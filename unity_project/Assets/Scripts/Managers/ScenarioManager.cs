@@ -29,8 +29,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 {
 	protected ScenarioManager () {}
 
-	// private GameObject mPlayer1, mPlayer2;
-	// private ControlScheme mControls;
+	public ControlScheme mControls = new ControlScheme();
 
 	public List<ScenarioData> m_Scenarios = new List<ScenarioData>();
 	private int mCurrentScenario = -1;
@@ -45,14 +44,13 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	// called once per timestep update (critical: do game state updates here!!!)
 	void FixedUpdate()
 	{
+		if (!ReplayManager.Instance.mIsReplaying) {
+			mControls.Update();
+		}
+
 		if (Input.GetKey(KeyCode.Return)) {
 			NextScenario();
 		}
-	}
-
-	public void ShowReplay() {
-		Application.LoadLevel(Application.loadedLevel);
-		// ReplayManager.Instance.Play();
 	}
 
 	public void Shuffle() {
@@ -74,6 +72,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		if (mCurrentScenario < m_Scenarios.Count) {
 			ScenarioData data = m_Scenarios[mCurrentScenario];
 			Application.LoadLevel(data.scenarioName);
+			mControls.Clear();
 			ReplayManager.Instance.Clear();
 		}
 	}
