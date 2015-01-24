@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class Main : MonoBehaviour
 {
-	private GameObject mPlayer1, mPlayer2, mCamera, mMan;
+	private GameObject mPlayer1, mPlayer2, mCamera, mMan, mLeftHand, mRightHand;
 	private ControlScheme mControls;
 
 	// Use this for initialization
@@ -14,9 +14,14 @@ public class Main : MonoBehaviour
 		// create mock scene with two player objects
 		mPlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		mPlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		Vector3 scale = new Vector3(0.1f, 0.1f, 0.1f);
+		mPlayer1.transform.localScale = scale;
+		mPlayer2.transform.localScale = scale;
 		// find the camera and man
 		mCamera = GameObject.Find("Main Camera");
 		mMan = GameObject.Find("Man");
+		mLeftHand = GameObject.FindWithTag("LeftHand");
+		mRightHand = GameObject.FindWithTag("RightHand");
 		// restart the scene
 		Restart();
 
@@ -55,6 +60,9 @@ public class Main : MonoBehaviour
 		// update all the controls
 		mControls.Update();
 
+		mLeftHand.transform.position  = mPlayer1.transform.position;
+		mRightHand.transform.position = mPlayer2.transform.position;
+
 		Camera camera = mCamera.GetComponent<Camera>();
 		int headLayerBit = 1 << 8;
 		if (Input.GetKey(KeyCode.Q)) // show head
@@ -77,8 +85,9 @@ public class Main : MonoBehaviour
 	// helper functions
 	void Restart()
 	{
-		mPlayer1.transform.position = new Vector3(-1, 0, 0);
-		mPlayer2.transform.position = new Vector3( 1, 0, 0);
+		float depth = -8.5f;
+		mPlayer1.transform.position = new Vector3(-1, 0, depth);
+		mPlayer2.transform.position = new Vector3( 1, 0, depth);
 	}
 }
 
