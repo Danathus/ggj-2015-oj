@@ -18,7 +18,9 @@ public abstract class Behavior
 		mOperand = operand;
 	}
 
-	public abstract void Operate();
+	// input: signal -- degree [0.0, 1.0] to which signal should be operated (0.0 means do nothing, generally)
+	// output: true iff should record
+	public abstract bool Operate(float signal);
 	public virtual Behavior GenerateRecordedBehavior()
 	{
 		return this;
@@ -34,9 +36,14 @@ public class TranslateBehavior : Behavior
 		mOffset = offset;
 	}
 
-	public override void Operate()
+	public override bool Operate(float signal)
 	{
-		mOperand.transform.position += mOffset;
+		if (signal > 0.0f)
+		{
+			mOperand.transform.position += mOffset * signal;
+			return true;
+		}
+		return false;
 	}
 }
 
@@ -57,29 +64,51 @@ class Scenario
 	}
 }
 
-class Control
+public abstract class ControlSignal
 {
+	public ControlSignal() {}
+	public abstract float PollSignal();
+}
+
+public class KeyCodeControlSignal : ControlSignal
+{
+	KeyCode mKeyCode;
+
+	public KeyCodeControlSignal(KeyCode keyCode)
+		: base()
+	{
+		mKeyCode = keyCode;
+	}
+
+	public override float PollSignal()
+	{
+		bool keyDown = Input.GetKey(mKeyCode);
+		return keyDown ? 1.0f : 0.0f;
+	}
 }
 
 class ControlScheme
 {
-	List< KeyValuePair<KeyCode, Behavior> > mBehaviors = new List< KeyValuePair<KeyCode, Behavior> >();
+	List< KeyValuePair<ControlSignal, Behavior> > mBehaviors = new List< KeyValuePair<ControlSignal, Behavior> >();
 
-	public void AddControl(KeyCode control, Behavior behavior)
+	public void AddControl(ControlSignal controlSignal, Behavior behavior)
 	{
-		mBehaviors.Add(new KeyValuePair<KeyCode, Behavior>(control, behavior));
+		mBehaviors.Add(new KeyValuePair<ControlSignal, Behavior>(controlSignal, behavior));
 	}
 
 	public void Update()
 	{
-		foreach (KeyValuePair<KeyCode, Behavior> key_behavior in mBehaviors)
+		foreach (KeyValuePair<ControlSignal, Behavior> key_behavior in mBehaviors)
 		{
-			if (Input.GetKey(key_behavior.Key))
-			{
-				Behavior behavior = key_behavior.Value;
-				behavior.Operate();
+			ControlSignal controlSignal = key_behavior.Key;
+			float signal = controlSignal.PollSignal();
 
-				BehaviorEvent behavior_event = new BehaviorEvent(behavior.GenerateRecordedBehavior());
+			Behavior behavior = key_behavior.Value;
+			bool shouldRecord = behavior.Operate(signal);
+
+			if (shouldRecord)
+			{
+				BehaviorEvent behavior_event = new BehaviorEvent(behavior.GenerateRecordedBehavior(), signal);
 				ReplayManager.Instance.AddEvent(behavior_event);
 			}
 		}
@@ -91,17 +120,19 @@ class ControlScheme
 public class BehaviorEvent : ReplayEvent
 {
 	Behavior mBehavior;
+	float mSignal;
 
 	private BehaviorEvent() {}
-	public BehaviorEvent(Behavior behavior)
+	public BehaviorEvent(Behavior behavior, float signal)
 		: base()
 	{
 		mBehavior = behavior;
+		mSignal = signal;
 	}
 
 	public override void Activate()
 	{
-		mBehavior.Operate();
+		mBehavior.Operate(mSignal);
 	}
 }
 
@@ -116,9 +147,8 @@ public class Main : MonoBehaviour
 	void Start () {
 		// create mock scene with two player objects
 		mPlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		mPlayer1.transform.position = new Vector3(-1, 0, 0);
 		mPlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		mPlayer2.transform.position = new Vector3( 1, 0, 0);
+		Restart();
 
 		// create the behaviors in this scene
 		Scenario scenario = new Scenario();
@@ -134,14 +164,14 @@ public class Main : MonoBehaviour
 
 		// create the control scheme that maps inputs to these behaviors
 		mControls = new ControlScheme();
-		mControls.AddControl(KeyCode.W,          scenario.GetBehavior("player1 move up"));
-		mControls.AddControl(KeyCode.S,          scenario.GetBehavior("player1 move down"));
-		mControls.AddControl(KeyCode.A,          scenario.GetBehavior("player1 move left"));
-		mControls.AddControl(KeyCode.D,          scenario.GetBehavior("player1 move right"));
-		mControls.AddControl(KeyCode.UpArrow,    scenario.GetBehavior("player2 move up"));
-		mControls.AddControl(KeyCode.DownArrow,  scenario.GetBehavior("player2 move down"));
-		mControls.AddControl(KeyCode.LeftArrow,  scenario.GetBehavior("player2 move left"));
-		mControls.AddControl(KeyCode.RightArrow, scenario.GetBehavior("player2 move right"));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          scenario.GetBehavior("player1 move up"));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          scenario.GetBehavior("player1 move down"));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          scenario.GetBehavior("player1 move left"));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          scenario.GetBehavior("player1 move right"));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    scenario.GetBehavior("player2 move up"));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  scenario.GetBehavior("player2 move down"));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  scenario.GetBehavior("player2 move left"));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), scenario.GetBehavior("player2 move right"));
 	}
 	
 	// Update is called once per frame
@@ -158,11 +188,17 @@ public class Main : MonoBehaviour
 		if (Input.GetKey(KeyCode.Space))
 		{
 			// start the playback
-			ReplayManager.Instance.PlayReplay();
+			Restart();
+			ReplayManager.Instance.Play();
 		}
 	}
 
 	// helper functions
+	void Restart()
+	{
+		mPlayer1.transform.position = new Vector3(-1, 0, 0);
+		mPlayer2.transform.position = new Vector3( 1, 0, 0);
+	}
 }
 
 // END OF FILE /////////////////////////////////////////////////////////////////
