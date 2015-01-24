@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class Main : MonoBehaviour
 {
-	private GameObject mPlayer1, mPlayer2, mCamera, mMan, mLeftHand, mRightHand;
+	private GameObject mPlayer1, mPlayer2, mCamera, mMan, mLeftHand, mRightHand, mRightShoulder;
 	private ControlScheme mControls;
 
 	// Use this for initialization
@@ -29,10 +29,12 @@ public class Main : MonoBehaviour
 		//
 		mLeftHand = GameObject.FindWithTag("LeftHand");
 		mRightHand = GameObject.FindWithTag("RightHand");
+		mRightShoulder = GameObject.FindWithTag("RightShoulder");
 		// hook up the IK
-		IKControl ik = mMan.GetComponent<IKControl>();
-		ik.rightHandObj = mPlayer2.transform;
-		ik.ikActive = true;
+		IKControl ik = mRightShoulder.GetComponent<IKControl>();
+		//ik.rightHandObj = mPlayer2.transform;
+		ik.target = mPlayer2.transform;
+		//ik.ikActive = true;
 		// restart the scene
 		Restart();
 
