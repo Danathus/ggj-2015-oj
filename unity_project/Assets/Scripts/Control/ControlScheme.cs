@@ -9,11 +9,6 @@ public abstract class ControlSignal
 	public abstract float PollSignal();
 }
 
-[System.Serializable]
-public class ControlData {
-
-}
-
 public class ControlScheme
 {
 	List<KeyValuePair<ControlSignal, Behavior> > mBehaviors = new List<KeyValuePair<ControlSignal, Behavior> >();
@@ -21,6 +16,10 @@ public class ControlScheme
 	public void AddControl(ControlSignal controlSignal, Behavior behavior)
 	{
 		mBehaviors.Add(new KeyValuePair<ControlSignal, Behavior>(controlSignal, behavior));
+	}
+
+	public void Clear() {
+		mBehaviors.Clear();
 	}
 
 	public void Update()

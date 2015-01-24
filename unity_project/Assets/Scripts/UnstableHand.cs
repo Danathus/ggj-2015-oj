@@ -154,7 +154,6 @@ public class UnstableHand : MonoBehaviour {
 
 	private GameObject mHand;
 	private GameObject mElevateKeyPad;
-	private ControlScheme mControls;
 	private Vector3 mOriginal_position;
 	private bool replaying = false;
 	// Use this for initialization
@@ -164,44 +163,20 @@ public class UnstableHand : MonoBehaviour {
 		
 		mOriginal_position = mHand.transform.position;
 		
-		Scenario scenario = new Scenario();
-		scenario.AddBehavior(new UnstableBehavior("unstable hand", mHand));
-		scenario.AddBehavior(new PushBehavior("finger push", mHand, mElevateKeyPad));
 		float speed = 0.1f;
-		scenario.AddBehavior(new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player1 move left",  mHand, new Vector3(-1,  0, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player1 move right", mHand, new Vector3( 1,  0, 0) * speed));
-		
-		mControls = new ControlScheme();
-		ControlSignal trueSignal;
-		
-		mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          scenario.GetBehavior("player1 move up"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          scenario.GetBehavior("player1 move down"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          scenario.GetBehavior("player1 move left"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          scenario.GetBehavior("player1 move right"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),          scenario.GetBehavior("finger push"));
-		
+		ScenarioManager.Instance.mControls.AddControl(new TrueSignal(),          						new UnstableBehavior("unstable hand", mHand));
+		ScenarioManager.Instance.mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          	new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
+		ScenarioManager.Instance.mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          	new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
+		ScenarioManager.Instance.mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          	new TranslateBehavior("player1 move left",  mHand, new Vector3(-1,  0, 0) * speed));
+		ScenarioManager.Instance.mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          	new TranslateBehavior("player1 move right", mHand, new Vector3( 1,  0, 0) * speed));
+		ScenarioManager.Instance.mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),	new PushBehavior("finger push", mHand, mElevateKeyPad));
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-		///transform.Translate(Vector3.forward * Time.deltaTime);
-	}
 	// called once per timestep update (critical: do game state updates here!!!)
 	void FixedUpdate()
 	{
-		// update all the controls
-		if(!replaying)
-		{
-			mControls.Update();
-		}
 		if (Input.GetKey(KeyCode.Space))
 		{
-			replaying = true;
-			// start the playback
 			Restart();
 			ReplayManager.Instance.Play();
 		}
