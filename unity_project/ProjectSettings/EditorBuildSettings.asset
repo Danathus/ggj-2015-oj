@@ -4,4 +4,12 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/startup.unity
+  - enabled: 1
+    path: Assets/Scenes/elevator_button.unity
+  - enabled: 1
+    path: Assets/Scenes/scene.unity
+  - enabled: 1
+    path: Assets/Scenes/boxes.unity

@@ -20,7 +20,7 @@ public class ReplayManager : Singleton<ReplayManager> {
 
   // Use this for initialization
   void Start () {
-    Debug.Log("ReplayManager Started");
+    DontDestroyOnLoad(gameObject);
   }
   
   // Update is called once per frame
