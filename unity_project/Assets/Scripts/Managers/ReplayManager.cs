@@ -24,7 +24,7 @@ public class ReplayManager : Singleton<ReplayManager> {
   }
   
   // Update is called once per frame
-  void Update () {
+  void FixedUpdate () {
     if (mIsReplaying) {
       UpdateReplay();
     }
@@ -38,7 +38,7 @@ public class ReplayManager : Singleton<ReplayManager> {
     mEventList.Clear();
   }
 
-  public void PlayReplay() {
+  public void Play() {
     if (mEventList.Count > 0) {
       mIsReplaying = true;
       mCurrentEvent = 0;
@@ -46,24 +46,22 @@ public class ReplayManager : Singleton<ReplayManager> {
     }
   }
 
-  public void StopReplay() {
+  public void Stop() {
     mIsReplaying = false;
     mCurrentEvent = -1;
   }
 
   private void UpdateReplay() {
-    mCurrentTime += Time.deltaTime;
+    mCurrentTime += Time.fixedDeltaTime;
 
     if (mCurrentEvent > -1 && mCurrentEvent < mEventList.Count) {
-      ReplayEvent e = mEventList[mCurrentEvent];
-      // Test if it is time to activate the current event.
-      if (e.mTime <= mCurrentTime) {
-        e.Activate();
+      while (mCurrentEvent < mEventList.Count && mEventList[mCurrentEvent].mTime <= mCurrentTime) {
+        mEventList[mCurrentEvent].Activate();
         mCurrentEvent++;
       }
     } else {
       // Stop the replay automatically when we come to the end of the events.
-      StopReplay();
+      Stop();
     }
   }
 }
