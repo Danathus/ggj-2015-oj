@@ -24,7 +24,8 @@ class ControlScheme
 		int left = Input.GetKey(mLeft) ? 1 : 0;
 		int right = Input.GetKey(mRight) ? 1 : 0;
 		Vector3 delta = new Vector3(right - left, up - down, 0);
-		mGameObject.transform.position = mGameObject.transform.position + delta;
+		float speed = 0.1f;
+		mGameObject.transform.position = mGameObject.transform.position + delta * speed;
 	}
 }
 
@@ -48,7 +49,13 @@ public class Main : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
+	}
+
+	// called once per timestep update (critical: do game state updates here!!!)
+	void FixedUpdate()
+	{
 		mPlayer1Control.Update();
 		mPlayer2Control.Update();
 	}
