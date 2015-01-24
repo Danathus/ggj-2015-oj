@@ -113,7 +113,7 @@ public class PushBehavior : Behavior {
 		if (signal > 0.0f)
 		{
 			pushing = true;
-		}
+		} 
 		if(pushing)
 		{
 			float z_boundary = originPosition.z + 1.0f;
