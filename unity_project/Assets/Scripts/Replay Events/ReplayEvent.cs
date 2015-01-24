@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ReplayEvent {
+public abstract class ReplayEvent {
 
   private float _time = 0.0f;
 
@@ -10,11 +10,9 @@ public class ReplayEvent {
     private set { _time = value; }
   }
 
-  ReplayEvent () {
+  public ReplayEvent () {
     mTime = Time.time;
   }
 
-  public void Activate() {
-
-  }
+  public abstract void Activate();
 }
