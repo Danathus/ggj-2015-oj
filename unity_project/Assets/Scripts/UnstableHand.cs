@@ -167,13 +167,20 @@ public class UnstableHand : MonoBehaviour {
 		Scenario scenario = new Scenario();
 		scenario.AddBehavior(new UnstableBehavior("unstable hand", mHand));
 		scenario.AddBehavior(new PushBehavior("finger push", mHand, mElevateKeyPad));
-		scenario.AddBehavior(new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * 0.1f));
+		float speed = 0.1f;
+		scenario.AddBehavior(new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
+		scenario.AddBehavior(new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
+		scenario.AddBehavior(new TranslateBehavior("player1 move left",  mHand, new Vector3(-1,  0, 0) * speed));
+		scenario.AddBehavior(new TranslateBehavior("player1 move right", mHand, new Vector3( 1,  0, 0) * speed));
 		
 		mControls = new ControlScheme();
 		ControlSignal trueSignal;
 		
 		mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          scenario.GetBehavior("player1 move up"));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          scenario.GetBehavior("player1 move down"));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          scenario.GetBehavior("player1 move left"));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          scenario.GetBehavior("player1 move right"));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),          scenario.GetBehavior("finger push"));
 		
 	}
