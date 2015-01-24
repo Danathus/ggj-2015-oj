@@ -55,15 +55,13 @@ public class ReplayManager : Singleton<ReplayManager> {
     mCurrentTime += Time.fixedDeltaTime;
 
     if (mCurrentEvent > -1 && mCurrentEvent < mEventList.Count) {
-      ReplayEvent e = mEventList[mCurrentEvent];
-      // Test if it is time to activate the current event.
-      if (e.mTime <= mCurrentTime) {
-        e.Activate();
+      while (mCurrentEvent < mEventList.Count && mEventList[mCurrentEvent].mTime <= mCurrentTime) {
+        mEventList[mCurrentEvent].Activate();
         mCurrentEvent++;
       }
     } else {
       // Stop the replay automatically when we come to the end of the events.
-      StopReplay();
+      Stop();
     }
   }
 }
