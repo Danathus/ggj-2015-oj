@@ -171,7 +171,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
       propertyPath: m_Scenarios.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
       propertyPath: m_LocalPosition.x
@@ -213,6 +213,10 @@ Prefab:
       propertyPath: m_Scenarios.Array.data[1].scenarioName
       value: elevator_button
       objectReference: {fileID: 0}
+    - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
+      propertyPath: m_Scenarios.Array.data[2].scenarioName
+      value: CerealPour
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
   m_RootGameObject: {fileID: 1810358419}
@@ -250,6 +254,8 @@ MonoBehaviour:
   - scenarioName: boxes
     someOtherValue: 0
   - scenarioName: elevator_button
+    someOtherValue: 0
+  - scenarioName: CerealPour
     someOtherValue: 0
 --- !u!4 &1810358421
 Transform:
