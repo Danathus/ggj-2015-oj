@@ -36,28 +36,28 @@ public class Main : MonoBehaviour
 		// restart the scene
 		Restart();
 
-		// create the behaviors in this scene
-		Scenario scenario = new Scenario();
-		float speed = 0.025f;
-		scenario.AddBehavior(new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player1 move right", mPlayer1, new Vector3( 1,  0, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player2 move up",    mPlayer2, new Vector3( 0,  1, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player2 move down",  mPlayer2, new Vector3( 0, -1, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player2 move left",  mPlayer2, new Vector3(-1,  0, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0) * speed));
+		// // create the behaviors in this scene
+		// Scenario scenario = new Scenario();
+		// float speed = 0.025f;
+		// scenario.AddBehavior(new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0) * speed));
+		// scenario.AddBehavior(new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0) * speed));
+		// scenario.AddBehavior(new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0) * speed));
+		// scenario.AddBehavior(new TranslateBehavior("player1 move right", mPlayer1, new Vector3( 1,  0, 0) * speed));
+		// scenario.AddBehavior(new TranslateBehavior("player2 move up",    mPlayer2, new Vector3( 0,  1, 0) * speed));
+		// scenario.AddBehavior(new TranslateBehavior("player2 move down",  mPlayer2, new Vector3( 0, -1, 0) * speed));
+		// scenario.AddBehavior(new TranslateBehavior("player2 move left",  mPlayer2, new Vector3(-1,  0, 0) * speed));
+		// scenario.AddBehavior(new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0) * speed));
 
-		// create the control scheme that maps inputs to these behaviors
-		mControls = new ControlScheme();
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          scenario.GetBehavior("player1 move up"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          scenario.GetBehavior("player1 move down"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          scenario.GetBehavior("player1 move left"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          scenario.GetBehavior("player1 move right"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    scenario.GetBehavior("player2 move up"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  scenario.GetBehavior("player2 move down"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  scenario.GetBehavior("player2 move left"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), scenario.GetBehavior("player2 move right"));
+		// // create the control scheme that maps inputs to these behaviors
+		// mControls = new ControlScheme();
+		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          scenario.GetBehavior("player1 move up"));
+		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          scenario.GetBehavior("player1 move down"));
+		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          scenario.GetBehavior("player1 move left"));
+		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          scenario.GetBehavior("player1 move right"));
+		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    scenario.GetBehavior("player2 move up"));
+		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  scenario.GetBehavior("player2 move down"));
+		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  scenario.GetBehavior("player2 move left"));
+		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), scenario.GetBehavior("player2 move right"));
 	}
 	
 	// Update is called once per frame
