@@ -20,14 +20,25 @@ public class Main : MonoBehaviour
 		// find the camera and man
 		mCamera = GameObject.Find("Main Camera");
 		mMan = GameObject.Find("Man");
+		//RuntimeAnimatorController animCtrl = mMan.AddComponent("RuntimeAnimatorController") as RuntimeAnimatorController;
+		//
+		//RuntimeAnimatorController anim = (RuntimeAnimatorController)RuntimeAnimatorController.Instantiate(Resources.Load("myAnimation", typeof(RuntimeAnimatorController)));
+		AnimatorOverrideController overrideController = new AnimatorOverrideController();
+		Animator manimator = mMan.GetComponent<Animator>();
+		manimator.runtimeAnimatorController = overrideController;
+		//
 		mLeftHand = GameObject.FindWithTag("LeftHand");
 		mRightHand = GameObject.FindWithTag("RightHand");
+		// hook up the IK
+		IKControl ik = mMan.GetComponent<IKControl>();
+		ik.rightHandObj = mPlayer2.transform;
+		ik.ikActive = true;
 		// restart the scene
 		Restart();
 
 		// create the behaviors in this scene
 		Scenario scenario = new Scenario();
-		float speed = 0.1f;
+		float speed = 0.025f;
 		scenario.AddBehavior(new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0) * speed));
 		scenario.AddBehavior(new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0) * speed));
 		scenario.AddBehavior(new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0) * speed));
@@ -60,8 +71,13 @@ public class Main : MonoBehaviour
 		// update all the controls
 		mControls.Update();
 
+		// left hand -- hard-coded
 		mLeftHand.transform.position  = mPlayer1.transform.position;
-		mRightHand.transform.position = mPlayer2.transform.position;
+		// right hand -- via IK system
+		//mRightHand.transform.position = mPlayer2.transform.position;
+		//Animator manimator = mMan.GetComponent<Animator>();
+		//manimator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1.0f);
+        //manimator.SetIKPosition(AvatarIKGoal.RightHand, mPlayer2.transform.position);
 
 		Camera camera = mCamera.GetComponent<Camera>();
 		int headLayerBit = 1 << 8;
@@ -82,12 +98,22 @@ public class Main : MonoBehaviour
 		}
 	}
 
+	/*
+	void OnAnimatorIK(int layerIndex)
+	{
+		Animator manimator = mMan.GetComponent<Animator>();
+        float reach = 1.0f; //animator.GetFloat("RightHandReach");
+        manimator.SetIKPositionWeight(AvatarIKGoal.RightHand, reach);
+        manimator.SetIKPosition(AvatarIKGoal.RightHand, mPlayer2.transform.position);
+    }
+	//*/
+
 	// helper functions
 	void Restart()
 	{
-		float depth = -8.5f;
-		mPlayer1.transform.position = new Vector3(-1, 0, depth);
-		mPlayer2.transform.position = new Vector3( 1, 0, depth);
+		float depth = -8.75f;
+		mPlayer1.transform.position = new Vector3(-1, 1, depth);
+		mPlayer2.transform.position = new Vector3( 1, 1, depth);
 	}
 }
 
