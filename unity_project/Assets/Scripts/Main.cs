@@ -6,11 +6,12 @@ using System.Collections.Generic;
 
 public class Main : MonoBehaviour
 {
-	private GameObject mPlayer1, mPlayer2, mCamera, mMan, mLeftHand, mRightHand;
+	private GameObject mPlayer1, mPlayer2, mCamera, mMan, mLeftHand, mRightHand, mRightShoulder;
 	private ControlScheme mControls;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		// create mock scene with two player objects
 		mPlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		mPlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -24,15 +25,20 @@ public class Main : MonoBehaviour
 		//
 		//RuntimeAnimatorController anim = (RuntimeAnimatorController)RuntimeAnimatorController.Instantiate(Resources.Load("myAnimation", typeof(RuntimeAnimatorController)));
 		AnimatorOverrideController overrideController = new AnimatorOverrideController();
-		Animator manimator = mMan.GetComponent<Animator>();
-		manimator.runtimeAnimatorController = overrideController;
+		//Animator manimator = mMan.GetComponent<Animator>();
+		//manimator.runtimeAnimatorController = overrideController;
 		//
 		mLeftHand = GameObject.FindWithTag("LeftHand");
 		mRightHand = GameObject.FindWithTag("RightHand");
+		mRightShoulder = GameObject.FindWithTag("RightShoulder");
 		// hook up the IK
-		IKControl ik = mMan.GetComponent<IKControl>();
-		ik.rightHandObj = mPlayer2.transform;
-		ik.ikActive = true;
+		if (mRightShoulder != null)
+		{
+			IKControl ik = mRightShoulder.GetComponent<IKControl>();
+			//ik.rightHandObj = mPlayer2.transform;
+			ik.target = mPlayer2.transform;
+			//ik.ikActive = true;
+		}
 		// restart the scene
 		Restart();
 
@@ -72,7 +78,10 @@ public class Main : MonoBehaviour
 		mControls.Update();
 
 		// left hand -- hard-coded
-		mLeftHand.transform.position  = mPlayer1.transform.position;
+		if (mLeftHand != null)
+		{
+			mLeftHand.transform.position  = mPlayer1.transform.position;
+		}
 		// right hand -- via IK system
 		//mRightHand.transform.position = mPlayer2.transform.position;
 		//Animator manimator = mMan.GetComponent<Animator>();
