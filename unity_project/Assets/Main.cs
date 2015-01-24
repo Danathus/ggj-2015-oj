@@ -19,6 +19,10 @@ public abstract class Behavior
 	}
 
 	public abstract void Operate();
+	public virtual Behavior GenerateRecordedBehavior()
+	{
+		return this;
+	}
 }
 
 public class TranslateBehavior : Behavior
@@ -53,6 +57,10 @@ class Scenario
 	}
 }
 
+class Control
+{
+}
+
 class ControlScheme
 {
 	List< KeyValuePair<KeyCode, Behavior> > mBehaviors = new List< KeyValuePair<KeyCode, Behavior> >();
@@ -71,7 +79,7 @@ class ControlScheme
 				Behavior behavior = key_behavior.Value;
 				behavior.Operate();
 
-				BehaviorEvent behavior_event = new BehaviorEvent(behavior);
+				BehaviorEvent behavior_event = new BehaviorEvent(behavior.GenerateRecordedBehavior());
 				ReplayManager.Instance.AddEvent(behavior_event);
 			}
 		}
