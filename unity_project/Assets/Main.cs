@@ -53,7 +53,7 @@ class Scenario
 	}
 }
 
-class NewControlScheme
+class ControlScheme
 {
 	List< KeyValuePair<KeyCode, Behavior> > mBehaviors = new List< KeyValuePair<KeyCode, Behavior> >();
 
@@ -74,40 +74,12 @@ class NewControlScheme
 	}
 }
 
-// a control scheme has a mapping of controls to behaviors
-class ControlScheme
-{
-	GameObject mGameObject;
-	KeyCode mUp, mDown, mLeft, mRight;
-
-	public ControlScheme(GameObject gameObj, KeyCode up, KeyCode down, KeyCode left, KeyCode right)
-	{
-		mGameObject = gameObj;
-		mUp = up;
-		mDown = down;
-		mLeft = left;
-		mRight = right;
-	}
-
-	public void Update()
-	{
-		int up = Input.GetKey(mUp) ? 1 : 0;
-		int down = Input.GetKey(mDown) ? 1 : 0;
-		int left = Input.GetKey(mLeft) ? 1 : 0;
-		int right = Input.GetKey(mRight) ? 1 : 0;
-		Vector3 delta = new Vector3(right - left, up - down, 0);
-		float speed = 0.1f;
-		mGameObject.transform.position = mGameObject.transform.position + delta * speed;
-	}
-}
-
 // BEHAVIOR ENTRY POINT ////////////////////////////////////////////////////////
 
 public class Main : MonoBehaviour
 {
 	private GameObject mPlayer1, mPlayer2;
-	ControlScheme mPlayer1Control, mPlayer2Control;
-	NewControlScheme mNewControls;
+	private ControlScheme mControls;
 
 	// Use this for initialization
 	void Start () {
@@ -119,30 +91,26 @@ public class Main : MonoBehaviour
 
 		// create the behaviors in this scene
 		Scenario scenario = new Scenario();
-		//Behavior b = new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0));
-		//scenario.AddBehavior(b);
-		scenario.AddBehavior(new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0)));
-		scenario.AddBehavior(new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0)));
-		scenario.AddBehavior(new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0)));
-		scenario.AddBehavior(new TranslateBehavior("player1 move right", mPlayer1, new Vector3( 1,  0, 0)));
-		scenario.AddBehavior(new TranslateBehavior("player2 move up",    mPlayer2, new Vector3( 0,  1, 0)));
-		scenario.AddBehavior(new TranslateBehavior("player2 move down",  mPlayer2, new Vector3( 0, -1, 0)));
-		scenario.AddBehavior(new TranslateBehavior("player2 move left",  mPlayer2, new Vector3(-1,  0, 0)));
-		scenario.AddBehavior(new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0)));
+		float speed = 0.1f;
+		scenario.AddBehavior(new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0) * speed));
+		scenario.AddBehavior(new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0) * speed));
+		scenario.AddBehavior(new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0) * speed));
+		scenario.AddBehavior(new TranslateBehavior("player1 move right", mPlayer1, new Vector3( 1,  0, 0) * speed));
+		scenario.AddBehavior(new TranslateBehavior("player2 move up",    mPlayer2, new Vector3( 0,  1, 0) * speed));
+		scenario.AddBehavior(new TranslateBehavior("player2 move down",  mPlayer2, new Vector3( 0, -1, 0) * speed));
+		scenario.AddBehavior(new TranslateBehavior("player2 move left",  mPlayer2, new Vector3(-1,  0, 0) * speed));
+		scenario.AddBehavior(new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0) * speed));
 
 		// create the control scheme that maps inputs to these behaviors
-		mNewControls = new NewControlScheme();
-		mNewControls.AddControl(KeyCode.W,          scenario.GetBehavior("player1 move up"));
-		mNewControls.AddControl(KeyCode.S,          scenario.GetBehavior("player1 move down"));
-		mNewControls.AddControl(KeyCode.A,          scenario.GetBehavior("player1 move left"));
-		mNewControls.AddControl(KeyCode.D,          scenario.GetBehavior("player1 move right"));
-		mNewControls.AddControl(KeyCode.UpArrow,    scenario.GetBehavior("player2 move up"));
-		mNewControls.AddControl(KeyCode.DownArrow,  scenario.GetBehavior("player2 move down"));
-		mNewControls.AddControl(KeyCode.LeftArrow,  scenario.GetBehavior("player2 move left"));
-		mNewControls.AddControl(KeyCode.RightArrow, scenario.GetBehavior("player2 move right"));
-
-		//mPlayer1Control = new ControlScheme(mPlayer1, KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D);
-		//mPlayer2Control = new ControlScheme(mPlayer2, KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.LeftArrow, KeyCode.RightArrow);
+		mControls = new ControlScheme();
+		mControls.AddControl(KeyCode.W,          scenario.GetBehavior("player1 move up"));
+		mControls.AddControl(KeyCode.S,          scenario.GetBehavior("player1 move down"));
+		mControls.AddControl(KeyCode.A,          scenario.GetBehavior("player1 move left"));
+		mControls.AddControl(KeyCode.D,          scenario.GetBehavior("player1 move right"));
+		mControls.AddControl(KeyCode.UpArrow,    scenario.GetBehavior("player2 move up"));
+		mControls.AddControl(KeyCode.DownArrow,  scenario.GetBehavior("player2 move down"));
+		mControls.AddControl(KeyCode.LeftArrow,  scenario.GetBehavior("player2 move left"));
+		mControls.AddControl(KeyCode.RightArrow, scenario.GetBehavior("player2 move right"));
 	}
 	
 	// Update is called once per frame
@@ -153,10 +121,8 @@ public class Main : MonoBehaviour
 	// called once per timestep update (critical: do game state updates here!!!)
 	void FixedUpdate()
 	{
-		//mPlayer1Control.Update();
-		//mPlayer2Control.Update();
-
-		mNewControls.Update();
+		// update all the controls
+		mControls.Update();
 	}
 
 	// helper functions
