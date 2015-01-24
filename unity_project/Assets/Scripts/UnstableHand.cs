@@ -4,7 +4,7 @@ using System.Collections;
 /// Rshaking: http://forum.unity3d.com/threads/camera-shake-script-c.142764/
 
 /// </summary>
-public class RightHandPoint : MonoBehaviour {
+public class UnstableHand : MonoBehaviour {
 
 	private Vector3 originPosition;
 	private Quaternion originRotation;
