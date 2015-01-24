@@ -2,15 +2,21 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+
 public abstract class ControlSignal
 {
 	public ControlSignal() {}
 	public abstract float PollSignal();
 }
 
-class ControlScheme
+[System.Serializable]
+public class ControlData {
+
+}
+
+public class ControlScheme
 {
-	List< KeyValuePair<ControlSignal, Behavior> > mBehaviors = new List< KeyValuePair<ControlSignal, Behavior> >();
+	List<KeyValuePair<ControlSignal, Behavior> > mBehaviors = new List<KeyValuePair<ControlSignal, Behavior> >();
 
 	public void AddControl(ControlSignal controlSignal, Behavior behavior)
 	{
@@ -19,6 +25,11 @@ class ControlScheme
 
 	public void Update()
 	{
+		// Skip user input if we are replaying.
+		if (ReplayManager.Instance.mIsReplaying) {
+			return;
+		}
+
 		foreach (KeyValuePair<ControlSignal, Behavior> key_behavior in mBehaviors)
 		{
 			ControlSignal controlSignal = key_behavior.Key;
