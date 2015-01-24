@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class Main : MonoBehaviour
 {
-	private GameObject mPlayer1, mPlayer2;
+	private GameObject mPlayer1, mPlayer2, mCamera, mMan;
 	private ControlScheme mControls;
 
 	// Use this for initialization
@@ -14,6 +14,10 @@ public class Main : MonoBehaviour
 		// create mock scene with two player objects
 		mPlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		mPlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		// find the camera and man
+		mCamera = GameObject.Find("Main Camera");
+		mMan = GameObject.Find("Man");
+		// restart the scene
 		Restart();
 
 		// create the behaviors in this scene
@@ -50,6 +54,17 @@ public class Main : MonoBehaviour
 	{
 		// update all the controls
 		mControls.Update();
+
+		Camera camera = mCamera.GetComponent<Camera>();
+		int headLayerBit = 1 << 8;
+		if (Input.GetKey(KeyCode.Q)) // show head
+		{
+			camera.cullingMask |= headLayerBit; //0xffffffff;
+		}
+		if (Input.GetKey(KeyCode.E)) // hide head
+		{
+			camera.cullingMask &= ~headLayerBit; //0xffffffff;
+		}
 
 		if (Input.GetKey(KeyCode.Space))
 		{
