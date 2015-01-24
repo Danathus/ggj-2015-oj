@@ -306,15 +306,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400014, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.51485252
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400014, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.49492693
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400014, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
       propertyPath: m_LocalPosition.z
-      value: .977193356
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400014, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
       propertyPath: m_LocalRotation.x
@@ -335,6 +335,10 @@ Prefab:
     - target: {fileID: 400014, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
@@ -1521,7 +1525,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294967039
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1784,7 +1788,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1609570610}
   - 137: {fileID: 1609570611}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Head_and_arms.006_Man.015
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2385,7 +2389,7 @@ Transform:
   m_PrefabInternal: {fileID: 374724036}
   m_GameObject: {fileID: 2010834221}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.51485252, y: 3.49492693, z: .977193356}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 113539679}
