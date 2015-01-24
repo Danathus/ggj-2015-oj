@@ -95,11 +95,12 @@ public class PushBehavior : Behavior {
 	private Vector3 originPosition;
 	private bool forward;
 	private bool pushing;
-	
-	public PushBehavior(string name, GameObject operand)
+	private GameObject mObstacle;
+	public PushBehavior(string name, GameObject operand, GameObject obstacle=null)
 	{
 		mName = name;
 		mOperand = operand;
+		mObstacle = obstacle;
 		originPosition = mOperand.transform.position;
 		forward = true;
 		pushing = false;
@@ -116,10 +117,13 @@ public class PushBehavior : Behavior {
 		} 
 		if(pushing)
 		{
-			float z_boundary = originPosition.z + 1.0f;
+			float z_boundary = (mObstacle != null)?
+				mObstacle.transform.position.z - (mObstacle.renderer.bounds.size.z/2 * mObstacle.transform.localScale.z) : 
+				originPosition.z + 1.0f;
 			if(forward)
 			{
-				if((mOperand.transform.position.z + 0.1f) >= z_boundary)
+				float finger_z_position = mOperand.transform.position.z + (mOperand.renderer.bounds.size.z/2 * mOperand.transform.localScale.z);
+				if((finger_z_position + 0.1f) >= z_boundary)
 				{
 					forward = false;
 				}
@@ -149,17 +153,20 @@ public class PushBehavior : Behavior {
 public class UnstableHand : MonoBehaviour {
 
 	private GameObject mHand;
+	private GameObject mElevateKeyPad;
 	private ControlScheme mControls;
 	private Vector3 mOriginal_position;
 	private bool replaying = false;
 	// Use this for initialization
 	void Start () {
 		mHand = GameObject.Find("Automatic Rifle Standard");
+		mElevateKeyPad = GameObject.Find("wallBrickExposedShort");
+		
 		mOriginal_position = mHand.transform.position;
 		
 		Scenario scenario = new Scenario();
 		scenario.AddBehavior(new UnstableBehavior("unstable hand", mHand));
-		scenario.AddBehavior(new PushBehavior("finger push", mHand));
+		scenario.AddBehavior(new PushBehavior("finger push", mHand, mElevateKeyPad));
 		scenario.AddBehavior(new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * 0.1f));
 		
 		mControls = new ControlScheme();
