@@ -28,7 +28,7 @@ public class UnstableBehavior: Behavior
 	public UnstableBehavior(string name, GameObject operand)
 		: base(name, operand)
 	{
-		Debug.Log("UnstableBehavior initialized");
+		//Debug.Log("UnstableBehavior initialized");
 		originPosition = mOperand.transform.position;
 		//originRotation = mOperand.transform.rotation;
 		shake_intensity = 0.001f;
@@ -43,15 +43,15 @@ public class UnstableBehavior: Behavior
 	{
 		if (signal > 0.0f)
 		{
-			Debug.Log("UnstableBehavior Operate");
+			//Debug.Log("UnstableBehavior Operate");
 			if(shake_intensity > 0){
 				Vector3 start_position = mOperand.transform.position;
 				Vector3 min_moving_range = originPosition - new Vector3 (camera_range, camera_range, 0);
 				Vector3 max_moving_range = originPosition + new Vector3 (camera_range, camera_range, 0);
 				diff_time += Time.deltaTime;
-				Debug.Log("change delta value, diff time: " + diff_time.ToString());
+				//Debug.Log("change delta value, diff time: " + diff_time.ToString());
 				if(diff_time > Random.Range(3.0f, 5.0f)) {
-					Debug.Log("change delta value, diff time: " + diff_time.ToString());
+					//Debug.Log("change delta value, diff time: " + diff_time.ToString());
 					x_delta = Random.Range(-drunk_level, drunk_level);
 					y_delta = Random.Range(-drunk_level, drunk_level);
 					diff_time = 0.0f;
@@ -83,7 +83,7 @@ public class UnstableBehavior: Behavior
 	
 	public override Behavior GenerateRecordedBehavior()
 	{
-		Debug.Log("UnstableBehavior GenerateRecordedBehavior");
+		//Debug.Log("UnstableBehavior GenerateRecordedBehavior");
 		TranslateBehavior generated_behavior = new TranslateBehavior("auto generate unstable behavior",    mOperand, position_offset);
 		
 		return generated_behavior;
@@ -110,7 +110,7 @@ public class PushBehavior : Behavior {
 	// output: true iff should record
 	public override bool Operate(float signal)
 	{
-		Debug.Log("PushBehavior Operate");
+		//Debug.Log("PushBehavior Operate");
 		if (signal > 0.0f)
 		{
 			pushing = true;
@@ -144,16 +144,111 @@ public class PushBehavior : Behavior {
 	}
 	public override Behavior GenerateRecordedBehavior()
 	{
-		Debug.Log("PushBehavior GenerateRecordedBehavior");
+		//Debug.Log("PushBehavior GenerateRecordedBehavior");
 		return this;
 	}
 }
 
+public class ButtonPushBehavior : Behavior {
+	
+	private Vector3 originPosition;
+	private bool push_down;
+	private bool pushing;
+	private GameObject mPusher;
+	public ButtonPushBehavior(string name, GameObject operand, GameObject pusher)
+	{
+		mName = name;
+		mOperand = operand;
+		mPusher = pusher;
+		originPosition = mOperand.transform.position;
+		push_down = true;
+		pushing = false;
+	}
+	
+	// input: signal -- degree [0.0, 1.0] to which signal should be operated (0.0 means do nothing, generally)
+	// output: true iff should record
+	public override bool Operate(float signal)
+	{
+		//Debug.Log("PushBehavior Operate");
+		float finger_z_position = mPusher.transform.position.z + (mPusher.renderer.bounds.size.z/2 * mPusher.transform.localScale.z);
+		
+		if (signal > 0.0f)
+		{	
+			Rect button_bounds = new Rect(mOperand.transform.position.x - mOperand.renderer.bounds.size.x/2, mOperand.transform.position.y - mOperand.renderer.bounds.size.y/2, mOperand.transform.position.x + mOperand.renderer.bounds.size.x/2, mOperand.transform.position.y + mOperand.renderer.bounds.size.y/2);
+			Vector2 finger_position = new Vector2(mPusher.transform.position.x, mPusher.transform.position.y + mPusher.renderer.bounds.size.y/2);
+			Debug.Log("button_bounds " + button_bounds.ToString());
+			Debug.Log("finger position " + finger_position.ToString());
+			Debug.Log("inside? "  + button_bounds.Contains(finger_position));
+				if( button_bounds.Contains(finger_position) &&
+				((finger_z_position) >= mOperand.transform.position.z - mOperand.renderer.bounds.size.z/2))
+			{
+				pushing = true;
+			}
+		} 
+		if(pushing)
+		{
+			float z_boundary = originPosition.z + mOperand.renderer.bounds.size.z/2;
+			if(push_down)
+			{
+				if((finger_z_position) <= mOperand.transform.position.z - mOperand.renderer.bounds.size.z/2)
+				{
+					push_down = false;
+				}
+			}
+			float delta = (push_down) ? (0.1f) : (-0.1f);
+			mOperand.transform.position = new Vector3(
+				mOperand.transform.position.x,
+				mOperand.transform.position.y,
+				mOperand.transform.position.z + delta);
+			if(mOperand.transform.position.z <= originPosition.z)
+			{
+				pushing = false;
+				push_down = true;
+			}
+			return true;
+		}
+		return false;
+	}
+	public override Behavior GenerateRecordedBehavior()
+	{
+		//Debug.Log("PushBehavior GenerateRecordedBehavior");
+		return this;
+	}
+}
+
+public class CorrectButtonBehavior : ButtonPushBehavior {
+	
+	private Vector3 originPosition;
+	private bool push_down;
+	private bool pushing;
+	private GameObject mPusher;
+	public CorrectButtonBehavior(string name, GameObject operand, GameObject pusher)
+		:base (name, operand, pusher)
+	{
+
+	}
+}
+
+public class WrongButtonBehavior : ButtonPushBehavior {
+	
+	private Vector3 originPosition;
+	private bool push_down;
+	private bool pushing;
+	private GameObject mPusher;
+	public WrongButtonBehavior(string name, GameObject operand, GameObject pusher)
+		:base (name, operand, pusher)
+	{
+		
+	}
+}
 
 public class UnstableHand : MonoBehaviour {
 
 	private GameObject mHand;
 	private GameObject mElevateKeyPad;
+	private GameObject mCorrectButton;
+	private GameObject mWrongButton;
+	
 	private ControlScheme mControls;
 	private Vector3 mOriginal_position;
 	private bool replaying = false;
@@ -161,22 +256,29 @@ public class UnstableHand : MonoBehaviour {
 	void Start () {
 		mHand = GameObject.Find("Automatic Rifle Standard");
 		mElevateKeyPad = GameObject.Find("wallBrickExposedShort");
+		mCorrectButton = GameObject.Find("Correct Button Test");
+		mWrongButton = GameObject.Find("Wrong Button Test");
 		
 		mOriginal_position = mHand.transform.position;
 		
 		Scenario scenario = new Scenario();
 		scenario.AddBehavior(new UnstableBehavior("unstable hand", mHand));
 		scenario.AddBehavior(new PushBehavior("finger push", mHand, mElevateKeyPad));
+		scenario.AddBehavior(new CorrectButtonBehavior("correct button push", mCorrectButton, mHand));
+		scenario.AddBehavior(new WrongButtonBehavior("wrong button push", mWrongButton, mHand));
 		float speed = 0.1f;
 		scenario.AddBehavior(new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
 		scenario.AddBehavior(new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
 		scenario.AddBehavior(new TranslateBehavior("player1 move left",  mHand, new Vector3(-1,  0, 0) * speed));
 		scenario.AddBehavior(new TranslateBehavior("player1 move right", mHand, new Vector3( 1,  0, 0) * speed));
 		
+		
 		mControls = new ControlScheme();
 		ControlSignal trueSignal;
 		
 		mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
+		mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("correct button push"));
+		mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("wrong button push"));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          scenario.GetBehavior("player1 move up"));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          scenario.GetBehavior("player1 move down"));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          scenario.GetBehavior("player1 move left"));
