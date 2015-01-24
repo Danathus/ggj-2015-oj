@@ -68,9 +68,32 @@ class ControlScheme
 		{
 			if (Input.GetKey(key_behavior.Key))
 			{
-				key_behavior.Value.Operate();
+				Behavior behavior = key_behavior.Value;
+				behavior.Operate();
+
+				BehaviorEvent behavior_event = new BehaviorEvent(behavior);
+				ReplayManager.Instance.AddEvent(behavior_event);
 			}
 		}
+	}
+}
+
+// ADAPT REPLAY EVENT PATTERN //////////////////////////////////////////////////
+
+public class BehaviorEvent : ReplayEvent
+{
+	Behavior mBehavior;
+
+	private BehaviorEvent() {}
+	public BehaviorEvent(Behavior behavior)
+		: base()
+	{
+		mBehavior = behavior;
+	}
+
+	public override void Activate()
+	{
+		mBehavior.Operate();
 	}
 }
 
@@ -123,6 +146,12 @@ public class Main : MonoBehaviour
 	{
 		// update all the controls
 		mControls.Update();
+
+		if (Input.GetKey(KeyCode.Space))
+		{
+			// start the playback
+			ReplayManager.Instance.PlayReplay();
+		}
 	}
 
 	// helper functions
