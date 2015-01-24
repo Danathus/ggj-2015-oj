@@ -147,9 +147,8 @@ public class Main : MonoBehaviour
 	void Start () {
 		// create mock scene with two player objects
 		mPlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		mPlayer1.transform.position = new Vector3(-1, 0, 0);
 		mPlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		mPlayer2.transform.position = new Vector3( 1, 0, 0);
+		Restart();
 
 		// create the behaviors in this scene
 		Scenario scenario = new Scenario();
@@ -189,11 +188,17 @@ public class Main : MonoBehaviour
 		if (Input.GetKey(KeyCode.Space))
 		{
 			// start the playback
-			ReplayManager.Instance.PlayReplay();
+			Restart();
+			ReplayManager.Instance.Play();
 		}
 	}
 
 	// helper functions
+	void Restart()
+	{
+		mPlayer1.transform.position = new Vector3(-1, 0, 0);
+		mPlayer2.transform.position = new Vector3( 1, 0, 0);
+	}
 }
 
 // END OF FILE /////////////////////////////////////////////////////////////////
