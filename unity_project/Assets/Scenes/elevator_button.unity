@@ -175,7 +175,6 @@ GameObject:
   - 23: {fileID: 848748713}
   - 95: {fileID: 848748712}
   - 114: {fileID: 848748716}
-  - 114: {fileID: 848748717}
   m_Layer: 0
   m_Name: Automatic Rifle Standard
   m_TagString: Untagged
@@ -249,17 +248,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab506bf28947f584882440a50272c31e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &848748717
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 848748711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67b426a9161f54b4eadd1aa12c619b24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1159394910
