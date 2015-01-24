@@ -11,7 +11,7 @@ public abstract class ReplayEvent {
   }
 
   public ReplayEvent () {
-    mTime = Time.time;
+    mTime = Time.fixedTime;
   }
 
   public abstract void Activate();
