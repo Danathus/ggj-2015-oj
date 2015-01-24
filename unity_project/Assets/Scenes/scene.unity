@@ -348,6 +348,10 @@ Prefab:
       propertyPath: m_TagString
       value: RightHand
       objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
   m_RootGameObject: {fileID: 2010834221}
@@ -2383,6 +2387,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 2010834222}
   - 95: {fileID: 2010834223}
+  - 114: {fileID: 2010834224}
   m_Layer: 0
   m_Name: Man
   m_TagString: Untagged
@@ -2426,6 +2431,19 @@ Animator:
   m_ApplyRootMotion: 1
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &2010834224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2010834221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dce4a9d94dc0b94d902410fdf13f953, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ikActive: 0
+  rightHandObj: {fileID: 0}
 --- !u!1 &2017704374
 GameObject:
   m_ObjectHideFlags: 0
