@@ -16,8 +16,17 @@ public class FroggerCamera : Scenario {
 	void Start() {
 		Move(this.gameObject, new Vector3 ());
 
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow), new MovementCallbackBehavior("player2 move left",  this.gameObject, new Vector3( 1,  0,  0) * Time.fixedDeltaTime, Move));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), new MovementCallbackBehavior("player2 move right", this.gameObject, new Vector3(-1,  0,  0) * Time.fixedDeltaTime, Move));
+		// create behaviors
+		Behavior p2Left  = new MovementCallbackBehavior("player2 move left",  this.gameObject, new Vector3( 1,  0,  0) * Time.fixedDeltaTime, Move);
+		Behavior p2Right = new MovementCallbackBehavior("player2 move right", this.gameObject, new Vector3(-1,  0,  0) * Time.fixedDeltaTime, Move);
+
+		// rig control scheme
+		//   for buttons
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  p2Left );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), p2Right);
+		//   for gamepads
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p2Left  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p2Right );
 	}
 	
 	// Update is called once per frame
