@@ -203,7 +203,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
       propertyPath: m_Scenarios.Array.data[0]
-      value: boxes
+      value: FroggerMan
       objectReference: {fileID: 0}
     - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
       propertyPath: m_Scenarios.Array.data[1]
@@ -217,6 +217,10 @@ Prefab:
       propertyPath: m_FailureScreen
       value: 
       objectReference: {fileID: 177286, guid: 8f15fcb271816854982a033c78640c44, type: 2}
+    - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
+      propertyPath: m_Scenarios.Array.data[3]
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
   m_RootGameObject: {fileID: 1810358419}
@@ -253,7 +257,7 @@ MonoBehaviour:
   m_VictoryScreen: {fileID: 177286, guid: ee67869aac9cdc842a9215ec9a031aa8, type: 2}
   m_FailureScreen: {fileID: 177286, guid: 8f15fcb271816854982a033c78640c44, type: 2}
   m_Scenarios:
-  - boxes
+  - FroggerMan
   - elevator_button
   - CerealPour
 --- !u!4 &1810358421
