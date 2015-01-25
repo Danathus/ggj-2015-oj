@@ -3186,6 +3186,7 @@ GameObject:
   - 223: {fileID: 1371319471}
   - 114: {fileID: 1371319470}
   - 114: {fileID: 1371319469}
+  - 114: {fileID: 1371319472}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3267,6 +3268,18 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
+--- !u!114 &1371319472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1371319467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd5ffd2cf53056748b3aa6650f5abb4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  countdown: 3
 --- !u!1 &1395179631
 GameObject:
   m_ObjectHideFlags: 0
