@@ -342,31 +342,46 @@ public class ElevatorMoveBehavior : Behavior {
 	private bool jump;
 	private Vector3 original_position;
 	private bool back;
+	private bool openDoor;
+	private bool closeDoor;
+	private GameObject mLeftDoor;
+	private GameObject mRightDoor;
+	private Vector3 left_door_position;
+	private Vector3 right_door_position;
 	
-	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap)
+	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor)
 		: base(name, operand)
 	{
 		mCurrFloor = 0;
 		mOperand.transform.position = new Vector3(1.87f, 0.0f, -2.76f);
 		jump = false;
 		original_position = mOperand.transform.position;
+		openDoor = false;
+		closeDoor = false;
+		mLeftDoor = leftdoor;
+		mRightDoor = rightdoor;
+		left_door_position = mLeftDoor.transform.position;
+		right_door_position = mRightDoor.transform.position;
 	}
 	
 	public override bool Operate(float signal)
 	{
 		if (signal > 0.0f)
 		{
-			jump = true;
-			back = false;
-			//Debug.Log("signal: " + signal.ToString());
-			if(mCurrFloor != (int)signal)
+			if(!openDoor && !closeDoor)
 			{
-				mCurrFloor = (int)signal;
-				
-				Debug.Log("go to " + mCurrFloor.ToString() + " floor");
-				mHeight = (float)mCurrFloor * 2.0f;
+				jump = true;
+				back = false;
+				//Debug.Log("signal: " + signal.ToString());
+				if(mCurrFloor != (int)signal)
+				{
+					mCurrFloor = (int)signal;
+					
+					Debug.Log("go to " + mCurrFloor.ToString() + " floor");
+					mHeight = (float)mCurrFloor * 2.0f;
+				}
+				return true;
 			}
-			
 		}
 		if(jump)
 		{
@@ -381,11 +396,56 @@ public class ElevatorMoveBehavior : Behavior {
 			if(mOperand.transform.position.y <= original_position.y)
 			{
 				jump = false;
+				openDoor = true;
 			}
 			//Debug.Log ("target height: " + mHeight.ToString() + " current height: " + mOperand.transform.position.y);
 			position_offset = mOperand.transform.position - oriPosition;
-			return true;
+			
 		}
+		if(openDoor)
+		{
+			if(mLeftDoor.transform.position.x >= left_door_position.x + 0.9f)
+			{
+				openDoor = false;
+				closeDoor = true;
+			}
+			if(openDoor)
+			{
+			mLeftDoor.transform.position = new Vector3 (
+				mLeftDoor.transform.position.x + 0.01f,
+				mLeftDoor.transform.position.y,
+				mLeftDoor.transform.position.z
+			);
+			
+			mRightDoor.transform.position = new Vector3 (
+				mRightDoor.transform.position.x - 0.01f,
+				mRightDoor.transform.position.y,
+				mRightDoor.transform.position.z
+				);
+			}
+		}
+		if(closeDoor)
+		{
+			if(mLeftDoor.transform.position.x <= left_door_position.x)
+			{
+				closeDoor = false;
+			}
+			if(closeDoor)
+			{
+				mLeftDoor.transform.position = new Vector3 (
+					mLeftDoor.transform.position.x - 0.01f,
+					mLeftDoor.transform.position.y,
+					mLeftDoor.transform.position.z
+					);
+				
+				mRightDoor.transform.position = new Vector3 (
+					mRightDoor.transform.position.x + 0.01f,
+					mRightDoor.transform.position.y,
+					mRightDoor.transform.position.z
+					);
+			}
+		}
+		
 		
 		return false;
 	}
@@ -438,7 +498,7 @@ public class UnstableHand : Scenario {
 
 
 		float speed = 0.01f;
-		//mControls.AddControl(new TrueSignal(),          					new UnstableBehavior("unstable hand", mHand));
+		mControls.AddControl(new TrueSignal(),          					new UnstableBehavior("unstable hand", mHand));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          	new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          	new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          	new TranslateBehavior("player1 move left",  mHand, new Vector3( 1,  0, 0) * speed));
@@ -461,7 +521,11 @@ public class UnstableHand : Scenario {
 		floorMap.Add(3, "heaven");
 		mFloorSignals.Add(new FloorChangeSignal(3));
 		mButtonPushSignals.Add(new FloorChangeSignal(3));
-		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap);
+		
+		GameObject leftDoor = GameObject.Find("left door");
+		GameObject rightDoor = GameObject.Find("right door");
+		
+		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor);
 		for(int i = 0; i < mFloorSignals.Count; ++i)
 		{
 			mControls.AddControl(mFloorSignals[i],          elevatorMover);
