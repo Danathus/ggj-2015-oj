@@ -47,6 +47,7 @@ public class ReplayManager : Singleton<ReplayManager> {
   }
 
   public void Stop() {
+	Debug.Log("stopping!");
     mIsReplaying = false;
     mCurrentEvent = -1;
   }
@@ -62,6 +63,7 @@ public class ReplayManager : Singleton<ReplayManager> {
       }
     } else {
       // Stop the replay automatically when we come to the end of the events.
+	  Debug.Log("getting to the end!");
       Stop();
     }
   }

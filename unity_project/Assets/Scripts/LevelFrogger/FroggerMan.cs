@@ -17,6 +17,27 @@ public class FroggerMan : Scenario {
 
 	GameObjectReverter _manReverter = null;
 
+	protected void GoRagdoll()
+	{
+		foreach (var body in this.GetComponentsInChildren<Rigidbody>()) {
+			body.isKinematic = false;
+			body.collider.enabled = true;
+		}
+		_animator.enabled = false;
+		_enabled = false;
+	}
+
+	protected void GoCannedAnimation()
+	{
+		foreach (var body in this.GetComponentsInChildren<Rigidbody>()) {
+			body.isKinematic = true;
+			body.collider.enabled = false;
+		}
+		//this.gameObject.rigidbody.isKinematic = false;
+		_animator.enabled = true;
+		_enabled = true;
+	}
+
 	public override void Reset()
 	{
 		//UnityEngine.Random.seed = _randomSeed;
@@ -24,15 +45,26 @@ public class FroggerMan : Scenario {
 			Destroy(car.gameObject);
 		}
 
-		foreach (var body in this.GetComponentsInChildren<Rigidbody>()) {
-			body.isKinematic = true;
-			body.collider.enabled = false;
+		if (_animator != null)
+		{
+			_animator.SetFloat ("Horizontal", 0.0f);
+			_animator.SetFloat ("Vertical",   0.0f);
+			_animator.SetFloat ("Turn", 0.0f);
+			_animator.SetBool ("Jump", false);
 		}
-		this.collider.enabled = true;
+		this.gameObject.rigidbody.isKinematic = false;
 		if (_manReverter != null)
 		{
 			_manReverter.Revert();
 		}
+		this.gameObject.rigidbody.isKinematic = true;
+
+		GoCannedAnimation();
+		this.collider.enabled = true;
+
+		_movement = new Vector3();
+		_horizontalWeight = 0.0f;
+		_VerticalWeight = 0.0f;
 	}
 
 	// Use this for initialization
@@ -94,12 +126,7 @@ public class FroggerMan : Scenario {
 
 	void OnTriggerEnter(Collider other) {
 		if (_enabled && other.name.StartsWith ("Car")) {
-			foreach (var body in this.GetComponentsInChildren<Rigidbody>()) {
-				body.isKinematic = false;
-				body.collider.enabled = true;
-			}	
-			_animator.enabled = false;
-			_enabled = false;
+			GoRagdoll();
 			Failure();
 		}
 	}
