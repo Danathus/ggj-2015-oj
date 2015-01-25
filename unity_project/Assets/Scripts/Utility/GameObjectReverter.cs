@@ -15,9 +15,17 @@ public class GameObjectReverter
 
 	public void Revert()
 	{
-		_gameObject.transform.position = _gameObject.rigidbody.position = _position;
-		_gameObject.transform.rotation = _gameObject.rigidbody.rotation = _rotation;
-		_gameObject.rigidbody.velocity = _gameObject.rigidbody.angularVelocity = new Vector3();
+		if(_gameObject.rigidbody != null)
+		{
+			_gameObject.transform.position = _gameObject.rigidbody.position = _position;
+			_gameObject.transform.rotation = _gameObject.rigidbody.rotation = _rotation;
+			_gameObject.rigidbody.velocity = _gameObject.rigidbody.angularVelocity = new Vector3();
+		}
+		else
+		{
+			_gameObject.transform.position = _position;
+			_gameObject.transform.rotation = _rotation;
+		}
 	}
 
 	private GameObject _gameObject;
