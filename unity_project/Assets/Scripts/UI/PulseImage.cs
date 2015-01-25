@@ -41,4 +41,10 @@ public class PulseImage : MonoBehaviour {
 			m_ImageComponent.localScale = new Vector3(m_CurrentScale, m_CurrentScale, m_CurrentScale);
 		}
 	}
+
+	void OnDisable() {
+		if (m_ImageComponent != null) {
+			m_ImageComponent.localScale = new Vector3(m_MinScale, m_MinScale, m_MinScale);
+		}
+	}
 }
