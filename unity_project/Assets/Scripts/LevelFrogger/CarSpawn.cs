@@ -10,15 +10,16 @@ public class CarSpawn : Scenario {
 	private float _timeToNextSpawn;
 	private RandomReverter _random;
 
-	public override void Reset ()
+	public override void Reset()
 	{
-		_random.Revert ();
+		_random.Revert();
+		SetNextSpawn();
 	}
 
 	// Use this for initialization
 	void Start() {
 		_random = new RandomReverter ();
-		SetNextSpawn ();
+		Reset();
 	}
 	
 	// Update is called once per frame
