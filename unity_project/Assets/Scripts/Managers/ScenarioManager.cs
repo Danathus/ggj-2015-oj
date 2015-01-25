@@ -29,6 +29,10 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		if (mCurrentState != null) {
 			mCurrentState.Update();
 		}
+
+		if (Input.GetKey(KeyCode.Escape)) {
+			Application.Quit();
+		}
 	}
 
 	private void SetupStates() {
