@@ -1586,7 +1586,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &848748712
 Animator:
   serializedVersion: 3
@@ -2844,6 +2844,10 @@ Prefab:
     - target: {fileID: 400000, guid: 0b32fa9087883a841b9a493c1c327335, type: 3}
       propertyPath: m_LocalScale.z
       value: .354609936
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 0b32fa9087883a841b9a493c1c327335, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0b32fa9087883a841b9a493c1c327335, type: 3}

@@ -49,9 +49,7 @@ public class FroggerMan : Scenario {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		Debug.Log("a");
 		ScenarioUpdate();
-		Debug.Log("b");
 
 		if (_movement.sqrMagnitude > 0.0) {
 			//this.transform.LookAt(this.transform.position + _movement);
