@@ -351,7 +351,7 @@ public class ElevatorMoveBehavior : Behavior {
 	
 	protected bool IsRightFloor()
 	{
-		return mCurrFloor == 1;
+		return mFloorMap[mCurrFloor] == "heaven";
 	}
 	
 	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor, Scenario scenario, GameObject hell, GameObject heaven, GameObject bathroom)
@@ -570,15 +570,42 @@ public class UnstableHand : Scenario {
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("wrong button push", mWrongButton, mHand, 2));
 		
 		Dictionary<int, string> floorMap = new Dictionary<int, string>();
+		int heavenFloor = Random.Range(1, 4);
+		floorMap.Add(heavenFloor, "heaven");
+		string team_instructions;
+		switch(heavenFloor)
+		{
+			case 1:
+			{
+			floorMap.Add(2, "hell");
+			floorMap.Add(3, "bathroom");
+			team_instructions = "Ground floor exit!\nGo!";
+			}
+			break;
+			case 2:
+			{
+			floorMap.Add(1, "hell");
+			floorMap.Add(3, "bathroom");
+			team_instructions = "1st floor exit!\nGo!";
+			}
+			break;
+			case 3:
+			{
+			floorMap.Add(2, "hell");
+			floorMap.Add(1, "bathroom");
+			team_instructions = "2nd floor exit!\nGo!";
+			}
+			break;
+		}
 		mFloorSignals.Clear();
 		mButtonPushSignals.Clear();
-		floorMap.Add(1, "hell");
+		//floorMap.Add(1, "hell");
 		mFloorSignals.Add(new FloorChangeSignal(1));
 		mButtonPushSignals.Add(new FloorChangeSignal(1));
-		floorMap.Add(2, "heaven");
+		//floorMap.Add(2, "heaven");
 		mFloorSignals.Add(new FloorChangeSignal(2));
 		mButtonPushSignals.Add(new FloorChangeSignal(2));
-		floorMap.Add(3, "bathroom");
+		//floorMap.Add(3, "bathroom");
 		mFloorSignals.Add(new FloorChangeSignal(3));
 		mButtonPushSignals.Add(new FloorChangeSignal(3));
 		
