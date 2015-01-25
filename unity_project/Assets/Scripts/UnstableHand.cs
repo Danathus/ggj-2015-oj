@@ -303,7 +303,7 @@ public class ElevatorMoveBehavior : Behavior {
 	}
 }
 
-public class UnstableHand : MonoBehaviour {
+public class UnstableHand : Scenario {
 
 	private GameObject mHand;
 	private GameObject mElevateKeyPad;
@@ -311,7 +311,6 @@ public class UnstableHand : MonoBehaviour {
 	private GameObject mWrongButton;
 	private GameObject mGameCamera;
 	
-	private ControlScheme mControls;
 	private Vector3 mOriginal_position;
 	private bool replaying = false;
 	// Use this for initialization
@@ -324,9 +323,6 @@ public class UnstableHand : MonoBehaviour {
 		
 		mOriginal_position = mHand.transform.position;
 		
-		Scenario scenario = new Scenario();
-		scenario.AddBehavior(new UnstableBehavior("unstable hand", mHand));
-		scenario.AddBehavior(new PushBehavior("finger push", mHand, mElevateKeyPad));
 		List<ButtonPushBehavior> buttonBehaviorList = new List<ButtonPushBehavior>();
 		buttonBehaviorList.Add(new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
 		buttonBehaviorList.Add(new WrongButtonBehavior("wrong button push", mWrongButton, mHand, 2));
@@ -339,32 +335,21 @@ public class UnstableHand : MonoBehaviour {
 		floorMap.Add(2, "heaven");
 		scenario.AddBehavior(new ElevatorMoveBehavior("elevator move", mElevateKeyPad, floorMap));
 		float speed = 0.1f;
-		scenario.AddBehavior(new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player1 move left",  mHand, new Vector3(-1,  0, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player1 move right", mHand, new Vector3( 1,  0, 0) * speed));
-		
-		
-		mControls = new ControlScheme();
-		ControlSignal trueSignal;
-		
+		mControls.AddControl(new TrueSignal(),          					new UnstableBehavior("unstable hand", mHand));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          	new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          	new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          	new TranslateBehavior("player1 move left",  mHand, new Vector3(-1,  0, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          	new TranslateBehavior("player1 move right", mHand, new Vector3( 1,  0, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),	new PushBehavior("finger push", mHand, mElevateKeyPad));
 		//mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
 		mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("correct button push"));
 		mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("wrong button push"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          scenario.GetBehavior("player1 move up"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          scenario.GetBehavior("player1 move down"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          scenario.GetBehavior("player1 move left"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          scenario.GetBehavior("player1 move right"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),          scenario.GetBehavior("finger push"));
 		for(int i = 0; i < buttonBehaviorList.Count; ++i)
 		{
 			mControls.AddControl(new CorrectLevelSignal(buttonBehaviorList[i]),          scenario.GetBehavior("elevator move"));
 		}
-		
 	}
 	
-	// Update is called once per frame
-	void Update () {
 		Vector3 finger_tip = new Vector3(
 			mHand.transform.position.x,
 			mHand.transform.position.y + mHand.renderer.bounds.size.y/2,
@@ -372,27 +357,17 @@ public class UnstableHand : MonoBehaviour {
 		//GameObject helper = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		//helper.transform.position = finger_tip;
 		//mGameCamera.transform.LookAt(finger_tip);
-		///transform.Translate(Vector3.forward * Time.deltaTime);
-	}
 	// called once per timestep update (critical: do game state updates here!!!)
 	void FixedUpdate()
 	{
-		// update all the controls
-		if(!replaying)
-		{
-			mControls.Update();
-		}
 		if (Input.GetKey(KeyCode.Space))
 		{
-			replaying = true;
-			// start the playback
-			Restart();
-			ReplayManager.Instance.Play();
+			BeginReplay();
 		}
 	}
 	
 	// helper functions
-	void Restart()
+	public override void Reset()
 	{
 		mHand.transform.position = mOriginal_position;
 	}

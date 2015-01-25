@@ -2,77 +2,86 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-// a scenario includes an ordered set of behaviors that can be done
-class Scenario
-{
-	List<Behavior> mBehaviors = new List<Behavior>();
-	Dictionary<string, Behavior> mNameToBehavior = new Dictionary<string, Behavior>();
-
-	public void AddBehavior(Behavior behavior)
-	{
-		mBehaviors.Add(behavior);
-		mNameToBehavior[behavior.mName] = behavior;
-	}
-	public Behavior GetBehavior(string name)
-	{
-		return mNameToBehavior[name];
-	}
+[System.Serializable]
+public struct ScenarioData {
+	public string scenarioName;
+	public int someOtherValue;
 }
 
-public class ScenarioManager : MonoBehaviour
+public class ScenarioManager : Singleton<ScenarioManager>
 {
-	private GameObject mPlayer1, mPlayer2;
-	private ControlScheme mControls;
+	protected ScenarioManager () {}
+
+	public List<ScenarioData> m_Scenarios = new List<ScenarioData>();
+	private int mCurrentScenario = -1;
+
+	private List<State> mStates = new List<State>();
+	private State mCurrentState = null;
 
 	// Use this for initialization
 	void Start () {
-		// create mock scene with two player objects
-		mPlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		mPlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		Restart();
+		DontDestroyOnLoad(gameObject);
 
-		// create the behaviors in this scene
-		Scenario scenario = new Scenario();
-		float speed = 0.1f;
-		scenario.AddBehavior(new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player1 move right", mPlayer1, new Vector3( 1,  0, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player2 move up",    mPlayer2, new Vector3( 0,  1, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player2 move down",  mPlayer2, new Vector3( 0, -1, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player2 move left",  mPlayer2, new Vector3(-1,  0, 0) * speed));
-		scenario.AddBehavior(new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0) * speed));
-
-		// create the control scheme that maps inputs to these behaviors
-		mControls = new ControlScheme();
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          scenario.GetBehavior("player1 move up"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          scenario.GetBehavior("player1 move down"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          scenario.GetBehavior("player1 move left"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          scenario.GetBehavior("player1 move right"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    scenario.GetBehavior("player2 move up"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  scenario.GetBehavior("player2 move down"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  scenario.GetBehavior("player2 move left"));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), scenario.GetBehavior("player2 move right"));
+		SetupStates();
 	}
 
 	// called once per timestep update (critical: do game state updates here!!!)
 	void FixedUpdate()
 	{
-		// update all the controls
-		mControls.Update();
-
-		if (Input.GetKey(KeyCode.Space))
-		{
-			// start the playback
-			Restart();
-			ReplayManager.Instance.Play();
+		if (mCurrentState != null) {
+			mCurrentState.Update();
 		}
 	}
 
-	// helper functions
-	void Restart()
-	{
-		mPlayer1.transform.position = new Vector3(-1, 0, 0);
-		mPlayer2.transform.position = new Vector3( 1, 0, 0);
+	private void SetupStates() {
+		mStates.Add(new IntroState());
+		mStates.Add(new PlayState());
+		mStates.Add(new ReplayState());
+
+		ActivateState("Intro");
+	}
+
+	public string CurrentState() {
+		if (mCurrentState != null) {
+			return mCurrentState.mName;
+		}
+		return "";
+	}
+
+	public bool ActivateState(string name) {
+		for (int i = 0; i < mStates.Count; ++i) {
+			if (mStates[i].mName == name) {
+				if (mCurrentState != null) {
+					mCurrentState.Leave();
+				}
+				mCurrentState = mStates[i];
+				mStates[i].Enter();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public void Shuffle() {
+		for (int i = 0; i < m_Scenarios.Count; ++i) {
+			ScenarioData data = m_Scenarios[i];
+			int randomIndex = Random.Range(i, m_Scenarios.Count);
+			m_Scenarios[i] = m_Scenarios[randomIndex];
+			m_Scenarios[randomIndex] = data;
+		}
+	}
+
+	public void NextScenario() {
+		mCurrentScenario++;
+
+		if (mCurrentScenario >= m_Scenarios.Count) {
+			mCurrentScenario = 0;
+		}
+
+		if (mCurrentScenario < m_Scenarios.Count) {
+			ScenarioData data = m_Scenarios[mCurrentScenario];
+			Application.LoadLevel(data.scenarioName);
+		}
 	}
 }
