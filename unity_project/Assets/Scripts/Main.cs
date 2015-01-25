@@ -13,7 +13,6 @@ public class Main : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		try {
 		// create mock scene with two player objects
 		mPlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		mPlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -66,10 +65,6 @@ public class Main : MonoBehaviour
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  new TranslateBehavior("player2 move down",  mPlayer2, new Vector3( 0, -1, 0) * speed));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  new TranslateBehavior("player2 move left",  mPlayer2, new Vector3(-1,  0, 0) * speed));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0) * speed));
-		} catch (Exception e)
-		{
-			Debug.Log(e);
-		}
 	}
 	
 	// Update is called once per frame
