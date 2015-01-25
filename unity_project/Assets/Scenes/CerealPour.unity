@@ -1581,6 +1581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e459c3dc8a238c24782d54196a1349da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TimeLimit: 10
   cereal: {fileID: 5440842, guid: f865c61b626f34b4890435721b95310e, type: 2}
   generationPoint1: {fileID: 290757905}
   generationPoint2: {fileID: 632791345}
