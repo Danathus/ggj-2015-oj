@@ -106,6 +106,8 @@ public class ScenarioManager : Singleton<ScenarioManager>
 
 		if (mCurrentScenario < m_Scenarios.Count) {
 			string scenarioName = m_Scenarios[mCurrentScenario];
+			ReplayManager.Instance.Stop();
+			ReplayManager.Instance.Clear();
 			Application.LoadLevel(scenarioName);
 		}
 	}
