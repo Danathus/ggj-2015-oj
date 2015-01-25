@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 /// <summary>
@@ -21,7 +22,7 @@ public class UnstableBehavior: Behavior
 	
 	private float shake_decay;
 	private float shake_intensity;
-	private float drunk_level = 2.0f;
+	private float drunk_level = 3.0f;
 	private Vector2 camera_range = new Vector2(1.0f, 2.0f);
 	private float diff_time;
 	private float x_delta;
@@ -572,7 +573,7 @@ public class UnstableHand : Scenario {
 		Dictionary<int, string> floorMap = new Dictionary<int, string>();
 		int heavenFloor = Random.Range(1, 4);
 		floorMap.Add(heavenFloor, "heaven");
-		string team_instructions;
+		string team_instructions = "";
 		switch(heavenFloor)
 		{
 			case 1:
@@ -597,6 +598,9 @@ public class UnstableHand : Scenario {
 			}
 			break;
 		}
+		GameObject instructions = GameObject.Find("team instructions");
+		Text text = instructions.GetComponent<Text>() as Text;
+		text.text =  team_instructions;
 		mFloorSignals.Clear();
 		mButtonPushSignals.Clear();
 		//floorMap.Add(1, "hell");
