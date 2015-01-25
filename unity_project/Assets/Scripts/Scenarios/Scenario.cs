@@ -3,6 +3,7 @@ using System.Collections;
 
 public abstract class Scenario: MonoBehaviour {
 
+	public float mTimeLimit = 5;
 	public ControlScheme mControls = new ControlScheme();
 
 	// Use this for initialization
@@ -10,15 +11,42 @@ public abstract class Scenario: MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate() {
-		mControls.Update();
-	}
+	public void AloneUpdate() {
+		if (ScenarioManager.Instance.m_Scenarios.Count == 0) {
+			mControls.Update();
+		}
 
-	public void BeginReplay() {
-		if (ScenarioManager.Instance.CurrentState() == "Play") {
-			ScenarioManager.Instance.ActivateState("Replay");
+		if (mTimeLimit > -1) {
+			mTimeLimit -= Time.fixedDeltaTime;
+
+			if (mTimeLimit <= 0) {
+				Failure();
+			}
 		}
 	}
+
+	public void Victory() {
+		if (ScenarioManager.Instance.CurrentState() == "Play") {
+			ScenarioManager.Instance.ActivateState("Victory");
+		}
+	}
+
+	public void Failure() {
+		if (ScenarioManager.Instance.CurrentState() == "Play") {
+			ScenarioManager.Instance.ActivateState("Failure");
+		}
+	}
+
+	// public void BeginReplay() {
+	// 	GameObject replayCamera = GameObject.FindWithTag("ReplayCamera");
+	// 	if (replayCamera != null) {
+	// 		camera.enabled = false;
+	// 		replayCamera.GetComponent<Camera>().enabled = true;
+	// 	}
+	// 	if (ScenarioManager.Instance.CurrentState() == "Play") {
+	// 		ScenarioManager.Instance.ActivateState("Replay");
+	// 	}
+	// }
 
 	public abstract void Reset();
 }
