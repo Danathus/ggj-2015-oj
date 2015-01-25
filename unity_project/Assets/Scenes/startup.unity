@@ -214,10 +214,6 @@ Prefab:
       value: CerealPour
       objectReference: {fileID: 0}
     - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
-      propertyPath: m_FailureScreen
-      value: 
-      objectReference: {fileID: 177286, guid: 8f15fcb271816854982a033c78640c44, type: 2}
-    - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
       propertyPath: m_Scenarios.Array.data[3]
       value: 
       objectReference: {fileID: 0}
@@ -254,6 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9276dccee39be3948b40671b36e97f65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TimeScreen: {fileID: 181074, guid: cd1005fbb7e002f4388b490df8706792, type: 2}
   m_VictoryScreen: {fileID: 177286, guid: ee67869aac9cdc842a9215ec9a031aa8, type: 2}
   m_FailureScreen: {fileID: 177286, guid: 8f15fcb271816854982a033c78640c44, type: 2}
   m_Scenarios:

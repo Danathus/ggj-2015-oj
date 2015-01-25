@@ -454,7 +454,7 @@ public class UnstableHand : Scenario {
 	{
 		
 
-		AloneUpdate();
+		ScenarioUpdate();
 
 		if (Input.GetKey(KeyCode.Space))
 		{
