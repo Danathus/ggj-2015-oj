@@ -3,7 +3,7 @@ using System.Collections;
 
 public abstract class Scenario: MonoBehaviour {
 
-	public float mTimeLimit = 5;
+	public float m_TimeLimit = 10.0f;
 	public ControlScheme mControls = new ControlScheme();
 
 	// Use this for initialization
@@ -16,10 +16,10 @@ public abstract class Scenario: MonoBehaviour {
 			mControls.Update();
 		}
 
-		if (mTimeLimit > -1) {
-			mTimeLimit -= Time.fixedDeltaTime;
+		if (m_TimeLimit > -1) {
+			m_TimeLimit -= Time.fixedDeltaTime;
 
-			if (mTimeLimit <= 0) {
+			if (m_TimeLimit <= 0) {
 				Failure();
 			}
 		}
