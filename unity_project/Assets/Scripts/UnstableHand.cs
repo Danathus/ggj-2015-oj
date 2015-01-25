@@ -359,11 +359,14 @@ public class UnstableHand : Scenario {
 	private bool replaying = false;
 	// Use this for initialization
 	void Start () {
+		
 		mHand = GameObject.Find("Automatic Rifle Standard");
 		mElevateKeyPad = GameObject.Find("elevator button keypad");
 		mCorrectButton = GameObject.Find("button.001");
 		mWrongButton = GameObject.Find("button.002");
 		mGameCamera = GameObject.Find("Main Camera");
+		GameObject elevatorWall = GameObject.Find("elevator walls");
+		mElevateKeyPad.transform.parent = elevatorWall.transform;
 		
 		mOriginal_position = mHand.transform.position;
 		
@@ -414,6 +417,13 @@ public class UnstableHand : Scenario {
 	
 	void FixedUpdate()
 	{
+		GameObject floor = GameObject.Find("elevator floor");
+		if(floor.transform.position.y < 2.0f)
+			floor.transform.position = new Vector3 (
+				floor.transform.position.x,
+				floor.transform.position.y +0.1f,
+				floor.transform.position.z
+			);
 		AloneUpdate();
 
 		if (Input.GetKey(KeyCode.Space))
