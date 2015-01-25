@@ -13,7 +13,7 @@ public class FroggerMan : Scenario {
 
 	float _horizontalWeight = 0.0f;
 	float _VerticalWeight = 0.0f;
-	int _randomSeed;
+	//int _randomSeed;
 
 	public override void Reset ()
 	{
@@ -25,7 +25,7 @@ public class FroggerMan : Scenario {
 
 	// Use this for initialization
 	void Start () {
-		_randomSeed = UnityEngine.Random.seed;
+		//_randomSeed = UnityEngine.Random.seed;
 
 		_animator = GetComponent<Animator>();
 
