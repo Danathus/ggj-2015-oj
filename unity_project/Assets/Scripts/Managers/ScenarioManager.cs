@@ -2,17 +2,11 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-[System.Serializable]
-public struct ScenarioData {
-	public string scenarioName;
-	public int someOtherValue;
-}
-
 public class ScenarioManager : Singleton<ScenarioManager>
 {
 	protected ScenarioManager () {}
 
-	public List<ScenarioData> m_Scenarios = new List<ScenarioData>();
+	public List<string> m_Scenarios = new List<string>();
 	private int mCurrentScenario = -1;
 
 	private List<State> mStates = new List<State>();
@@ -65,10 +59,10 @@ public class ScenarioManager : Singleton<ScenarioManager>
 
 	public void Shuffle() {
 		for (int i = 0; i < m_Scenarios.Count; ++i) {
-			ScenarioData data = m_Scenarios[i];
+			string scenarioName = m_Scenarios[i];
 			int randomIndex = Random.Range(i, m_Scenarios.Count);
 			m_Scenarios[i] = m_Scenarios[randomIndex];
-			m_Scenarios[randomIndex] = data;
+			m_Scenarios[randomIndex] = scenarioName;
 		}
 	}
 
@@ -80,8 +74,8 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		}
 
 		if (mCurrentScenario < m_Scenarios.Count) {
-			ScenarioData data = m_Scenarios[mCurrentScenario];
-			Application.LoadLevel(data.scenarioName);
+			string scenarioName = m_Scenarios[mCurrentScenario];
+			Application.LoadLevel(scenarioName);
 		}
 	}
 }
