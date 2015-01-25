@@ -14,10 +14,23 @@ public class FroggerMan : Scenario {
 
 	// Use this for initialization
 	void Start () {
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W), new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  0, -1) * Time.fixedDeltaTime, Move));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S), new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0,  0,  1) * Time.fixedDeltaTime, Move));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A), new MovementCallbackBehavior("player1 move left",  this.gameObject, new Vector3( 1,  0,  0) * Time.fixedDeltaTime, Move));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D), new MovementCallbackBehavior("player1 move right", this.gameObject, new Vector3(-1,  0,  0) * Time.fixedDeltaTime, Move));
+		// create behaviors
+		Behavior p1Up    = new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  0, -1) * Time.fixedDeltaTime, Move);
+		Behavior p1Down  = new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0,  0,  1) * Time.fixedDeltaTime, Move);
+		Behavior p1Left  = new MovementCallbackBehavior("player1 move left",  this.gameObject, new Vector3( 1,  0,  0) * Time.fixedDeltaTime, Move);
+		Behavior p1Right = new MovementCallbackBehavior("player1 move right", this.gameObject, new Vector3(-1,  0,  0) * Time.fixedDeltaTime, Move);
+
+		// rig control scheme
+		//   for buttons
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W), p1Up   );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S), p1Down );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A), p1Left );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D), p1Right);
+		//   for gamepads
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p1Up    );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p1Down  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p1Left  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p1Right );
 
 		foreach (var body in this.GetComponentsInChildren<Rigidbody>()) {
 			body.isKinematic = true;
