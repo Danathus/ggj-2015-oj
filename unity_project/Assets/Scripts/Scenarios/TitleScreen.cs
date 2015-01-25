@@ -116,6 +116,9 @@ public class TitleScreen : MonoBehaviour {
 
 						m_LeftPart.GetComponent<PulseImage>().enabled = false;
 						m_RightPart.GetComponent<PulseImage>().enabled = false;
+						
+						AudioSource audio = Camera.main.GetComponentInChildren<AudioSource>();
+						audio.Play();
 					}
 				}
 				else {
