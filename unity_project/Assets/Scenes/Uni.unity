@@ -3043,7 +3043,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1801dce231943544bb1297686a6561d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: 30
+  m_TimeLimit: 5
   wheelMount: {fileID: 950416616}
   unicycle: {fileID: 887653391}
   player1Wheel: {fileID: 535383744}
