@@ -13,21 +13,15 @@ public class Box : Scenario {
 	private static Stack<GameObject> _freeCereal = new Stack<GameObject>();
 
 
-	static int n = 0;
 	// Use this for initialization
 	void CreateCereal(Vector3 position)
 	{
 		if (_freeCereal.Count > 0) {
-			// Debug.Log("fe:" + _freeCereal.Count);
 			GameObject gameObject = _freeCereal.Pop();
-			// Debug.Log("fa:" + _freeCereal.Count);
-				gameObject.transform.position = gameObject.rigidbody.position = position;
-			//gameObject.transform.rotation = gameObject.rigidbody.rotation = new Quaternion();
+			gameObject.transform.position = gameObject.rigidbody.position = position;
 			gameObject.rigidbody.velocity = gameObject.rigidbody.angularVelocity = new Vector3();
 			gameObject.SetActiveRecursively(true);
 		} else {
-			n ++;
-			// Debug.Log(n);
 			Instantiate(cereal, position, new Quaternion());
 		}
 	}
@@ -59,7 +53,7 @@ public class Box : Scenario {
 		x *= speed * Time.fixedDeltaTime;
 		y *= speed * Time.fixedDeltaTime;
 
-		this.rigidbody.position += new Vector3(x, 0, 0);
+		this.rigidbody.position -= new Vector3(x, 0, 0);
 		this.rigidbody.rotation *= new Quaternion(Mathf.Sin(y), 0, 0, Mathf.Cos(y));
 
 		var up = this.rigidbody.rotation * new Vector3(0, 1, 0);
