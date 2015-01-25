@@ -41,9 +41,9 @@ public class DynamicWindBehavior : WindBehavior
 		{
 			mWindTimer -= Time.fixedDeltaTime;
 			if (mWindTimer <= 0.0f) {
-				mWindTimer = (Random.value * 3.0f) + 2.0f;
+				mWindTimer = Random.value * 1.0f;
 
-				mWindVelocity = new Vector3(Random.value * 1.0f, 0.0f, Random.value * 1.0f);
+				mWindVelocity = new Vector3((Random.value * 2.0f) - 1.0f, 0.0f, (Random.value * 2.0f) - 1.0f);
 			}
 			return true;
 		}
