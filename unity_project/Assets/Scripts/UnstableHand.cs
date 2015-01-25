@@ -43,15 +43,15 @@ public class UnstableBehavior: Behavior
 	{
 		if (signal > 0.0f)
 		{
-			Debug.Log("UnstableBehavior Operate");
+			// Debug.Log("UnstableBehavior Operate");
 			if(shake_intensity > 0){
 				Vector3 start_position = mOperand.transform.position;
 				Vector3 min_moving_range = originPosition - new Vector3 (camera_range, camera_range, 0);
 				Vector3 max_moving_range = originPosition + new Vector3 (camera_range, camera_range, 0);
 				diff_time += Time.deltaTime;
-				Debug.Log("change delta value, diff time: " + diff_time.ToString());
+				// Debug.Log("change delta value, diff time: " + diff_time.ToString());
 				if(diff_time > Random.Range(3.0f, 5.0f)) {
-					Debug.Log("change delta value, diff time: " + diff_time.ToString());
+					// Debug.Log("change delta value, diff time: " + diff_time.ToString());
 					x_delta = Random.Range(-drunk_level, drunk_level);
 					y_delta = Random.Range(-drunk_level, drunk_level);
 					diff_time = 0.0f;
@@ -83,7 +83,7 @@ public class UnstableBehavior: Behavior
 	
 	public override Behavior GenerateRecordedBehavior()
 	{
-		Debug.Log("UnstableBehavior GenerateRecordedBehavior");
+		// Debug.Log("UnstableBehavior GenerateRecordedBehavior");
 		TranslateBehavior generated_behavior = new TranslateBehavior("auto generate unstable behavior",    mOperand, position_offset);
 		
 		return generated_behavior;
@@ -110,7 +110,7 @@ public class PushBehavior : Behavior {
 	// output: true iff should record
 	public override bool Operate(float signal)
 	{
-		Debug.Log("PushBehavior Operate");
+		// Debug.Log("PushBehavior Operate");
 		if (signal > 0.0f)
 		{
 			pushing = true;
@@ -144,13 +144,13 @@ public class PushBehavior : Behavior {
 	}
 	public override Behavior GenerateRecordedBehavior()
 	{
-		Debug.Log("PushBehavior GenerateRecordedBehavior");
+		// Debug.Log("PushBehavior GenerateRecordedBehavior");
 		return this;
 	}
 }
 
 
-public class UnstableHand : MonoBehaviour {
+public class UnstableHand : Scenario {
 
 	private GameObject mHand;
 	private GameObject mElevateKeyPad;
@@ -164,26 +164,28 @@ public class UnstableHand : MonoBehaviour {
 		mOriginal_position = mHand.transform.position;
 		
 		float speed = 0.1f;
-		ScenarioManager.Instance.mControls.AddControl(new TrueSignal(),          						new UnstableBehavior("unstable hand", mHand));
-		ScenarioManager.Instance.mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          	new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
-		ScenarioManager.Instance.mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          	new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
-		ScenarioManager.Instance.mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          	new TranslateBehavior("player1 move left",  mHand, new Vector3(-1,  0, 0) * speed));
-		ScenarioManager.Instance.mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          	new TranslateBehavior("player1 move right", mHand, new Vector3( 1,  0, 0) * speed));
-		ScenarioManager.Instance.mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),	new PushBehavior("finger push", mHand, mElevateKeyPad));
+		mControls.AddControl(new TrueSignal(),          					new UnstableBehavior("unstable hand", mHand));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          	new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          	new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          	new TranslateBehavior("player1 move left",  mHand, new Vector3(-1,  0, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          	new TranslateBehavior("player1 move right", mHand, new Vector3( 1,  0, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),	new PushBehavior("finger push", mHand, mElevateKeyPad));
 	}
 	
 	// called once per timestep update (critical: do game state updates here!!!)
 	void FixedUpdate()
 	{
+		AloneUpdate();
+
 		if (Input.GetKey(KeyCode.Space))
 		{
-			Restart();
-			ReplayManager.Instance.Play();
+			Victory();
+			// BeginReplay();
 		}
 	}
 	
 	// helper functions
-	void Restart()
+	public override void Reset()
 	{
 		mHand.transform.position = mOriginal_position;
 	}
