@@ -6,6 +6,10 @@ public class ScenarioManager : Singleton<ScenarioManager>
 {
 	protected ScenarioManager () {}
 
+	public GameObject m_VictoryScreen = null;
+	public GameObject m_FailureScreen = null;
+	private GameObject mShowingScreen = null;
+
 	public List<string> m_Scenarios = new List<string>();
 	private int mCurrentScenario = -1;
 
@@ -30,7 +34,9 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	private void SetupStates() {
 		mStates.Add(new IntroState());
 		mStates.Add(new PlayState());
-		mStates.Add(new ReplayState());
+		// mStates.Add(new ReplayState());
+		mStates.Add(new VictoryState());
+		mStates.Add(new FailureState());
 
 		ActivateState("Intro");
 	}
@@ -76,6 +82,32 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		if (mCurrentScenario < m_Scenarios.Count) {
 			string scenarioName = m_Scenarios[mCurrentScenario];
 			Application.LoadLevel(scenarioName);
+		}
+	}
+
+	public void ShowVictory() {
+		if (m_VictoryScreen != null) {
+			mShowingScreen = Instantiate(m_VictoryScreen, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+		}
+	}
+
+	public void HideVictory() {
+		if (mShowingScreen != null) {
+			Destroy(mShowingScreen);
+			mShowingScreen = null;
+		}
+	}
+
+	public void ShowFailure() {
+		if (m_FailureScreen != null) {
+			mShowingScreen = Instantiate(m_FailureScreen, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+		}
+	}
+
+	public void HideFailure() {
+		if (mShowingScreen != null) {
+			Destroy(mShowingScreen);
+			mShowingScreen = null;
 		}
 	}
 }
