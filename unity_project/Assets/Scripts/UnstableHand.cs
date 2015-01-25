@@ -583,6 +583,33 @@ public class UnstableHand : Scenario
 		mIndirectControls = new ControlScheme();
 
 		Dictionary<int, string> floorMap = new Dictionary<int, string>();
+		int heavenFloor = Random.Range(1, 4);
+		floorMap.Add(heavenFloor, "heaven");
+		string team_instructions;
+		switch(heavenFloor)
+		{
+			case 1:
+			{
+			floorMap.Add(2, "hell");
+			floorMap.Add(3, "bathroom");
+			team_instructions = "Ground floor exit!\nGo!";
+			}
+			break;
+			case 2:
+			{
+			floorMap.Add(1, "hell");
+			floorMap.Add(3, "bathroom");
+			team_instructions = "1st floor exit!\nGo!";
+			}
+			break;
+			case 3:
+			{
+			floorMap.Add(2, "hell");
+			floorMap.Add(1, "bathroom");
+			team_instructions = "2nd floor exit!\nGo!";
+			}
+			break;
+		}
 		mFloorSignals.Clear();
 		mButtonPushSignals.Clear();
 		//floorMap.Add(1, "hell");
@@ -680,33 +707,6 @@ public class UnstableHand : Scenario
 		//mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("wrong button push", mWrongButton, mHand, 2));
-		int heavenFloor = Random.Range(1, 4);
-		floorMap.Add(heavenFloor, "heaven");
-		string team_instructions;
-		switch(heavenFloor)
-		{
-			case 1:
-			{
-			floorMap.Add(2, "hell");
-			floorMap.Add(3, "bathroom");
-			team_instructions = "Ground floor exit!\nGo!";
-			}
-			break;
-			case 2:
-			{
-			floorMap.Add(1, "hell");
-			floorMap.Add(3, "bathroom");
-			team_instructions = "1st floor exit!\nGo!";
-			}
-			break;
-			case 3:
-			{
-			floorMap.Add(2, "hell");
-			floorMap.Add(1, "bathroom");
-			team_instructions = "2nd floor exit!\nGo!";
-			}
-			break;
-		}
 	}
 
 
