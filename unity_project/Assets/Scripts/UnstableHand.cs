@@ -564,6 +564,11 @@ public class UnstableHand : Scenario
 	FlatTransform mRememberedTransform_IK_fingertip = new FlatTransform();
 	FlatTransform mRememberedTransform_IK_elbow     = new FlatTransform();
 
+	void OnDestroy()
+	{
+		mIndirectControls = null;
+	}
+
 	public override void Reset()
 	{
 		mRandomReverter.Revert();
