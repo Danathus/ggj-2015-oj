@@ -51,7 +51,7 @@ public class TitleScreen : MonoBehaviour {
 
 	private ControlScheme m_Controls;
 	private bool m_IsFinished = false;
-	private float m_FinishedTimer = 5.0f;
+	public float m_FinishedTimer = 5.0f;
 
 	private Vector3 m_FinishedCenter;
 	public float m_holdAccum = 0.0f;
@@ -127,13 +127,19 @@ public class TitleScreen : MonoBehaviour {
 		} else {
 			// we're finished -- slide together
 			if (m_LeftTransform != null && m_RightTransform != null) {
-				Vector3 offset = (m_FinishedCenter - new Vector3(17, 0, 0)) - m_LeftTransform.position;
-				offset *= 3.0f * Time.fixedDeltaTime;
-				m_LeftTransform.position += offset;
+				// and grow bigger
+				float w = 0.9f;
+				float targetScale = 1.5f;
+				float currentScale = m_LeftTransform.localScale.x * w + targetScale * (1 - w);
+				Vector3 scalev = new Vector3(currentScale, currentScale, currentScale);
+				m_LeftTransform.localScale  = scalev;
+				m_RightTransform.localScale = scalev;
 
-				offset = (m_FinishedCenter + new Vector3(17, 0, 0)) - m_RightTransform.position;
-				offset *= 3.0f * Time.fixedDeltaTime;
-				m_RightTransform.position += offset;
+				Vector3 targetLeftPos = (m_FinishedCenter - targetScale * new Vector3(17, 0, 0));
+				m_LeftTransform.position = m_LeftTransform.position * w + targetLeftPos * (1 - w);
+
+				Vector3 targetRightPos = (m_FinishedCenter + targetScale * new Vector3(17, 0, 0));
+				m_RightTransform.position = m_RightTransform.position * w + targetRightPos * (1 - w);
 			}
 
 			m_FinishedTimer -= Time.fixedDeltaTime;

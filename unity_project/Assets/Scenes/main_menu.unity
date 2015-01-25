@@ -797,5 +797,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LeftPart: {fileID: 1359676301}
   m_RightPart: {fileID: 33870709}
+  m_FinishedTimer: 2
   m_holdAccum: 0
-  m_holdTimeRequirement: 1
+  m_holdTimeRequirement: .5
