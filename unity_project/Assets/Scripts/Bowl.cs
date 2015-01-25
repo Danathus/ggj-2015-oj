@@ -30,6 +30,6 @@ public class Bowl : MonoBehaviour {
 
 		//this.rigidbody.position += new Vector3(x, 0, y);
 		this.rigidbody.velocity = new Vector3(x, 0, y) * Time.fixedDeltaTime;
-		Debug.Log (Time.fixedDeltaTime);
+		// Debug.Log (Time.fixedDeltaTime);
 	}
 }
