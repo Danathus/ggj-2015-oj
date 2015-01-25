@@ -20,6 +20,7 @@ public class ReviewState: State {
 
 	public override void Leave() {
 		ReplayManager.Instance.Stop();
+		ScenarioManager.Instance.HideVinette();
 	}
 
 	// called at FixedUpdate()
@@ -38,6 +39,7 @@ public class ReviewState: State {
 					ReplayManager.Instance.AddEvent(new BookendEvent()); // add a bookend first to mark end
 					ReplayManager.Instance.Play();
 				}
+				ScenarioManager.Instance.ShowVinette();
 			}
 		}
 

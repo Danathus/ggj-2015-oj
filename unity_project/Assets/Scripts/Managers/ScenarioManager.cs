@@ -10,6 +10,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	public GameObject m_TimeScreen = null;
 	private GameObject mShowingTimeScreen = null;
 
+	public GameObject m_VinetteScreen = null;
 	public GameObject m_VictoryScreen = null;
 	public GameObject m_FailureScreen = null;
 	private GameObject mShowingScreen = null;
@@ -97,7 +98,22 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		}
 	}
 
+	public void ShowVinette() {
+		HideVinette();
+		if (m_VinetteScreen != null) {
+			mShowingScreen = Instantiate(m_VinetteScreen, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+		}
+	}
+
+	public void HideVinette() {
+		if (mShowingScreen != null) {
+			Destroy(mShowingScreen);
+			mShowingScreen = null;
+		}
+	}
+
 	public void ShowVictory() {
+		HideVictory();
 		if (m_VictoryScreen != null) {
 			mShowingScreen = Instantiate(m_VictoryScreen, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 		}
@@ -111,6 +127,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	}
 
 	public void ShowFailure() {
+		HideFailure();
 		if (m_FailureScreen != null) {
 			mShowingScreen = Instantiate(m_FailureScreen, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 		}
@@ -124,6 +141,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	}
 
 	public void ShowTimeLimit() {
+		HideTimeLimit();
 		if (m_TimeScreen != null) {
 			mShowingTimeScreen = Instantiate(m_TimeScreen, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 			Text text = mShowingTimeScreen.GetComponentInChildren<Text>() as Text;
