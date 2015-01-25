@@ -3674,7 +3674,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Player 1
 
-    Run across the street!'
+    Cross the street!'
 --- !u!222 &1536723019
 CanvasRenderer:
   m_ObjectHideFlags: 0
