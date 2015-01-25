@@ -18,6 +18,7 @@ public class Box : Scenario {
 	private Bounder _bounder;
 
 	public override void Reset() {
+		Debug.Log("Box.Reset()!");
 		foreach (Cereal cereal in Object.FindObjectsOfType<Cereal>()) {
 			Destroy(cereal.gameObject);
 		}
@@ -25,6 +26,7 @@ public class Box : Scenario {
 
 		_reverter.Revert ();
 		_random.Revert ();
+		_spawnTimeAccum = 0.0f;
 	}
 
 	void Start() {
@@ -56,7 +58,6 @@ public class Box : Scenario {
 		float x = _bounder.Translate(this.rigidbody.position, offset).x;
 		this.rigidbody.position += new Vector3(x, 0, 0);
 		this.rigidbody.rotation *= new Quaternion(Mathf.Sin(offset.z), 0, 0, Mathf.Cos(offset.z));
-		
 	}
 
 	// Update is called once per frame
