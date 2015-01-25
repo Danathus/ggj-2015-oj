@@ -10,8 +10,10 @@ public abstract class Scenario: MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate() {
-		mControls.Update();
+	public void AloneUpdate() {
+		if (ScenarioManager.Instance.m_Scenarios.Count == 0) {
+			mControls.Update();
+		}
 	}
 
 	public void BeginReplay() {

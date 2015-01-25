@@ -359,6 +359,8 @@ public class UnstableHand : Scenario {
 	
 	void FixedUpdate()
 	{
+		AloneUpdate();
+
 		if (Input.GetKey(KeyCode.Space))
 		{
 			BeginReplay();
