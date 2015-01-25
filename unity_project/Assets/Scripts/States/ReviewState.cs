@@ -20,6 +20,7 @@ public class ReviewState: State {
 
 	public override void Leave() {
 		ReplayManager.Instance.Stop();
+		ReplayManager.Instance.Clear();
 		ScenarioManager.Instance.HideVinette();
 	}
 
