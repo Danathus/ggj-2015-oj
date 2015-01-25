@@ -31,9 +31,9 @@ public class FroggerMan : Scenario {
 		// rig control scheme
 		//   for buttons
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W), p1Up   );
-		//mControls.AddControl(new KeyCodeControlSignal(KeyCode.S), p1Down );
-		//mControls.AddControl(new KeyCodeControlSignal(KeyCode.A), p1Left );
-		//mControls.AddControl(new KeyCodeControlSignal(KeyCode.D), p1Right);
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S), p1Down );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A), p1Left );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D), p1Right);
 		//   for gamepads
 		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p1Up    );
 		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p1Down  );
@@ -59,25 +59,22 @@ public class FroggerMan : Scenario {
 
 		//this.animation.Play ("walking");
 
-		float w      = 0.05f;
+		float w      = 0.1f;
 		float targetX = -_movement.x * (1.0f / speed);
 		float targetZ = Mathf.Min(_movement.z, 0.0f) * (1.0f / speed);
 		_horizontalWeight = _horizontalWeight * (1.0f - w) + targetX * w;
 		_VerticalWeight   = _VerticalWeight   * (1.0f - w) + targetZ * w;
 
-		Debug.Log(_movement.z);
-
-		if(_movement.z < -0.0f)
+		if (_movement.z < -0.0f)
 		{
 			this.transform.position += new Vector3 (0, 0, -_VerticalWeight * _movement.z * Time.fixedDeltaTime);
 		}
 
 		_animator.SetFloat ("Horizontal", _horizontalWeight);
-		_animator.SetFloat ("Vertical",   _VerticalWeight);
+		_animator.SetFloat ("Vertical",   -_VerticalWeight);
 		_animator.SetFloat ("Turn", 0);
 		_animator.SetBool ("Jump", false);
 		_movement.Set (0, 0, 0);
-		Debug.Log(_movement.z);
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -93,11 +90,7 @@ public class FroggerMan : Scenario {
 
 	private void Move(GameObject gameObject, Vector3 offset) {
 		if (_enabled) {
-			System.Diagnostics.StackTrace t = new System.Diagnostics.StackTrace();
-			System.Diagnostics.StackFrame frame = t.GetFrame(1);
-			Debug.Log("trace -- file \"" + frame.GetFileName() + "\", method: \"" + frame.GetMethod() + "\"");
 			_movement += offset * speed;
-			Debug.Log(offset);
 		}
 	}
 }
