@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 /// <summary>
@@ -21,7 +22,7 @@ public class UnstableBehavior: Behavior
 	
 	private float shake_decay;
 	private float shake_intensity;
-	private float drunk_level = 2.0f;
+	private float drunk_level = 3.0f;
 	private Vector2 camera_range = new Vector2(1.0f, 2.0f);
 	private float diff_time;
 	private float x_delta;
@@ -199,8 +200,8 @@ public class ButtonPushBehavior : Behavior {
 		pushing = false;
 		mTriggered = false;
 		mFloor = floor;
-		helper = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		helper.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+		//helper = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		//helper.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
 	}
 	
 	// input: signal -- degree [0.0, 1.0] to which signal should be operated (0.0 means do nothing, generally)
@@ -213,7 +214,7 @@ public class ButtonPushBehavior : Behavior {
 			mPusher.transform.position.x,
 			mPusher.transform.position.y,
 			mPusher.transform.position.z);
-		helper.transform.position = finger_tip;
+		//helper.transform.position = finger_tip;
 		if (signal > 0.0f)
 		{	
 			Rect button_bounds = new Rect(mOperand.transform.position.x - mOperand.renderer.bounds.size.x/2, 
@@ -347,14 +348,15 @@ public class ElevatorMoveBehavior : Behavior {
 	private GameObject mHellBackground;
 	private GameObject mHeavenBackground;
 	private GameObject mBathroomBackground;
-
+	private AudioSource mElevatorBell;
+	private bool bell_ring;
 	
 	protected bool IsRightFloor()
 	{
 		return mFloorMap[mCurrFloor] == "heaven";
 	}
 	
-	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor, Scenario scenario, GameObject hell, GameObject heaven, GameObject bathroom)
+	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor, Scenario scenario, GameObject hell, GameObject heaven, GameObject bathroom, AudioSource bell)
 		: base(name, operand)
 	{
 		mCurrFloor = 0;
@@ -373,6 +375,9 @@ public class ElevatorMoveBehavior : Behavior {
 		mBathroomBackground = bathroom;
 		//hellTex = hell;
 		mFloorMap = floorMap;
+		mElevatorBell = bell;
+		bell_ring = false;
+		
 	}
 	
 	public override bool Operate(float signal)
@@ -441,6 +446,11 @@ public class ElevatorMoveBehavior : Behavior {
 		}
 		if(openDoor)
 		{
+			if(!bell_ring)
+			{
+				mRightDoor.audio.PlayOneShot(mElevatorBell, 0.7f);
+				bell_ring = true;
+			}
 			if(mLeftDoor.transform.position.x >= left_door_position.x + 0.9f)
 			{
 				openDoor = false;
@@ -543,6 +553,8 @@ public class UnstableHand : Scenario
 	public Texture hellTex;
 	public Texture heavenTex;
 	public Texture bathroomTex;
+	public AudioSource elevator_bell;
+	public AudioClip elevator_sound_clip;
 
 	private bool replaying = false;
 	
@@ -590,7 +602,7 @@ public class UnstableHand : Scenario
 		Dictionary<int, string> floorMap = new Dictionary<int, string>();
 		int heavenFloor = Random.Range(1, 4);
 		floorMap.Add(heavenFloor, "heaven");
-		string team_instructions;
+		string team_instructions = "";
 		switch(heavenFloor)
 		{
 			case 1:
@@ -615,6 +627,9 @@ public class UnstableHand : Scenario
 			}
 			break;
 		}
+		GameObject instructions = GameObject.Find("team instructions");
+		Text text = instructions.GetComponent<Text>() as Text;
+		text.text =  team_instructions;
 		mFloorSignals.Clear();
 		mButtonPushSignals.Clear();
 		//floorMap.Add(1, "hell");
@@ -630,7 +645,7 @@ public class UnstableHand : Scenario
 		GameObject leftDoor = GameObject.Find("left door");
 		GameObject rightDoor = GameObject.Find("right door");
 
-		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor, this, mHellBackground, mHeavenBackground, mBathroomBackground);
+		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor, this, mHellBackground, mHeavenBackground, mBathroomBackground, elevator_bell);
 		for(int i = 0; i < mFloorSignals.Count; ++i)
 		{
 			mIndirectControls.AddControl(mFloorSignals[i],          elevatorMover);
