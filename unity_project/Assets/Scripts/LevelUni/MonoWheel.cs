@@ -7,8 +7,12 @@ public class MonoWheel : Scenario {
 	public Transform unicycle;
 	public Transform player1Wheel;
 	public Transform player2Wheel;
+	public Transform leftShoulder;
+	public Transform rightShoulder;
 	public float accel = 150, doubleaccel = 350, decel = 150, maxSpeed = 500;
 	public float angleDeviation = 40, singleAngleOffset = 90;
+	public float tiltSpeed = 1;
+	public float maxTilt = 10;
 
 	private const float WHEEL_RADIUS = 0.8f;
 
@@ -19,13 +23,17 @@ public class MonoWheel : Scenario {
 	private float _wheelAngle = 0;
 	private float _wheelSpeed = 0;
 	private float _dirAngle = 90;
+	private float _tilt = 0;
 
-	private GameObjectReverter _wheelMountRev, _unicycleRev, _player1WheelRev, _player2WheelRev;
+	private GameObjectReverter _player1WheelRev, _player2WheelRev;
+	private Vector3 _startPos;
 
 	public override void Reset ()
 	{
-		_wheelMountRev.Revert ();
-		_unicycleRev.Revert ();
+		wheelMount.transform.localRotation = new Quaternion ();
+		unicycle.transform.localPosition = _startPos;
+		leftShoulder.localRotation = new Quaternion ();
+		rightShoulder.localRotation = new Quaternion ();
 		_player1WheelRev.Revert ();
 		_player2WheelRev.Revert ();
 		_accumPlayer1.Set (0, 0, 0);
@@ -33,14 +41,14 @@ public class MonoWheel : Scenario {
 		_wheelAngle = 0;
 		_wheelSpeed = 0;
 		_dirAngle = 90;
+		_tilt = 0;
 	}
 
 	// Use this for initialization
 	void Start () {
-		_wheelMountRev = new GameObjectReverter (wheelMount.gameObject);
-		_unicycleRev = new GameObjectReverter (wheelMount.gameObject);
 		_player1WheelRev = new GameObjectReverter (player1Wheel.gameObject);
 		_player2WheelRev = new GameObjectReverter (player2Wheel.gameObject);
+		_startPos = unicycle.transform.localPosition;
 
 		Behavior p1Up    = new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  1, 0), MovePlayer1);
 		Behavior p1Down  = new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0, -1, 0), MovePlayer1);
@@ -128,5 +136,35 @@ public class MonoWheel : Scenario {
 		rotation.eulerAngles = new Vector3 (0, 0, 180 - _wheelAngle);
 		player2Wheel.rotation = rotation;
 		unicycle.Translate (new Vector3 (0, 0, travel));
+
+		if (player1 != player2)
+		{
+			if(player1)
+			{
+				_tilt += tiltSpeed + Time.fixedDeltaTime;
+			}
+			else
+			{
+				_tilt -= tiltSpeed + Time.fixedDeltaTime;
+			}
+			_tilt = Mathf.Clamp(_tilt, -maxTilt, maxTilt);
+		}
+		else if(-tiltSpeed < _tilt && _tilt < tiltSpeed)
+		{
+			_tilt = 0;
+		}
+		else if(_tilt < 0)
+		{
+			_tilt += tiltSpeed + Time.fixedDeltaTime;
+		}
+		else
+		{
+			_tilt -= tiltSpeed + Time.fixedDeltaTime;
+		}
+
+		rotation.eulerAngles = new Vector3 (0, 0, _tilt);
+		leftShoulder.localRotation = rotation;
+		rotation.eulerAngles = new Vector3 (0, 0, _tilt);
+		rightShoulder.localRotation = rotation;
 	}
 }
