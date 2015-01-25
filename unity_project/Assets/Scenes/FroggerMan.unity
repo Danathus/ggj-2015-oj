@@ -4083,7 +4083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd5b99e6b02589d41829ae1770f25e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: 10
+  m_TimeLimit: -1
   cameraTarget: {fileID: 1865713776}
   targetDist: 4
   targetY: 2.5
