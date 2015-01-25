@@ -344,13 +344,17 @@ public class ElevatorMoveBehavior : Behavior {
 	private Vector3 left_door_position;
 	private Vector3 right_door_position;
 	Scenario mScenario;
-
+	private GameObject mBackgroundCanvas;
+	private Texture hellTex;
+	private Texture heavenTex;
+	private Texture bathroomTex;
+	
 	protected bool IsRightFloor()
 	{
 		return mCurrFloor == 1;
 	}
 	
-	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor, Scenario scenario)
+	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor, Scenario scenario, GameObject background, Texture hell, Texture heaven, Texture bathroom)
 		: base(name, operand)
 	{
 		mCurrFloor = 0;
@@ -364,6 +368,9 @@ public class ElevatorMoveBehavior : Behavior {
 		left_door_position = mLeftDoor.transform.position;
 		right_door_position = mRightDoor.transform.position;
 		mScenario = scenario;
+		mBackgroundCanvas = background;
+		mFloorMap = floorMap;
+		hellTex = hell;
 	}
 	
 	public override bool Operate(float signal)
@@ -378,9 +385,23 @@ public class ElevatorMoveBehavior : Behavior {
 				if(mCurrFloor != (int)signal)
 				{
 					mCurrFloor = (int)signal;
+					string floorcontext = mFloorMap[mCurrFloor];
 					
-					Debug.Log("go to " + mCurrFloor.ToString() + " floor");
-					mHeight = (float)mCurrFloor * 2.0f;
+					Debug.Log("go to " + floorcontext + " floor");
+					//mHeight = (float)mCurrFloor * 2.0f;
+					if(floorcontext == "hell")
+					{
+						mBackgroundCanvas.renderer.material.SetTexture("_MainTex", hellTex);
+					}
+					else if(floorcontext == "heaven")
+					{
+						mBackgroundCanvas.renderer.material.SetTexture("_MainTex", heavenTex);
+					}
+					else if(floorcontext == "bathroom")
+					{
+						mBackgroundCanvas.renderer.material.SetTexture("_MainTex", bathroomTex);
+					}
+					
 				}
 				return true;
 			}
@@ -480,6 +501,10 @@ public class UnstableHand : Scenario {
 	private List<FloorChangeSignal> mFloorSignals = new List<FloorChangeSignal>();
 	private List<FloorChangeSignal> mButtonPushSignals = new List<FloorChangeSignal>();
 	private PushBehavior mHandPushBehavior;
+	private GameObject mBackgroundCanvas;
+	public Texture hellTex;
+	public Texture heavenTex;
+	public Texture bathroomTex;
 
 	private Vector3 mOriginal_position;
 	private bool replaying = false;
@@ -498,6 +523,7 @@ public class UnstableHand : Scenario {
 		mElevatorFloor.transform.position = new Vector3(1.87f, 0.0f, -2.76f);
 		//Debug.Log("mElevatorFloor: " + mElevatorFloor.name);
 		GameObject elevatorWall = GameObject.Find("elevator walls");
+		mBackgroundCanvas = GameObject.Find("outside environment");
 		
 		mOriginal_position = mHand.transform.position;
 
@@ -527,14 +553,14 @@ public class UnstableHand : Scenario {
 		floorMap.Add(2, "heaven");
 		mFloorSignals.Add(new FloorChangeSignal(2));
 		mButtonPushSignals.Add(new FloorChangeSignal(2));
-		floorMap.Add(3, "heaven");
+		floorMap.Add(3, "bathroom");
 		mFloorSignals.Add(new FloorChangeSignal(3));
 		mButtonPushSignals.Add(new FloorChangeSignal(3));
 		
 		GameObject leftDoor = GameObject.Find("left door");
 		GameObject rightDoor = GameObject.Find("right door");
 
-		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor, this);
+		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor, this, mBackgroundCanvas, hellTex, heavenTex, bathroomTex);
 		for(int i = 0; i < mFloorSignals.Count; ++i)
 		{
 			mControls.AddControl(mFloorSignals[i],          elevatorMover);
