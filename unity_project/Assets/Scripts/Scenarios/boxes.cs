@@ -11,16 +11,18 @@ public class boxes : Scenario
 	// Use this for initialization
 	void Start () {
 		float speed = 0.1f;
+		Behavior p1Up    = new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0) * speed);
+		Behavior p1Down  = new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0) * speed);
+		Behavior p1Left  = new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0) * speed);
+		Behavior p1Right = new TranslateBehavior("player1 move right", mPlayer1, new Vector3( 1,  0, 0) * speed);
+		Behavior p2Up    = new TranslateBehavior("player2 move up",    mPlayer2, new Vector3( 0,  1, 0) * speed);
+		Behavior p2Down  = new TranslateBehavior("player2 move down",  mPlayer2, new Vector3( 0, -1, 0) * speed);
+		Behavior p2Left  = new TranslateBehavior("player2 move left",  mPlayer2, new Vector3(-1,  0, 0) * speed);
+		Behavior p2Right = new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0) * speed);		
 
 		// create the control scheme that maps inputs to these behaviors
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          new TranslateBehavior("player1 move right", mPlayer1, new Vector3( 1,  0, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    new TranslateBehavior("player2 move up",    mPlayer2, new Vector3( 0,  1, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  new TranslateBehavior("player2 move down",  mPlayer2, new Vector3( 0, -1, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  new TranslateBehavior("player2 move left",  mPlayer2, new Vector3(-1,  0, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0) * speed));
+		SetControlScheme(0, p1Up, p1Down, p1Left, p1Right);
+		SetControlScheme(1, p2Up, p2Down, p2Left, p2Right);
 	}
 	
 	// called once per timestep update (critical: do game state updates here!!!)

@@ -11,6 +11,8 @@ public class Box : Scenario {
 
 	private float _spawnTimeAccum = 0.0f;
 
+	private Vector3 _windSpeed;
+
 	private static Stack<GameObject> _freeCereal = new Stack<GameObject>();
 
 	private GameObjectReverter _reverter;
@@ -30,26 +32,21 @@ public class Box : Scenario {
 	}
 
 	void Start() {
-		_reverter = new GameObjectReverter (this.gameObject);
-		_random = new RandomReverter ();
-		_bounder = new Bounder (bounds);
+		_reverter = new GameObjectReverter(this.gameObject);
+		_random = new RandomReverter();
+		_bounder = new Bounder(bounds);
 
-		Behavior p2Up    = new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  0, -1) * speed * Time.fixedDeltaTime, Move);
-		Behavior p2Down  = new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0,  0,  1) * speed * Time.fixedDeltaTime, Move);
-		Behavior p2Left  = new MovementCallbackBehavior("player1 move left",  this.gameObject, new Vector3( 1,  0,  0) * speed * Time.fixedDeltaTime, Move);
-		Behavior p2Right = new MovementCallbackBehavior("player1 move right", this.gameObject, new Vector3(-1,  0,  0) * speed * Time.fixedDeltaTime, Move);
+		Behavior p2Wind  = new DynamicWindBehavior("player2 wind", 			  this.gameObject, WindChanged);
+		Behavior p2Up    = new MovementCallbackBehavior("player2 move up",    this.gameObject, new Vector3( 0,  0, -1) * speed * Time.fixedDeltaTime, Move);
+		Behavior p2Down  = new MovementCallbackBehavior("player2 move down",  this.gameObject, new Vector3( 0,  0,  1) * speed * Time.fixedDeltaTime, Move);
+		Behavior p2Left  = new MovementCallbackBehavior("player2 move left",  this.gameObject, new Vector3( 1,  0,  0) * speed * Time.fixedDeltaTime, Move);
+		Behavior p2Right = new MovementCallbackBehavior("player2 move right", this.gameObject, new Vector3(-1,  0,  0) * speed * Time.fixedDeltaTime, Move);
 		
 		// rig control scheme
-		//   for buttons
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    p2Up   );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  p2Down );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  p2Left );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), p2Right);
-		//   for gamepads
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p2Up    );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p2Down  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p2Left  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p2Right );
+		mControls.AddControl(new TrueSignal(), 							   p2Wind );
+		//   for buttons		
+
+		SetControlScheme(1, p2Up, p2Down, p2Left, p2Right);
 
 		Reset();
 	}
@@ -58,6 +55,10 @@ public class Box : Scenario {
 		float x = _bounder.Translate(this.rigidbody.position, offset).x;
 		this.rigidbody.position += new Vector3(x, 0, 0);
 		this.rigidbody.rotation *= new Quaternion(Mathf.Sin(offset.z), 0, 0, Mathf.Cos(offset.z));
+	}
+
+	void WindChanged(GameObject operand, Vector3 wind) {
+		_windSpeed = wind;
 	}
 
 	// Update is called once per frame
@@ -120,7 +121,7 @@ public class Box : Scenario {
 		if (_freeCereal.Count > 0) {
 			GameObject gameObject = _freeCereal.Pop();
 			gameObject.transform.position = gameObject.rigidbody.position = position;
-			gameObject.rigidbody.velocity = gameObject.rigidbody.angularVelocity = new Vector3();
+			gameObject.rigidbody.velocity = gameObject.rigidbody.angularVelocity = _windSpeed;
 			gameObject.SetActiveRecursively(true);
 		} else {
 			Instantiate(cereal, position, new Quaternion());

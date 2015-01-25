@@ -38,16 +38,7 @@ public class Bowl : Scenario {
 		Behavior p1Right = new MovementCallbackBehavior("player1 move right", this.gameObject, new Vector3( 1,  0, 0) * speed, Move);
 
 		// create the control scheme that maps inputs to these behaviors
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          p1Up   );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          p1Down );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          p1Left );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          p1Right);
-		//
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p1Up    );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p1Down  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p1Left  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p1Right );
-
+		SetControlScheme(0, p1Up, p1Down, p1Left, p1Right);
 		Reset();
 	}
 	
@@ -76,7 +67,7 @@ public class Bowl : Scenario {
 
 		if (!_hasEnded) {
 			//_playTime += Time.fixedDeltaTime;
-			if(_totalCaught == 100)
+			if(_totalCaught == 20)
 			{
 				this.Victory();
 				_hasEnded = true;

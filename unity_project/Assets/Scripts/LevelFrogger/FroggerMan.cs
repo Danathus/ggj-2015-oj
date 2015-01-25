@@ -81,15 +81,7 @@ public class FroggerMan : Scenario {
 
 		// rig control scheme
 		//   for buttons
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W), p1Up   );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S), p1Down );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A), p1Left );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D), p1Right);
-		//   for gamepads
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p1Up    );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p1Down  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p1Left  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p1Right );
+		SetControlScheme(0, p1Up, p1Down, p1Left, p1Right);
 
 		_manReverter = null;
 		Reset();
