@@ -899,6 +899,7 @@ GameObject:
   - 33: {fileID: 1329423672}
   - 23: {fileID: 1329423671}
   - 114: {fileID: 1329423673}
+  - 64: {fileID: 1329423675}
   - 54: {fileID: 1329423674}
   m_Layer: 0
   m_Name: Bowl
@@ -973,8 +974,21 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!64 &1329423675
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1329423669}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_SmoothSphereCollisions: 0
+  m_Convex: 0
+  m_Mesh: {fileID: 4300016, guid: 07e48916e4577554d9ba1d08ccefa3c7, type: 3}
 --- !u!1 &1492536126
 GameObject:
   m_ObjectHideFlags: 0
@@ -1286,7 +1300,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1787329589}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: -4.37113883e-08}
-  m_LocalPosition: {x: -.0799999982, y: 1.42999995, z: 3.93000007}
+  m_LocalPosition: {x: -.0799999982, y: 1.64999998, z: .310000002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
