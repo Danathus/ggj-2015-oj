@@ -6,13 +6,16 @@ public abstract class Scenario: MonoBehaviour {
 	public float m_TimeLimit = 10.0f;
 	public ControlScheme mControls = new ControlScheme();
 
-	// Use this for initialization
-	void Start() {
-		ScenarioManager.Instance.ShowTimeLimit();
-	}
-	
+	private bool m_Initialized = false;
+
 	// Update is called once per frame
 	public void ScenarioUpdate() {
+		if (!m_Initialized) {
+			m_Initialized = true;
+
+			ScenarioManager.Instance.ShowTimeLimit();
+			ScenarioManager.Instance.UpdatePlayerInstructions();
+		}
 		// initialize ScenarioManager
 		ScenarioManager manager = ScenarioManager.Instance;
 

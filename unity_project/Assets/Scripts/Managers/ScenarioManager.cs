@@ -93,11 +93,27 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		if (mCurrentScenario >= m_Scenarios.Count) {
 			mCurrentScenario = 0;
 			m_PrimaryPlayer ^= 1;
+			Shuffle();
 		}
 
 		if (mCurrentScenario < m_Scenarios.Count) {
 			string scenarioName = m_Scenarios[mCurrentScenario];
 			Application.LoadLevel(scenarioName);
+		}
+	}
+
+	public void UpdatePlayerInstructions() {
+		GameObject player1Text = GameObject.FindWithTag("Player1Text");
+		GameObject player2Text = GameObject.FindWithTag("Player2Text");
+
+		if (player1Text != null) {
+			Text text = player1Text.GetComponent<Text>() as Text;
+			text.text = text.text.Replace("{{1}}", (m_PrimaryPlayer + 1).ToString());
+		}
+
+		if (player2Text != null) {
+			Text text = player2Text.GetComponent<Text>() as Text;
+			text.text = text.text.Replace("{{2}}", ((m_PrimaryPlayer ^ 1) + 1).ToString());
 		}
 	}
 

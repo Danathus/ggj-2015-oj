@@ -872,7 +872,7 @@ GameObject:
   - 114: {fileID: 364230276}
   m_Layer: 5
   m_Name: player 1 instructions
-  m_TagString: Untagged
+  m_TagString: Player1Text
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -919,7 +919,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Player 1
+  m_Text: 'Player {{1}}
 
     Aim for the button!'
 --- !u!222 &364230277
@@ -2169,7 +2169,7 @@ GameObject:
   - 114: {fileID: 974389648}
   m_Layer: 5
   m_Name: player 2 instructions
-  m_TagString: Untagged
+  m_TagString: Player2Text
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2199,7 +2199,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Player 2
+  m_Text: 'Player {{2}}
 
     Push the button!'
 --- !u!222 &974389649
