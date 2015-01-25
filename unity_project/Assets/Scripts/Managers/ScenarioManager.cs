@@ -1,10 +1,14 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class ScenarioManager : Singleton<ScenarioManager>
 {
 	protected ScenarioManager () {}
+
+	public GameObject m_TimeScreen = null;
+	private GameObject mShowingTimeScreen = null;
 
 	public GameObject m_VictoryScreen = null;
 	public GameObject m_FailureScreen = null;
@@ -116,6 +120,32 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		if (mShowingScreen != null) {
 			Destroy(mShowingScreen);
 			mShowingScreen = null;
+		}
+	}
+
+	public void ShowTimeLimit() {
+		if (m_TimeScreen != null) {
+			mShowingTimeScreen = Instantiate(m_TimeScreen, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+		}
+	}
+
+	public void HideTimeLimit() {
+		if (mShowingTimeScreen != null) {
+			Destroy(mShowingTimeScreen);
+			mShowingTimeScreen = null;
+		}
+	}
+
+	public void SetTimeRemaining(float t) {
+		if (mShowingTimeScreen == null) {
+			ShowTimeLimit();
+		}
+
+		if (mShowingTimeScreen != null) {
+			Text text = mShowingTimeScreen.GetComponentInChildren<Text>() as Text;
+			if (text != null) {
+				text.text = "Time Remaining: " + t.ToString();
+			}
 		}
 	}
 }

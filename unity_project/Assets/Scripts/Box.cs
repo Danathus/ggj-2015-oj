@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Box : MonoBehaviour {
+public class Box : Scenario {
 	public Rigidbody cereal;
 	public Transform generationPoint1, generationPoint2;
 	public float speed = 5.0f, rotateSpeed = 2.5f, minSpawnOffset = 0.0f, maxSpawnOffset = 0.2f, spawnPerSecond = 10.0f;
@@ -39,6 +39,8 @@ public class Box : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate() {
+		ScenarioUpdate();
+
 		float x = 0, y = 0;
 
 		if (Input.GetKey(KeyCode.LeftArrow)) {
@@ -90,5 +92,9 @@ public class Box : MonoBehaviour {
 		{
 			_spawnTimeAccum = 0;
 		}
+	}
+
+	public override void Reset() {
+		
 	}
 }

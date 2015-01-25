@@ -8,16 +8,19 @@ public abstract class Scenario: MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
+		ScenarioManager.Instance.ShowTimeLimit();
 	}
 	
 	// Update is called once per frame
-	public void AloneUpdate() {
+	public void ScenarioUpdate() {
 		if (!ScenarioManager.Instance.isInitialized()) {
 			mControls.Update();
 		}
 
 		if (m_TimeLimit > -1) {
 			m_TimeLimit -= Time.fixedDeltaTime;
+
+			ScenarioManager.Instance.SetTimeRemaining(m_TimeLimit);
 
 			if (m_TimeLimit <= 0) {
 				Failure();
@@ -26,12 +29,16 @@ public abstract class Scenario: MonoBehaviour {
 	}
 
 	public void Victory() {
+		ScenarioManager.Instance.HideTimeLimit();
+		m_TimeLimit = -1;
 		if (ScenarioManager.Instance.CurrentState() == "Play") {
 			ScenarioManager.Instance.ActivateState("Victory");
 		}
 	}
 
 	public void Failure() {
+		ScenarioManager.Instance.HideTimeLimit();
+		m_TimeLimit = -1;
 		if (ScenarioManager.Instance.CurrentState() == "Play") {
 			ScenarioManager.Instance.ActivateState("Failure");
 		}
