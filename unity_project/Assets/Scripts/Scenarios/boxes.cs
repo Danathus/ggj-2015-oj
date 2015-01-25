@@ -26,6 +26,8 @@ public class boxes : Scenario
 	// called once per timestep update (critical: do game state updates here!!!)
 	void FixedUpdate()
 	{
+		AloneUpdate();
+
 		if (Input.GetKey(KeyCode.Space))
 		{
 			BeginReplay();
