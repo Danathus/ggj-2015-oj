@@ -20,12 +20,13 @@ public class MonoWheel : Scenario {
 	private float _wheelSpeed = 0;
 	private float _dirAngle = 90;
 
-	private GameObjectReverter _wheelMountRev, _unicycleRev, _player1WheelRev, _player2WheelRev;
+	private GameObjectReverter _player1WheelRev, _player2WheelRev;
+	private Vector3 _startPos;
 
 	public override void Reset ()
 	{
-		_wheelMountRev.Revert ();
-		_unicycleRev.Revert ();
+		wheelMount.transform.localRotation = new Quaternion ();
+		unicycle.transform.localPosition = _startPos;
 		_player1WheelRev.Revert ();
 		_player2WheelRev.Revert ();
 		_accumPlayer1.Set (0, 0, 0);
@@ -37,10 +38,9 @@ public class MonoWheel : Scenario {
 
 	// Use this for initialization
 	void Start () {
-		_wheelMountRev = new GameObjectReverter (wheelMount.gameObject);
-		_unicycleRev = new GameObjectReverter (wheelMount.gameObject);
 		_player1WheelRev = new GameObjectReverter (player1Wheel.gameObject);
 		_player2WheelRev = new GameObjectReverter (player2Wheel.gameObject);
+		_startPos = unicycle.transform.localPosition;
 
 		Behavior p1Up    = new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  1, 0), MovePlayer1);
 		Behavior p1Down  = new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0, -1, 0), MovePlayer1);
