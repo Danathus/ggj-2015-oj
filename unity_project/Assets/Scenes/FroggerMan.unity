@@ -562,6 +562,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11423910, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
+      propertyPath: m_TimeLimit
+      value: -1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
   m_RootGameObject: {fileID: 2050743885}
@@ -699,6 +703,10 @@ Prefab:
     - target: {fileID: 11423910, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
       propertyPath: reversed
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11423910, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
+      propertyPath: m_TimeLimit
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
@@ -2172,6 +2180,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11423910, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
+      propertyPath: m_TimeLimit
+      value: -1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
   m_RootGameObject: {fileID: 1810071669}
@@ -2456,6 +2468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ea417642a25d74599921fcfb01f64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TimeLimit: -1
   car: {fileID: 130622, guid: a4e742540b267a34fa1f4662a6aad7dd, type: 2}
   reversed: 0
   spawnTimeMin: 1
@@ -2586,10 +2599,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ea417642a25d74599921fcfb01f64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TimeLimit: -1
   car: {fileID: 130622, guid: a4e742540b267a34fa1f4662a6aad7dd, type: 2}
   reversed: 1
   spawnTimeMin: 1
   spawnTimeMax: 4
+--- !u!1 &1181597183
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1181597185}
+  - 65: {fileID: 1181597184}
+  - 114: {fileID: 1181597186}
+  m_Layer: 0
+  m_Name: VictoryRegion
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &1181597184
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1181597183}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 65.5, y: 4, z: 4.51999998}
+  m_Center: {x: 0, y: .560000002, z: 0}
+--- !u!4 &1181597185
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1181597183}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 17.8400002, y: 1.47000003, z: -15.4700003}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+--- !u!114 &1181597186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1181597183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6ce09711e9cfdb44aff7c635d1357f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1230901292
 GameObject:
   m_ObjectHideFlags: 0
@@ -3484,6 +3550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ea417642a25d74599921fcfb01f64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TimeLimit: -1
   car: {fileID: 130622, guid: a4e742540b267a34fa1f4662a6aad7dd, type: 2}
   reversed: 1
   spawnTimeMin: 1
@@ -4314,6 +4381,10 @@ Prefab:
       propertyPath: reversed
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11423910, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
+      propertyPath: m_TimeLimit
+      value: -1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
   m_RootGameObject: {fileID: 2017547793}
@@ -4590,6 +4661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ea417642a25d74599921fcfb01f64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TimeLimit: -1
   car: {fileID: 130622, guid: a4e742540b267a34fa1f4662a6aad7dd, type: 2}
   reversed: 0
   spawnTimeMin: 1
@@ -4806,6 +4878,10 @@ Prefab:
     - target: {fileID: 426768, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11423910, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
+      propertyPath: m_TimeLimit
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
@@ -5411,6 +5487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ea417642a25d74599921fcfb01f64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TimeLimit: -1
   car: {fileID: 130622, guid: a4e742540b267a34fa1f4662a6aad7dd, type: 2}
   reversed: 1
   spawnTimeMin: 1
@@ -5461,6 +5538,10 @@ Prefab:
     - target: {fileID: 11423910, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
       propertyPath: reversed
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11423910, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
+      propertyPath: m_TimeLimit
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b57a0b89243b61e449e8d77ea5669ac9, type: 2}
@@ -5535,6 +5616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ea417642a25d74599921fcfb01f64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TimeLimit: -1
   car: {fileID: 130622, guid: a4e742540b267a34fa1f4662a6aad7dd, type: 2}
   reversed: 0
   spawnTimeMin: 1
