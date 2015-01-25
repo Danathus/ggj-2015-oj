@@ -348,7 +348,7 @@ public class ElevatorMoveBehavior : Behavior {
 	private GameObject mHellBackground;
 	private GameObject mHeavenBackground;
 	private GameObject mBathroomBackground;
-	private AudioSource mElevatorBell;
+	private AudioClip mElevatorBell;
 	private bool bell_ring;
 	
 	protected bool IsRightFloor()
@@ -356,7 +356,7 @@ public class ElevatorMoveBehavior : Behavior {
 		return mFloorMap[mCurrFloor] == "heaven";
 	}
 	
-	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor, Scenario scenario, GameObject hell, GameObject heaven, GameObject bathroom, AudioSource bell)
+	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor, Scenario scenario, GameObject hell, GameObject heaven, GameObject bathroom, AudioClip bell)
 		: base(name, operand)
 	{
 		mCurrFloor = 0;
@@ -439,6 +439,7 @@ public class ElevatorMoveBehavior : Behavior {
 			{
 				jump = false;
 				openDoor = true;
+				bell_ring = false;
 			}
 			//Debug.Log ("target height: " + mHeight.ToString() + " current height: " + mOperand.transform.position.y);
 			position_offset = mOperand.transform.position - oriPosition;
@@ -448,7 +449,10 @@ public class ElevatorMoveBehavior : Behavior {
 		{
 			if(!bell_ring)
 			{
-				mRightDoor.audio.PlayOneShot(mElevatorBell, 0.7f);
+				AudioSource audio = mRightDoor.AddComponent<AudioSource>();
+				audio.clip = mElevatorBell;
+				audio.Play();
+				//mRightDoor.audio.PlayOneShot(mElevatorBell, 0.7f);
 				bell_ring = true;
 			}
 			if(mLeftDoor.transform.position.x >= left_door_position.x + 0.9f)
@@ -553,7 +557,7 @@ public class UnstableHand : Scenario
 	public Texture hellTex;
 	public Texture heavenTex;
 	public Texture bathroomTex;
-	public AudioSource elevator_bell;
+	public AudioClip elevator_bell;
 	public AudioClip elevator_sound_clip;
 
 	private bool replaying = false;
