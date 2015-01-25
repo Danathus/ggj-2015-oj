@@ -126,6 +126,10 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	public void ShowTimeLimit() {
 		if (m_TimeScreen != null) {
 			mShowingTimeScreen = Instantiate(m_TimeScreen, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+			Text text = mShowingTimeScreen.GetComponentInChildren<Text>() as Text;
+			//text.rectTransform.position = new Vector3(50, 100, 0);
+			text.rectTransform.sizeDelta = new Vector2(30, 30);
+			text.color = Color.red;
 		}
 	}
 
@@ -145,6 +149,9 @@ public class ScenarioManager : Singleton<ScenarioManager>
 			Text text = mShowingTimeScreen.GetComponentInChildren<Text>() as Text;
 			if (text != null) {
 				text.text = "Time Remaining: " + t.ToString();
+				text.text = ((int)t).ToString();
+				float scale = 1.0f + Mathf.Repeat(t, 1.0f);
+				text.rectTransform.localScale = new Vector3(scale, scale, scale);
 			}
 		}
 	}
