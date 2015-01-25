@@ -214,10 +214,6 @@ Prefab:
       value: CerealPour
       objectReference: {fileID: 0}
     - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
-      propertyPath: m_FailureScreen
-      value: 
-      objectReference: {fileID: 177286, guid: 8f15fcb271816854982a033c78640c44, type: 2}
-    - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
       propertyPath: m_Scenarios.Array.data[3]
       value: 
       objectReference: {fileID: 0}
