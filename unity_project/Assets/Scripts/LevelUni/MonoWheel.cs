@@ -4,22 +4,44 @@ using System.Collections;
 public class MonoWheel : Scenario {
 
 	public Transform wheelMount;
-	public float accel = 250, maxSpeed = 500;
-	public float angleDeviation = 15, minDegreePerSecond = 10;
+	public Transform unicycle;
+	public Transform player1Wheel;
+	public Transform player2Wheel;
+	public float accel = 150, doubleaccel = 350, decel = 150, maxSpeed = 500;
+	public float angleDeviation = 40, singleAngleOffset = 90;
 
-	private float _player1Angle = 0;
-	private float _player2Angle = 0;
+	private const float WHEEL_RADIUS = 0.8f;
+
 	private Vector3 _accumPlayer1 = new Vector3();
 	private Vector3 _accumPlayer2 = new Vector3();
-	private float _wheelRadius = 0.8f;
-	private float _wheelSpeed;
+	private float _player1Angle = 0;
+	private float _player2Angle = 0;
+	private float _wheelAngle = 0;
+	private float _wheelSpeed = 0;
+	private float _dirAngle = 90;
+
+	private GameObjectReverter _wheelMountRev, _unicycleRev, _player1WheelRev, _player2WheelRev;
 
 	public override void Reset ()
 	{
+		_wheelMountRev.Revert ();
+		_unicycleRev.Revert ();
+		_player1WheelRev.Revert ();
+		_player2WheelRev.Revert ();
+		_accumPlayer1.Set (0, 0, 0);
+		_accumPlayer2.Set (0, 0, 0);
+		_wheelAngle = 0;
+		_wheelSpeed = 0;
+		_dirAngle = 90;
 	}
 
 	// Use this for initialization
 	void Start () {
+		_wheelMountRev = new GameObjectReverter (wheelMount.gameObject);
+		_unicycleRev = new GameObjectReverter (wheelMount.gameObject);
+		_player1WheelRev = new GameObjectReverter (player1Wheel.gameObject);
+		_player2WheelRev = new GameObjectReverter (player2Wheel.gameObject);
+
 		Behavior p1Up    = new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  1, 0), MovePlayer1);
 		Behavior p1Down  = new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0, -1, 0), MovePlayer1);
 		Behavior p1Left  = new MovementCallbackBehavior("player1 move left",  this.gameObject, new Vector3(-1,  0, 0), MovePlayer1);
@@ -50,6 +72,13 @@ public class MonoWheel : Scenario {
 		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p2Right );
 	}
 
+	void OnTriggerEnter(Collider other) {
+		Debug.Log (other.tag);
+		if (other.tag == "WinTrigger") {
+			Victory();
+		}
+	}
+
 	void MovePlayer1(GameObject gameObject, Vector3 offset)
 	{
 		_accumPlayer1 += offset;
@@ -65,7 +94,7 @@ public class MonoWheel : Scenario {
 		if (vec.magnitude < 0.1) {
 			return oldAngle;
 		} else {
-			float ret = Mathf.Atan2(vec.y, vec.x) * (180 / Mathf.PI);
+			float ret = Mathf.Atan2(vec.x, vec.y) * -(180 / Mathf.PI);
 			return ret < 0 ? ret + 360 : ret;
 		}
 	}
@@ -84,28 +113,36 @@ public class MonoWheel : Scenario {
 	void FixedUpdate () {
 		ScenarioUpdate ();
 
-		float angle1 = GetAngle(_accumPlayer1, _player1Angle);
-		float angle2 = GetAngle(_accumPlayer2, _player2Angle);
-		float delta1 = GetAngleDelta (angle1, _player1Angle);
-		float delta2 = GetAngleDelta (angle2, _player2Angle);
-		float delta = GetAngleDelta (angle1, angle2);
+		_player1Angle = GetAngle(_accumPlayer1, _player1Angle);
+		_player2Angle = GetAngle(_accumPlayer2, _player2Angle);
 
-		_player1Angle = angle1;
-		_player2Angle = angle2;
+		float delta1 = GetAngleDelta (_wheelAngle, _player1Angle);
+		float delta2 = GetAngleDelta (_wheelAngle, 180 - _player2Angle);
+
+		bool player1 = _accumPlayer1.sqrMagnitude > 0.01 && delta1 < angleDeviation;
+		bool player2 = _accumPlayer2.sqrMagnitude > 0.01 && delta2 < angleDeviation;
+
 		_accumPlayer1.Set (0, 0, 0);
 		_accumPlayer2.Set (0, 0, 0);
 
-		Debug.Log ("p1:"+angle1);
-		Debug.Log ("p2:"+angle2);
-		Debug.Log (delta);
+		float toAccel = player1 && player2 ? doubleaccel : player1 || player2 ? accel : -decel;
+		float toTurn = player1 == player2 ? 0 : player1 ? -singleAngleOffset : singleAngleOffset;
 
-		if (Mathf.Abs (delta - 180) < angleDeviation){// && delta1 + delta2 > minDegreePerSecond * Time.fixedDeltaTime) {
-			_wheelSpeed += accel * Time.fixedDeltaTime;
-		} else {
-			_wheelSpeed -= accel * Time.fixedDeltaTime;
-		}
+		_dirAngle = (_dirAngle + toTurn * Time.fixedDeltaTime * _wheelSpeed / maxSpeed) % 360;
+		_wheelSpeed += toAccel * Time.fixedDeltaTime;
 		_wheelSpeed = Mathf.Clamp (_wheelSpeed, 0, maxSpeed);
+		_wheelAngle = (_wheelAngle + _wheelSpeed * Time.fixedDeltaTime) % 360;
+		float travel = _wheelSpeed * Time.fixedDeltaTime * Mathf.PI / 180 * WHEEL_RADIUS;
 
-		wheelMount.Rotate(new Vector3(_wheelSpeed * Time.fixedDeltaTime, 0, 0));
+		Quaternion rotation = new Quaternion ();
+		rotation.eulerAngles = new Vector3 (_wheelAngle + 180, 0, 0);
+		wheelMount.localRotation = rotation;
+		rotation.eulerAngles = new Vector3 (0, _dirAngle, 0);
+		unicycle.rotation = rotation;
+		rotation.eulerAngles = new Vector3 (0, 0, _wheelAngle);
+		player1Wheel.rotation = rotation;
+		rotation.eulerAngles = new Vector3 (0, 0, 180 - _wheelAngle);
+		player2Wheel.rotation = rotation;
+		unicycle.Translate (new Vector3 (0, 0, travel));
 	}
 }
