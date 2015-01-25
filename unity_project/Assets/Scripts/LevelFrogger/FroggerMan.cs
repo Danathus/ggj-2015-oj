@@ -32,6 +32,8 @@ public class FroggerMan : Scenario {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		ScenarioUpdate();
+		
 		mControls.Update ();
 
 

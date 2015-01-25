@@ -424,7 +424,7 @@ public class UnstableHand : Scenario {
 				floor.transform.position.y +0.1f,
 				floor.transform.position.z
 			);
-		AloneUpdate();
+		ScenarioUpdate();
 
 		if (Input.GetKey(KeyCode.Space))
 		{
