@@ -10,6 +10,7 @@ public class FroggerMan : Scenario {
 	private Animator _animator;
 	private bool _enabled = true;
 	private Vector3 _movement = new Vector3();
+	public AudioClip _punch_sound;
 
 	float _horizontalWeight = 0.0f;
 	float _VerticalWeight = 0.0f;
@@ -119,6 +120,9 @@ public class FroggerMan : Scenario {
 	void OnTriggerEnter(Collider other) {
 		if (_enabled && other.name.StartsWith ("Car")) {
 			GoRagdoll();
+			AudioSource audio = this.gameObject.AddComponent<AudioSource>();
+			audio.clip = _punch_sound;
+			audio.Play();
 			Failure();
 		}
 	}
