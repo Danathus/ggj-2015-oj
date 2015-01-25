@@ -229,6 +229,10 @@ Prefab:
       propertyPath: m_Scenarios.Array.data[2]
       value: CerealPour
       objectReference: {fileID: 0}
+    - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
+      propertyPath: m_Scenarios.Array.data[3]
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
   m_RootGameObject: {fileID: 1810358419}
