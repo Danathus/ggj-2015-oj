@@ -19,7 +19,7 @@ RenderSettings:
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientLight: {r: .200000003, g: .200000003, b: .200000003, a: 1}
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 9ba05f538ee36044da5cd2a4f14a8b18, type: 2}
   m_HaloStrength: .5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -2598,8 +2598,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1230901293}
-  - 95: {fileID: 1230901295}
   - 114: {fileID: 1230901294}
+  - 95: {fileID: 1230901295}
   - 65: {fileID: 1230901297}
   - 54: {fileID: 1230901296}
   m_Layer: 0
@@ -2646,14 +2646,13 @@ MonoBehaviour:
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 9500000, guid: 2bde4cfc68d3ad34b8f392c083306b29,
-    type: 3}
-  m_PrefabInternal: {fileID: 1862556299}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1230901292}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 1
+  m_Controller: {fileID: 9100000, guid: b93536f408920ac4482d06e2fb6206b3, type: 2}
+  m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
   m_HasTransformHierarchy: 1
@@ -4597,7 +4596,12 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 9500000, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: b93536f408920ac4482d06e2fb6206b3, type: 2}
+    m_RemovedComponents:
+    - {fileID: 9500000, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
   m_ParentPrefab: {fileID: 100100000, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
   m_RootGameObject: {fileID: 1230901292}
   m_IsPrefabParent: 0
