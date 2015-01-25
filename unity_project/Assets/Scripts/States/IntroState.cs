@@ -31,6 +31,10 @@ public class IntroState: State {
 
 	void TestGamepads()
 	{
+		//Debug.Log("controllers: " +
+		//	GamepadInput.GamePad.GetJoystickName(GamepadInput.GamePad.Index.One)
+		//	+ " and " +
+		//	GamepadInput.GamePad.GetJoystickName(GamepadInput.GamePad.Index.Two));
 		GamepadInput.GamepadState state = GamepadInput.GamePad.GetState(GamepadInput.GamePad.Index.One);
 		if (state.A)             { Debug.Log("1 A"); }
 		if (state.B)             { Debug.Log("1 B"); }
