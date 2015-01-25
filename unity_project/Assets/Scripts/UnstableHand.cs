@@ -117,6 +117,7 @@ public class PushBehavior : Behavior {
 		//Debug.Log("PushBehavior Operate");
 		if (signal > 0.0f)
 		{
+			//Debug.Log("signal from PushBehavior" + signal.ToString());
 			pushing = true;
 		} 
 		if(pushing)
@@ -205,8 +206,9 @@ public class ButtonPushBehavior : Behavior {
 			//Debug.Log("finger position " + finger_position.ToString());
 			//Debug.Log("inside? "  + button_bounds.Contains(finger_position));
 			//Debug.Log("finger_tip z: " + finger_tip.z.ToString() + " operand bounds: " + (mOperand.transform.position.z + mOperand.renderer.bounds.size.z/2).ToString());
-				if( button_bounds.Contains(finger_position) &&
-			   ((finger_tip.z) <= mOperand.transform.position.z + mOperand.renderer.bounds.size.z/2))
+				//if( button_bounds.Contains(finger_position) &&
+			   //((finger_tip.z) <= mOperand.transform.position.z + mOperand.renderer.bounds.size.z/2))
+			if(true)
 			{
 				
 				pushing = true;
@@ -218,12 +220,12 @@ public class ButtonPushBehavior : Behavior {
 			float z_boundary = originPosition.z + mOperand.renderer.bounds.size.z/2;
 			if(push_down)
 			{
-				if(mOperand.transform.position.z <= originPosition.z - mOperand.renderer.bounds.size.z/2)
+				if(mOperand.transform.position.z < originPosition.z - mOperand.renderer.bounds.size.z)
 				{
 					push_down = false;
 				}
 			}
-			float delta = (push_down) ? (-0.001f) : (0.001f);
+			float delta = (push_down) ? (-0.0006f) : (0.0006f);
 			mOperand.transform.position = new Vector3(
 				mOperand.transform.position.x,
 				mOperand.transform.position.y,
@@ -321,7 +323,7 @@ public class ElevatorMoveBehavior : Behavior {
 	{
 		if (signal > 0.0f)
 		{
-			Debug.Log("signal: " + signal.ToString());
+			//Debug.Log("signal: " + signal.ToString());
 			if(mCurrFloor != (int)signal)
 			{
 				mCurrFloor = (int)signal;
@@ -351,6 +353,7 @@ public class UnstableHand : Scenario {
 	private GameObject mWrongButton;
 	private GameObject mGameCamera;
 	private List<FloorChangeSignal> mFloorSignals = new List<FloorChangeSignal>();
+	private List<FloorChangeSignal> mButtonPushSignals = new List<FloorChangeSignal>();
 	
 	private Vector3 mOriginal_position;
 	private bool replaying = false;
@@ -378,20 +381,27 @@ public class UnstableHand : Scenario {
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          	new TranslateBehavior("player1 move right", mHand, new Vector3(-1,  0, 0) * speed));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),	new PushBehavior("finger push", mHand, mElevateKeyPad));
 		//mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
-		mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
-		mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("wrong button push", mWrongButton, mHand, 2));
+		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
+		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("wrong button push", mWrongButton, mHand, 2));
 		
 		Dictionary<int, string> floorMap = new Dictionary<int, string>();
 		mFloorSignals.Clear();
+		mButtonPushSignals.Clear();
 		floorMap.Add(1, "hell");
 		mFloorSignals.Add(new FloorChangeSignal(1));
+		mButtonPushSignals.Add(new FloorChangeSignal(1));
 		floorMap.Add(2, "heaven");
 		mFloorSignals.Add(new FloorChangeSignal(2));
+		mButtonPushSignals.Add(new FloorChangeSignal(2));
 		floorMap.Add(3, "heaven");
 		mFloorSignals.Add(new FloorChangeSignal(3));
+		mButtonPushSignals.Add(new FloorChangeSignal(3));
 		for(int i = 0; i < mFloorSignals.Count; ++i)
 		{
 			mControls.AddControl(mFloorSignals[i],          new ElevatorMoveBehavior("elevator move", mElevateKeyPad, floorMap));
+			GameObject obj = GameObject.Find("button.00" + (i+1).ToString());
+			Debug.Log(obj.name);
+			mControls.AddControl(mButtonPushSignals[i],          new CorrectButtonBehavior("correct button push", obj, mHand, i));
 		}
 	}
 
@@ -417,14 +427,17 @@ public class UnstableHand : Scenario {
 		if(button.name == "button.001" )
 		{
 			mFloorSignals[0].mTriggered = true;
+			mButtonPushSignals[0].mTriggered = true;
 		}
 		else if(button.name == "button.002" )
 		{
 			mFloorSignals[1].mTriggered = true;
+			mButtonPushSignals[1].mTriggered = true;
 		}
 		else if(button.name == "button.003" )
 		{
 			mFloorSignals[2].mTriggered = true;
+			mButtonPushSignals[2].mTriggered = true;
 		}
 	}
 	
