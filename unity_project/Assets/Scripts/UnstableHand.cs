@@ -470,12 +470,13 @@ public class UnstableHand : Scenario {
 	private List<FloorChangeSignal> mFloorSignals = new List<FloorChangeSignal>();
 	private List<FloorChangeSignal> mButtonPushSignals = new List<FloorChangeSignal>();
 	private PushBehavior mHandPushBehavior;
-	
+
 	private Vector3 mOriginal_position;
 	private bool replaying = false;
+
 	// Use this for initialization
-	void Start () {
-		
+	void Start ()
+	{
 		mHand = GameObject.Find("IK_fingertip");
 		//Debug.Log("hand obj name: " + mHand.name);
 		mElevateKeyPad = GameObject.Find("elevator button keypad");
@@ -488,14 +489,11 @@ public class UnstableHand : Scenario {
 		//Debug.Log("mElevatorFloor: " + mElevatorFloor.name);
 		GameObject elevatorWall = GameObject.Find("elevator walls");
 		
-		
 		mOriginal_position = mHand.transform.position;
-		
+
 		List<ButtonPushBehavior> buttonBehaviorList = new List<ButtonPushBehavior>();
 		buttonBehaviorList.Add(new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
 		buttonBehaviorList.Add(new WrongButtonBehavior("wrong button push", mWrongButton, mHand, 2));
-
-
 
 		float speed = 0.01f;
 		mControls.AddControl(new TrueSignal(),          					new UnstableBehavior("unstable hand", mHand));
@@ -524,7 +522,7 @@ public class UnstableHand : Scenario {
 		
 		GameObject leftDoor = GameObject.Find("left door");
 		GameObject rightDoor = GameObject.Find("right door");
-		
+
 		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor);
 		for(int i = 0; i < mFloorSignals.Count; ++i)
 		{
@@ -533,8 +531,6 @@ public class UnstableHand : Scenario {
 			//Debug.Log(obj.name);
 			mControls.AddControl(mButtonPushSignals[i],          new CorrectButtonBehavior("correct button push", obj, mHand, i));
 		}
-		
-
 	}
 
 
@@ -546,8 +542,6 @@ public class UnstableHand : Scenario {
 	
 	void FixedUpdate()
 	{
-		
-
 		ScenarioUpdate();
 
 		if (Input.GetKey(KeyCode.Space))
