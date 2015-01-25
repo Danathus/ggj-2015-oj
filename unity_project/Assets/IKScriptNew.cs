@@ -27,10 +27,10 @@ public class IKScriptNew: MonoBehaviour {
 	//hold last positions so recalculation is only done if needed
 	private Vector3 lastUpperArmPosition, lastTargetPosition, lastElbowTargetPosition;
 	
-	void Start(){
-		upperArmStartRotation = upperArm.rotation;
-		forearmStartRotation = forearm.rotation;
-		handStartRotation = hand.rotation;
+	public void Reset()
+	{
+		transition = 1.0f;
+
 		//targetRelativeStartPosition = target.position - upperArm.position;
 		elbowTargetRelativeStartPosition = elbowTarget.position - upperArm.position;
 		
@@ -46,6 +46,19 @@ public class IKScriptNew: MonoBehaviour {
 		
 		//guarantee first-frame update
 		lastUpperArmPosition = upperArm.position + 5*Vector3.up;
+
+		// loose ends
+		lastTargetPosition = new Vector3();
+		lastElbowTargetPosition = new Vector3();
+	}
+
+	void Start(){
+		// remember the start rotations just the first time
+		upperArmStartRotation = upperArm.rotation;
+		forearmStartRotation = forearm.rotation;
+		handStartRotation = hand.rotation;
+
+		Reset();
 	}
 	
 	void LateUpdate () {
