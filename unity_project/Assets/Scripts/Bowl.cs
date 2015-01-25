@@ -9,8 +9,10 @@ public class Bowl : Scenario {
 	private float _playTime = 0.0f;
 	private bool _hasEnded = false;
 	private Vector3 _accum = new Vector3();
+	public Renderer bounds;
 
 	private GameObjectReverter _reverter;
+	private Bounder _bounder;
 
 	public override void Reset ()
 	{
@@ -25,6 +27,7 @@ public class Bowl : Scenario {
 	// Use this for initialization
 	void Start () {
 		_reverter = new GameObjectReverter (this.gameObject);
+		_bounder = new Bounder (bounds);
 
 		Behavior p1Up    = new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  1, 0) * speed, Move);
 		Behavior p1Down  = new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0, -1, 0) * speed, Move);
@@ -83,7 +86,7 @@ public class Bowl : Scenario {
 		// Debug.Log (Time.fixeadDeltaTime);
 		//Debug.Log (this.rigidbody.velocity);
 
-		this.rigidbody.velocity = _accum;
+		this.rigidbody.velocity = _bounder.Translate(this.rigidbody.position, _accum);
 		_accum.Set (0, 0, 0);
 	}
 }
