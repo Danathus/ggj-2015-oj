@@ -67,7 +67,7 @@ public class Bowl : Scenario {
 
 		if (!_hasEnded) {
 			//_playTime += Time.fixedDeltaTime;
-			if(_totalCaught == 20)
+			if(_totalCaught == 50)
 			{
 				this.Victory();
 				_hasEnded = true;
