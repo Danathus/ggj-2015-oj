@@ -38,8 +38,8 @@ public class FroggerCamera : Scenario {
 		position.y = targetY;
 		this.transform.position = position;
 
-		mControls.Update();
-		//ScenarioUpdate();
+		// mControls.Update();
+		ScenarioUpdate();
 	}
 
 	private void Move(GameObject gameObject, Vector3 offset) {
