@@ -9,7 +9,7 @@ public class IntroState: State {
 
 	public override void Enter() {
 		ScenarioManager.Instance.Shuffle();
-		if (!ScenarioManager.Instance.isInitialized()) {
+		if (ScenarioManager.Instance.isInitialized()) {
 			Application.LoadLevel("main_menu");
 		} else {
 			ScenarioManager.Instance.ActivateState("Play");
