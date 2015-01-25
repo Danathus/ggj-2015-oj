@@ -1260,7 +1260,7 @@ Renderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 516880266}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_LightmapIndex: 255
@@ -1301,7 +1301,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 516880266}
   m_LocalRotation: {x: .696376979, y: -.122715607, z: .122715577, w: .696376979}
-  m_LocalPosition: {x: .920000017, y: 1.71000004, z: -1.51999998}
+  m_LocalPosition: {x: 1.21000004, y: 1.42499995, z: -1.41400003}
   m_LocalScale: {x: .300000012, y: 1.03999996, z: .340000004}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1867,6 +1867,7 @@ MonoBehaviour:
   hellTex: {fileID: 0}
   heavenTex: {fileID: 0}
   bathroomTex: {fileID: 0}
+  elevator_bell: {fileID: 0}
 --- !u!136 &848748717
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2868,6 +2869,7 @@ MonoBehaviour:
   hellTex: {fileID: 2800000, guid: 1bf840e1b034efb49a1d8640314c3478, type: 3}
   heavenTex: {fileID: 2800000, guid: 8ec227ae1f81a8640aeb3b4aedaa4d88, type: 3}
   bathroomTex: {fileID: 2800000, guid: e2a2122a306232d49afdc4ef6ed327e9, type: 3}
+  elevator_bell: {fileID: 0}
 --- !u!54 &1094230270
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3345,7 +3347,7 @@ Renderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1363151482}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_LightmapIndex: 255
