@@ -12,7 +12,7 @@ public class Cereal : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		var newRotation = new Quaternion ();
-		newRotation.eulerAngles = new Vector3(Random.Range (0, 180), Random.Range (0, 180), Random.Range (0, 180));
+		//newRotation.eulerAngles = new Vector3(Random.Range (0, 180), Random.Range (0, 180), Random.Range (0, 180));
 		this.transform.rotation = newRotation;
 		_bowlRenderer = GameObject.FindGameObjectWithTag("Bowl").renderer;
 	}

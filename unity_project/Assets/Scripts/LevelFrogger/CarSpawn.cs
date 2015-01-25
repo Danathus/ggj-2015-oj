@@ -1,16 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CarSpawn : MonoBehaviour {
+public class CarSpawn : Scenario {
 
 	public Object car;
 	public bool reversed = false;
 	public float spawnTimeMin = 1, spawnTimeMax = 4;
 
 	private float _timeToNextSpawn;
+	private RandomReverter _random;
+
+	public override void Reset ()
+	{
+		_random.Revert ();
+	}
 
 	// Use this for initialization
 	void Start() {
+		_random = new RandomReverter ();
 		SetNextSpawn ();
 	}
 	
@@ -30,6 +37,6 @@ public class CarSpawn : MonoBehaviour {
 	}
 	
 	void SetNextSpawn() {
-		_timeToNextSpawn = Random.Range(spawnTimeMin, spawnTimeMax);
+		_timeToNextSpawn = _random.Range(spawnTimeMin, spawnTimeMax);
 	}
 }
