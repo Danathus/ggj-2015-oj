@@ -6,7 +6,9 @@ public class FroggerMan : Scenario {
 
 	public float speed = 4.0f;
 
+	private Animator _animator;
 	private bool _enabled = true;
+	private Vector3 _movement = new Vector3();
 
 	public override void Reset ()
 	{
@@ -14,12 +16,12 @@ public class FroggerMan : Scenario {
 
 	// Use this for initialization
 	void Start () {
-		// create behaviors
-		Behavior p1Up    = new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  0, -1) * Time.fixedDeltaTime, Move);
-		Behavior p1Down  = new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0,  0,  1) * Time.fixedDeltaTime, Move);
-		Behavior p1Left  = new MovementCallbackBehavior("player1 move left",  this.gameObject, new Vector3( 1,  0,  0) * Time.fixedDeltaTime, Move);
-		Behavior p1Right = new MovementCallbackBehavior("player1 move right", this.gameObject, new Vector3(-1,  0,  0) * Time.fixedDeltaTime, Move);
+		_animator = GetComponent<Animator>();
 
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W), new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  0, -1), Move));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S), new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0,  0,  1), Move));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A), new MovementCallbackBehavior("player1 move left",  this.gameObject, new Vector3( 1,  0,  0), Move));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D), new MovementCallbackBehavior("player1 move right", this.gameObject, new Vector3(-1,  0,  0), Move));
 		// rig control scheme
 		//   for buttons
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W), p1Up   );
@@ -44,6 +46,21 @@ public class FroggerMan : Scenario {
 		ScenarioUpdate();
 		
 		mControls.Update ();
+
+
+		if (_movement.sqrMagnitude > 0.0) {
+			//this.transform.LookAt(this.transform.position + _movement);
+		}
+
+		//this.animation.Play ("walking");
+
+
+		if(_movement.z < 0) this.transform.position += new Vector3 (0, 0, _movement.z * Time.fixedDeltaTime);
+		_animator.SetFloat ("Horizontal", -_movement.x);
+		_animator.SetFloat ("Vertical", -_movement.z);
+		_animator.SetFloat ("Turn", 0);
+		_animator.SetBool ("Jump", false);
+		_movement.Set (0, 0, 0);
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -52,13 +69,14 @@ public class FroggerMan : Scenario {
 				body.isKinematic = false;
 				body.collider.enabled = true;
 			}	
+			_animator.enabled = false;
 			_enabled = false;
 		}
 	}
 
 	private void Move(GameObject gameObject, Vector3 offset) {
 		if (_enabled) {
-			gameObject.transform.position += offset * speed;
+			_movement += offset * speed;
 		}
 	}
 }
