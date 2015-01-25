@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,10 +35,19 @@ public class Main : MonoBehaviour
 		// hook up the IK
 		if (mRightShoulder != null)
 		{
-			IKControl ik = mRightShoulder.GetComponent<IKControl>();
-			//ik.rightHandObj = mPlayer2.transform;
-			ik.target = mPlayer2.transform;
+			//IKControl ik = mRightShoulder.GetComponent<IKControl>();
+			//ik.target = mPlayer2.transform;
 			//ik.ikActive = true;
+
+			//IKCtrl ik = mRightShoulder.GetComponent<IKCtrl>();
+			//ik.rightHandObj = mPlayer2.transform;
+			//ik.ikActive = true; 
+
+			//ikLimb2 ik = mRightShoulder.GetComponent<ikLimb2>();
+			//IKLimb ik = mRightShoulder.GetComponent<IKLimb>();
+			IKScriptNew ik = mRightShoulder.GetComponent<IKScriptNew>(); 
+			//ik.target = mPlayer2.transform;
+			ik.IsEnabled = true; 
 		}
 		// restart the scene
 		Restart();
