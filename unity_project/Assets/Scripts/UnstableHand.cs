@@ -179,7 +179,8 @@ public class UnstableHand : Scenario {
 
 		if (Input.GetKey(KeyCode.Space))
 		{
-			BeginReplay();
+			Victory();
+			// BeginReplay();
 		}
 	}
 	
