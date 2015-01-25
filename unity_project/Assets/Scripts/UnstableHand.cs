@@ -313,6 +313,8 @@ public class FloorChangeSignal : ControlSignal
 public class ElevatorMoveBehavior : Behavior {
 	private int mCurrFloor;
 	Dictionary<int, string> mFloorMap;
+	private int mHeight;
+	
 	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap)
 		: base(name, operand)
 	{
@@ -329,9 +331,16 @@ public class ElevatorMoveBehavior : Behavior {
 				mCurrFloor = (int)signal;
 				
 				Debug.Log("go to " + mCurrFloor.ToString() + " floor");
-				
-				return true;
+				mHeight = mCurrFloor * 2.0f;
 			}
+			if(mOperand.transform.position.y != mHeight)
+			{
+				mOperand.transform.position = new Vector3 (
+					mOperand.transform.position.x,
+					mOperand.transform.position.y += 0.1,
+					mOperand.transform.position.z);
+			}
+			return true;
 		}
 		return false;
 	}
@@ -352,6 +361,7 @@ public class UnstableHand : Scenario {
 	private GameObject mCorrectButton;
 	private GameObject mWrongButton;
 	private GameObject mGameCamera;
+	private GameObject mElevatorFloor;
 	private List<FloorChangeSignal> mFloorSignals = new List<FloorChangeSignal>();
 	private List<FloorChangeSignal> mButtonPushSignals = new List<FloorChangeSignal>();
 	
@@ -401,7 +411,7 @@ public class UnstableHand : Scenario {
 		mButtonPushSignals.Add(new FloorChangeSignal(3));
 		for(int i = 0; i < mFloorSignals.Count; ++i)
 		{
-			mControls.AddControl(mFloorSignals[i],          new ElevatorMoveBehavior("elevator move", mElevateKeyPad, floorMap));
+			mControls.AddControl(mFloorSignals[i],          new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap));
 			GameObject obj = GameObject.Find("button.00" + (i+1).ToString());
 			Debug.Log(obj.name);
 			mControls.AddControl(mButtonPushSignals[i],          new CorrectButtonBehavior("correct button push", obj, mHand, i));
@@ -418,7 +428,7 @@ public class UnstableHand : Scenario {
 	void FixedUpdate()
 	{
 		GameObject floor = GameObject.Find("elevator floor");
-		if(floor.transform.position.y < 2.0f)
+		if(false)
 			floor.transform.position = new Vector3 (
 				floor.transform.position.x,
 				floor.transform.position.y +0.1f,
