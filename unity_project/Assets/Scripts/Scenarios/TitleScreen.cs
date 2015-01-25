@@ -24,11 +24,11 @@ public class MagneticBehavior: Behavior
 	{
 		if (signal > 0.0f && m_Transform != null)
 		{
-			Vector3 offset = m_Target - m_Transform.position;
-			offset *= m_Strength * Time.fixedDeltaTime;
-			m_Delta = offset;
+			m_Delta = m_Target - m_Transform.position;
+			m_Delta *= m_Strength * Time.fixedDeltaTime;
+			Debug.Log("" + (m_Transform.position - m_Target) + ", " + m_Delta);
 
-			m_Transform.position += offset;
+			m_Transform.position += m_Delta;
 			return true;
 		}
 		return false;
@@ -78,25 +78,25 @@ public class TitleScreen : MonoBehaviour {
 		Behavior p2Right = new RectTranslateBehavior("player2 move right", m_RightPart, new Vector3( 1,  0, 0) * speed);
 
 		m_Controls = new ControlScheme();
-		m_Controls.AddControl(new TrueSignal(), 							p1Mag  );
-		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.W),          p1Up   );
-		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.S),          p1Down );
-		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.A),          p1Left );
-		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.D),          p1Right);
-		m_Controls.AddControl(new TrueSignal(), 							p2Mag  );
-		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    p2Up   );
-		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  p2Down );
-		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  p2Left );
-		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), p2Right);
+		m_Controls.AddControl(new TrueSignal(),                                                                     p1Mag  );
+		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.W, new KeyCode[] { KeyCode.A, KeyCode.D }),          p1Up   );
+		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.S, new KeyCode[] { KeyCode.A, KeyCode.D }),          p1Down );
+		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.A, new KeyCode[] { KeyCode.W, KeyCode.S }),          p1Left );
+		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.D, new KeyCode[] { KeyCode.W, KeyCode.S }),          p1Right);
+		m_Controls.AddControl(new TrueSignal(),                                                                     p2Mag  );
+		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow   , new KeyCode[] { KeyCode.A, KeyCode.D }), p2Up   );
+		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow , new KeyCode[] { KeyCode.A, KeyCode.D }), p2Down );
+		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow , new KeyCode[] { KeyCode.W, KeyCode.S }), p2Left );
+		m_Controls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow, new KeyCode[] { KeyCode.W, KeyCode.S }), p2Right);
 
-		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p1Up    );
-		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p1Down  );
-		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p1Left  );
-		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p1Right );
-		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p2Up    );
-		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p2Down  );
-		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p2Left  );
-		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p2Right );
+		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f, true), p1Up    );
+		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f, true), p1Down  );
+		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f, true), p1Left  );
+		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f, true), p1Right );
+		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f, true), p2Up    );
+		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f, true), p2Down  );
+		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f, true), p2Left  );
+		m_Controls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f, true), p2Right );
 	}
 	
 	// Update is called once per frame
