@@ -275,19 +275,14 @@ public class CorrectButtonBehavior : ButtonPushBehavior {
 	public CorrectButtonBehavior(string name, GameObject operand, GameObject pusher, int floor)
 		:base (name, operand, pusher, floor)
 	{
-		
 	}
-	
-
 }
 
 public class WrongButtonBehavior : ButtonPushBehavior {
 	
-
 	public WrongButtonBehavior(string name, GameObject operand, GameObject pusher, int floor)
 		:base (name, operand, pusher, floor)
 	{
-		
 	}
 }
 
@@ -343,13 +338,19 @@ public class ElevatorMoveBehavior : Behavior {
 	private Vector3 original_position;
 	private bool back;
 	private bool openDoor;
-	private bool closeDoor;
+	protected bool closeDoor;
 	private GameObject mLeftDoor;
 	private GameObject mRightDoor;
 	private Vector3 left_door_position;
 	private Vector3 right_door_position;
+	Scenario mScenario;
+
+	protected bool IsRightFloor()
+	{
+		return mCurrFloor == 1;
+	}
 	
-	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor)
+	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor, Scenario scenario)
 		: base(name, operand)
 	{
 		mCurrFloor = 0;
@@ -362,6 +363,7 @@ public class ElevatorMoveBehavior : Behavior {
 		mRightDoor = rightdoor;
 		left_door_position = mLeftDoor.transform.position;
 		right_door_position = mRightDoor.transform.position;
+		mScenario = scenario;
 	}
 	
 	public override bool Operate(float signal)
@@ -407,7 +409,15 @@ public class ElevatorMoveBehavior : Behavior {
 			if(mLeftDoor.transform.position.x >= left_door_position.x + 0.9f)
 			{
 				openDoor = false;
-				closeDoor = true;
+				if (IsRightFloor())
+				{
+					// win condition
+					mScenario.Victory();
+				}
+				else
+				{
+					closeDoor = true;
+				}
 			}
 			if(openDoor)
 			{
@@ -524,13 +534,25 @@ public class UnstableHand : Scenario {
 		GameObject leftDoor = GameObject.Find("left door");
 		GameObject rightDoor = GameObject.Find("right door");
 
-		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor);
+		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor, this);
 		for(int i = 0; i < mFloorSignals.Count; ++i)
 		{
 			mControls.AddControl(mFloorSignals[i],          elevatorMover);
 			GameObject obj = GameObject.Find("button.00" + (i+1).ToString());
 			//Debug.Log(obj.name);
 			mControls.AddControl(mButtonPushSignals[i],          new CorrectButtonBehavior("correct button push", obj, mHand, i));
+			/*
+			ButtonPushBehavior pushBehavior;
+			if (i == 0)
+			{
+				pushBehavior = new CorrectButtonBehavior("correct button push", obj, mHand, i, this);
+			}
+			else
+			{
+				pushBehavior = new WrongButtonBehavior("wrong button push", obj, mHand, i);
+			}
+			mControls.AddControl(mButtonPushSignals[i], pushBehavior);
+			//*/
 		}
 	}
 
