@@ -18,16 +18,16 @@ public class Box : MonoBehaviour {
 	void CreateCereal(Vector3 position)
 	{
 		if (_freeCereal.Count > 0) {
-			Debug.Log("fe:" + _freeCereal.Count);
+			// Debug.Log("fe:" + _freeCereal.Count);
 			GameObject gameObject = _freeCereal.Pop();
-			Debug.Log("fa:" + _freeCereal.Count);
+			// Debug.Log("fa:" + _freeCereal.Count);
 				gameObject.transform.position = gameObject.rigidbody.position = position;
 			//gameObject.transform.rotation = gameObject.rigidbody.rotation = new Quaternion();
 			gameObject.rigidbody.velocity = gameObject.rigidbody.angularVelocity = new Vector3();
 			gameObject.SetActiveRecursively(true);
 		} else {
 			n ++;
-			Debug.Log(n);
+			// Debug.Log(n);
 			Instantiate(cereal, position, new Quaternion());
 		}
 	}

@@ -2,63 +2,73 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-[System.Serializable]
-public struct ScenarioData {
-	public string scenarioName;
-	public int someOtherValue;
-}
-
-// a scenario includes an ordered set of behaviors that can be done
-class Scenario
-{
-	List<Behavior> mBehaviors = new List<Behavior>();
-	Dictionary<string, Behavior> mNameToBehavior = new Dictionary<string, Behavior>();
-
-	public void AddBehavior(Behavior behavior)
-	{
-		mBehaviors.Add(behavior);
-		mNameToBehavior[behavior.mName] = behavior;
-	}
-	public Behavior GetBehavior(string name)
-	{
-		return mNameToBehavior[name];
-	}
-}
-
 public class ScenarioManager : Singleton<ScenarioManager>
 {
 	protected ScenarioManager () {}
 
-	public ControlScheme mControls = new ControlScheme();
+	public GameObject m_VictoryScreen = null;
+	public GameObject m_FailureScreen = null;
+	private GameObject mShowingScreen = null;
 
-	public List<ScenarioData> m_Scenarios = new List<ScenarioData>();
+	public List<string> m_Scenarios = new List<string>();
 	private int mCurrentScenario = -1;
+
+	private List<State> mStates = new List<State>();
+	private State mCurrentState = null;
 
 	// Use this for initialization
 	void Start () {
 		DontDestroyOnLoad(gameObject);
 
-		Shuffle();
+		SetupStates();
 	}
 
 	// called once per timestep update (critical: do game state updates here!!!)
 	void FixedUpdate()
 	{
-		if (!ReplayManager.Instance.mIsReplaying) {
-			mControls.Update();
+		if (mCurrentState != null) {
+			mCurrentState.Update();
+		}
+	}
+
+	private void SetupStates() {
+		mStates.Add(new IntroState());
+		mStates.Add(new PlayState());
+		// mStates.Add(new ReplayState());
+		mStates.Add(new VictoryState());
+		mStates.Add(new FailureState());
+
+		ActivateState("Intro");
+	}
+
+	public string CurrentState() {
+		if (mCurrentState != null) {
+			return mCurrentState.mName;
+		}
+		return "";
+	}
+
+	public bool ActivateState(string name) {
+		for (int i = 0; i < mStates.Count; ++i) {
+			if (mStates[i].mName == name) {
+				if (mCurrentState != null) {
+					mCurrentState.Leave();
+				}
+				mCurrentState = mStates[i];
+				mStates[i].Enter();
+				return true;
+			}
 		}
 
-		if (Input.GetKey(KeyCode.Return)) {
-			NextScenario();
-		}
+		return false;
 	}
 
 	public void Shuffle() {
 		for (int i = 0; i < m_Scenarios.Count; ++i) {
-			ScenarioData data = m_Scenarios[i];
+			string scenarioName = m_Scenarios[i];
 			int randomIndex = Random.Range(i, m_Scenarios.Count);
 			m_Scenarios[i] = m_Scenarios[randomIndex];
-			m_Scenarios[randomIndex] = data;
+			m_Scenarios[randomIndex] = scenarioName;
 		}
 	}
 
@@ -70,10 +80,34 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		}
 
 		if (mCurrentScenario < m_Scenarios.Count) {
-			ScenarioData data = m_Scenarios[mCurrentScenario];
-			Application.LoadLevel(data.scenarioName);
-			mControls.Clear();
-			ReplayManager.Instance.Clear();
+			string scenarioName = m_Scenarios[mCurrentScenario];
+			Application.LoadLevel(scenarioName);
+		}
+	}
+
+	public void ShowVictory() {
+		if (m_VictoryScreen != null) {
+			mShowingScreen = Instantiate(m_VictoryScreen, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+		}
+	}
+
+	public void HideVictory() {
+		if (mShowingScreen != null) {
+			Destroy(mShowingScreen);
+			mShowingScreen = null;
+		}
+	}
+
+	public void ShowFailure() {
+		if (m_FailureScreen != null) {
+			mShowingScreen = Instantiate(m_FailureScreen, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+		}
+	}
+
+	public void HideFailure() {
+		if (mShowingScreen != null) {
+			Destroy(mShowingScreen);
+			mShowingScreen = null;
 		}
 	}
 }
