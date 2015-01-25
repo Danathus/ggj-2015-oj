@@ -9,7 +9,11 @@ public class IntroState: State {
 
 	public override void Enter() {
 		ScenarioManager.Instance.Shuffle();
-		Application.LoadLevel("main_menu");
+		if (ScenarioManager.Instance.m_Scenarios.Count > 0) {
+			Application.LoadLevel("main_menu");
+		} else {
+			ScenarioManager.Instance.ActivateState("Play");
+		}
 	}
 
 	public override void Leave() {
