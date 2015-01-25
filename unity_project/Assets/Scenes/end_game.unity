@@ -638,7 +638,6 @@ GameObject:
   - 223: {fileID: 1990361900}
   - 114: {fileID: 1990361899}
   - 114: {fileID: 1990361898}
-  - 114: {fileID: 1990361901}
   m_Layer: 5
   m_Name: Screen
   m_TagString: Untagged
@@ -723,19 +722,3 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!114 &1990361901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1990361896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96a7c60b15f3cb4596c88e5fcc947cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_LeftPart: {fileID: 0}
-  m_RightPart: {fileID: 0}
-  m_FinishedTimer: 2
-  m_holdAccum: 0
-  m_holdTimeRequirement: .5
