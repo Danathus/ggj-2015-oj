@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ReviewState: State {
 
-	protected Scenario mScenario = null;
+	private Scenario[] mScenarioList = null;
 
 	public ReviewState() {
 		mName = "Review";
@@ -25,13 +25,17 @@ public class ReviewState: State {
 	
 	public override void Update () {
 		if (!ReplayManager.Instance.mIsReplaying) {
-			if (mScenario == null) {
-				mScenario = Object.FindObjectOfType(typeof(Scenario)) as Scenario;
+			if (mScenarioList == null) {
+				mScenarioList = Object.FindObjectsOfType<Scenario>();
 			}
 
 			if (Input.GetKey(KeyCode.Space)) {
-				if (mScenario != null) {
-					mScenario.Reset();
+				bool updatedSomeScenario = false;
+				foreach (var scenario in mScenarioList) {
+					scenario.Reset();
+					updatedSomeScenario = true;
+				}
+				if (updatedSomeScenario) {
 					ReplayManager.Instance.Play();
 				}
 			}
