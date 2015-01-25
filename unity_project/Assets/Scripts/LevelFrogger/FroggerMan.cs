@@ -13,13 +13,64 @@ public class FroggerMan : Scenario {
 
 	float _horizontalWeight = 0.0f;
 	float _VerticalWeight = 0.0f;
+	//int _randomSeed;
 
-	public override void Reset ()
+	GameObjectReverter _manReverter = null;
+
+	protected void GoRagdoll()
 	{
+		foreach (var body in this.GetComponentsInChildren<Rigidbody>()) {
+			body.isKinematic = false;
+			body.collider.enabled = true;
+		}
+		_animator.enabled = false;
+		_enabled = false;
+	}
+
+	protected void GoCannedAnimation()
+	{
+		foreach (var body in this.GetComponentsInChildren<Rigidbody>()) {
+			body.isKinematic = true;
+			body.collider.enabled = false;
+		}
+		//this.gameObject.rigidbody.isKinematic = false;
+		_animator.enabled = true;
+		_enabled = true;
+	}
+
+	public override void Reset()
+	{
+		//UnityEngine.Random.seed = _randomSeed;
+		foreach (Car car in UnityEngine.Object.FindObjectsOfType<Car>()) {
+			Destroy(car.gameObject);
+		}
+
+		if (_animator != null)
+		{
+			_animator.SetFloat ("Horizontal", 0.0f);
+			_animator.SetFloat ("Vertical",   0.0f);
+			_animator.SetFloat ("Turn", 0.0f);
+			_animator.SetBool ("Jump", false);
+		}
+		this.gameObject.rigidbody.isKinematic = false;
+		if (_manReverter != null)
+		{
+			_manReverter.Revert();
+		}
+		this.gameObject.rigidbody.isKinematic = true;
+
+		GoCannedAnimation();
+		this.collider.enabled = true;
+
+		_movement = new Vector3();
+		_horizontalWeight = 0.0f;
+		_VerticalWeight = 0.0f;
 	}
 
 	// Use this for initialization
 	void Start () {
+		//_randomSeed = UnityEngine.Random.seed;
+
 		_animator = GetComponent<Animator>();
 
 		// create behaviors
@@ -30,21 +81,11 @@ public class FroggerMan : Scenario {
 
 		// rig control scheme
 		//   for buttons
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W), p1Up   );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S), p1Down );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A), p1Left );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D), p1Right);
-		//   for gamepads
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p1Up    );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p1Down  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p1Left  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p1Right );
+		SetControlScheme(0, p1Up, p1Down, p1Left, p1Right);
 
-		foreach (var body in this.GetComponentsInChildren<Rigidbody>()) {
-			body.isKinematic = true;
-			body.collider.enabled = false;
-		}
-		this.collider.enabled = true;
+		_manReverter = null;
+		Reset();
+		_manReverter = new GameObjectReverter(this.gameObject);
 	}
 	
 	// Update is called once per frame
@@ -77,12 +118,8 @@ public class FroggerMan : Scenario {
 
 	void OnTriggerEnter(Collider other) {
 		if (_enabled && other.name.StartsWith ("Car")) {
-			foreach (var body in this.GetComponentsInChildren<Rigidbody>()) {
-				body.isKinematic = false;
-				body.collider.enabled = true;
-			}	
-			_animator.enabled = false;
-			_enabled = false;
+			GoRagdoll();
+			Failure();
 		}
 	}
 
