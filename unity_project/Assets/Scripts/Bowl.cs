@@ -6,7 +6,7 @@ public class Bowl : Scenario {
 	public float speed = 150.0f;
 
 	private int _totalCaught = 0;
-	private float _playTime = 0.0f;
+	//private float _playTime = 0.0f;
 	private bool _hasEnded = false;
 	private Vector3 _accum = new Vector3();
 	public Renderer bounds;
@@ -16,7 +16,10 @@ public class Bowl : Scenario {
 
 	public override void Reset ()
 	{
+		Debug.Log("Bowl.Reset()!");
 		_reverter.Revert ();
+		_totalCaught = 0;
+		_accum = new Vector3();
 	}
 
 	public void CaughtCereal()
@@ -44,6 +47,8 @@ public class Bowl : Scenario {
 		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p1Down  );
 		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p1Left  );
 		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p1Right );
+
+		Reset();
 	}
 	
 	void Move(GameObject gameObject, Vector3 offset) {
@@ -70,15 +75,16 @@ public class Bowl : Scenario {
 		}*/
 
 		if (!_hasEnded) {
-			_playTime += Time.fixedDeltaTime;
+			//_playTime += Time.fixedDeltaTime;
 			if(_totalCaught == 100)
 			{
 				this.Victory();
 				_hasEnded = true;
 			}
-			else if (_playTime > 15) {
-				this.Failure();
-				_hasEnded = true;
+			else //if (_playTime > 15)
+			{
+				//this.Failure();
+				//_hasEnded = true;
 			}
 		}
 
