@@ -122,7 +122,7 @@ namespace GamepadInput
 			return -2;
 		}
 		
-		static string GetJoystickName(Index controlIndex)
+		public static string GetJoystickName(Index controlIndex)
 		{
 			// poll joystick configuration
 			int index = IndexToInt(controlIndex);
@@ -146,6 +146,9 @@ namespace GamepadInput
 			switch (joystickName)
 			{
 			case "Logitech RumblePad 2 USB":
+				result = GetKeycode_Logitech(button, controlIndex);
+				break;
+			case "Logitech Dual Action":
 				result = GetKeycode_Logitech(button, controlIndex);
 				break;
 			default:
