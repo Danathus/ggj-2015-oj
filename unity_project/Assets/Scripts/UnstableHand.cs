@@ -121,24 +121,28 @@ public class PushBehavior : Behavior {
 		} 
 		if(pushing)
 		{
-			Debug.Log("obstacle is null? " + mObstacle == null);
+			//Debug.Log("obstacle is null? " + mObstacle == null);
 			float z_boundary = (mObstacle != null)?
-				mObstacle.transform.position.z - (mObstacle.renderer.bounds.size.z/2 * mObstacle.transform.localScale.z) : 
+				mObstacle.transform.position.z + (mObstacle.renderer.bounds.size.z/2) : 
 				originPosition.z + 1.0f;
 			if(forward)
 			{
-				float finger_z_position = mOperand.transform.position.z + (mOperand.renderer.bounds.size.z/2 * mOperand.transform.localScale.z);
-				if((finger_z_position + 0.1f) >= z_boundary)
+				Vector3 finger_tip = new Vector3(
+					mOperand.transform.position.x,
+					mOperand.transform.position.y + mOperand.renderer.bounds.size.y/2,
+					mOperand.transform.position.z - mOperand.renderer.bounds.size.z/2 - 0.12f);
+				float finger_z_position = finger_tip.z;
+				if((finger_z_position) <= z_boundary)
 				{
 					forward = false;
 				}
 			}
-			float delta = (forward) ? (0.1f) : (-0.1f);
+			float delta = (forward) ? (-0.005f) : (0.005f);
 			mOperand.transform.position = new Vector3(
 				mOperand.transform.position.x,
 				mOperand.transform.position.y,
 				mOperand.transform.position.z + delta);
-			if(mOperand.transform.position.z <= originPosition.z)
+			if(mOperand.transform.position.z >= originPosition.z)
 			{
 				pushing = false;
 				forward = true;
@@ -162,6 +166,8 @@ public class ButtonPushBehavior : Behavior {
 	private GameObject mPusher;
 	public bool mTriggered;
 	public int mFloor;
+	private GameObject helper;
+	
 	public ButtonPushBehavior(string name, GameObject operand, GameObject pusher, int floor)
 		:base(name, operand)
 	{
@@ -173,6 +179,8 @@ public class ButtonPushBehavior : Behavior {
 		pushing = false;
 		mTriggered = false;
 		mFloor = floor;
+		helper = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		helper.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
 	}
 	
 	// input: signal -- degree [0.0, 1.0] to which signal should be operated (0.0 means do nothing, generally)
@@ -180,21 +188,27 @@ public class ButtonPushBehavior : Behavior {
 	public override bool Operate(float signal)
 	{
 		//Debug.Log("PushBehavior Operate");
-		float finger_z_position = mPusher.transform.position.z + (mPusher.renderer.bounds.size.z/2 * mPusher.transform.localScale.z);
+		//float finger_z_position = mPusher.transform.position.z + (mPusher.renderer.bounds.size.z/2 * mPusher.transform.localScale.z);
 		Vector3 finger_tip = new Vector3(
 			mPusher.transform.position.x,
 			mPusher.transform.position.y + mPusher.renderer.bounds.size.y/2,
-			mPusher.transform.position.z + mPusher.renderer.bounds.size.z/2);
+			mPusher.transform.position.z - mPusher.renderer.bounds.size.z/2 - 0.12f);
+		helper.transform.position = finger_tip;
 		if (signal > 0.0f)
 		{	
-			Rect button_bounds = new Rect(mOperand.transform.position.x - mOperand.renderer.bounds.size.x/2, mOperand.transform.position.y - mOperand.renderer.bounds.size.y/2, mOperand.transform.position.x + mOperand.renderer.bounds.size.x/2, mOperand.transform.position.y + mOperand.renderer.bounds.size.y/2);
+			Rect button_bounds = new Rect(mOperand.transform.position.x - mOperand.renderer.bounds.size.x/2, 
+			                              mOperand.transform.position.y - mOperand.renderer.bounds.size.y/2, 
+			                              mOperand.renderer.bounds.size.x , 
+			                              mOperand.renderer.bounds.size.y);
 			Vector2 finger_position = new Vector2(finger_tip.x, finger_tip.y);
 			//Debug.Log("button_bounds " + button_bounds.ToString());
 			//Debug.Log("finger position " + finger_position.ToString());
 			//Debug.Log("inside? "  + button_bounds.Contains(finger_position));
+			//Debug.Log("finger_tip z: " + finger_tip.z.ToString() + " operand bounds: " + (mOperand.transform.position.z + mOperand.renderer.bounds.size.z/2).ToString());
 				if( button_bounds.Contains(finger_position) &&
-			   ((finger_tip.z) >= mOperand.transform.position.z - mOperand.renderer.bounds.size.z/2))
+			   ((finger_tip.z) <= mOperand.transform.position.z + mOperand.renderer.bounds.size.z/2))
 			{
+				
 				pushing = true;
 				mTriggered = true;
 			}
@@ -204,17 +218,17 @@ public class ButtonPushBehavior : Behavior {
 			float z_boundary = originPosition.z + mOperand.renderer.bounds.size.z/2;
 			if(push_down)
 			{
-				if((finger_tip.z) <= mOperand.transform.position.z - mOperand.renderer.bounds.size.z/2)
+				if(mOperand.transform.position.z <= originPosition.z - mOperand.renderer.bounds.size.z/2)
 				{
 					push_down = false;
 				}
 			}
-			float delta = (push_down) ? (0.1f) : (-0.1f);
+			float delta = (push_down) ? (-0.001f) : (0.001f);
 			mOperand.transform.position = new Vector3(
 				mOperand.transform.position.x,
 				mOperand.transform.position.y,
 				mOperand.transform.position.z + delta);
-			if(mOperand.transform.position.z <= originPosition.z)
+			if(mOperand.transform.position.z >= originPosition.z)
 			{
 				pushing = false;
 				push_down = true;
@@ -269,6 +283,31 @@ public class CorrectLevelSignal : ControlSignal
 		return 0.0f;
 	}
 }
+
+public class FloorChangeSignal : ControlSignal
+{
+	private int mFloor;
+	public bool mTriggered;
+	public FloorChangeSignal(int floor)
+		: base()
+	{
+		mFloor = floor;
+		mTriggered = false;
+	}
+	public override float PollSignal()
+	{
+		
+		//Debug.Log(mFloor.ToString() + " FloorChangeSignal PollSignal");
+		if(mTriggered)
+		{
+			Debug.Log("floor " + mFloor.ToString() + " triggered");
+			mTriggered = false;
+			return mFloor;
+		}
+		return 0.0f;
+	}
+}
+
 public class ElevatorMoveBehavior : Behavior {
 	private int mCurrFloor;
 	Dictionary<int, string> mFloorMap;
@@ -311,6 +350,7 @@ public class UnstableHand : Scenario {
 	private GameObject mCorrectButton;
 	private GameObject mWrongButton;
 	private GameObject mGameCamera;
+	private List<FloorChangeSignal> mFloorSignals = new List<FloorChangeSignal>();
 	
 	private Vector3 mOriginal_position;
 	private bool replaying = false;
@@ -330,8 +370,8 @@ public class UnstableHand : Scenario {
 
 
 
-		float speed = 0.1f;
-		mControls.AddControl(new TrueSignal(),          					new UnstableBehavior("unstable hand", mHand));
+		float speed = 0.01f;
+		//mControls.AddControl(new TrueSignal(),          					new UnstableBehavior("unstable hand", mHand));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          	new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          	new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          	new TranslateBehavior("player1 move left",  mHand, new Vector3( 1,  0, 0) * speed));
@@ -342,11 +382,16 @@ public class UnstableHand : Scenario {
 		mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("wrong button push", mWrongButton, mHand, 2));
 		
 		Dictionary<int, string> floorMap = new Dictionary<int, string>();
+		mFloorSignals.Clear();
 		floorMap.Add(1, "hell");
+		mFloorSignals.Add(new FloorChangeSignal(1));
 		floorMap.Add(2, "heaven");
-		for(int i = 0; i < buttonBehaviorList.Count; ++i)
+		mFloorSignals.Add(new FloorChangeSignal(2));
+		floorMap.Add(3, "heaven");
+		mFloorSignals.Add(new FloorChangeSignal(3));
+		for(int i = 0; i < mFloorSignals.Count; ++i)
 		{
-			mControls.AddControl(new CorrectLevelSignal(buttonBehaviorList[i]),          new ElevatorMoveBehavior("elevator move", mElevateKeyPad, floorMap));
+			mControls.AddControl(mFloorSignals[i],          new ElevatorMoveBehavior("elevator move", mElevateKeyPad, floorMap));
 		}
 	}
 
@@ -364,6 +409,22 @@ public class UnstableHand : Scenario {
 		if (Input.GetKey(KeyCode.Space))
 		{
 			BeginReplay();
+		}
+	}
+	
+	void OnTriggerEnter(Collider button) {
+		Debug.Log ("hit " + button.name);
+		if(button.name == "button.001" )
+		{
+			mFloorSignals[0].mTriggered = true;
+		}
+		else if(button.name == "button.002" )
+		{
+			mFloorSignals[1].mTriggered = true;
+		}
+		else if(button.name == "button.003" )
+		{
+			mFloorSignals[2].mTriggered = true;
 		}
 	}
 	
