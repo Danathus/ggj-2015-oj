@@ -20,6 +20,11 @@ ModelImporter:
     100028: Plane.012
     100030: Plane.013
     100032: Sphere
+    100034: Buttons
+    100036: Buttons.001
+    100038: Cylinder
+    100040: Cylinder.001
+    100042: Cylinder.002
     400000: //RootNode
     400002: Plane
     400004: Plane.000
@@ -37,6 +42,11 @@ ModelImporter:
     400028: Plane.012
     400030: Plane.013
     400032: Sphere
+    400034: Buttons
+    400036: Buttons.001
+    400038: Cylinder
+    400040: Cylinder.001
+    400042: Cylinder.002
     2300000: Plane
     2300002: Plane.000
     2300004: Plane.001
@@ -53,6 +63,11 @@ ModelImporter:
     2300026: Plane.012
     2300028: Plane.013
     2300030: Sphere
+    2300032: Buttons
+    2300034: Buttons.001
+    2300036: Cylinder
+    2300038: Cylinder.001
+    2300040: Cylinder.002
     3300000: Plane
     3300002: Plane.000
     3300004: Plane.001
@@ -69,6 +84,11 @@ ModelImporter:
     3300026: Plane.012
     3300028: Plane.013
     3300030: Sphere
+    3300032: Buttons
+    3300034: Buttons.001
+    3300036: Cylinder
+    3300038: Cylinder.001
+    3300040: Cylinder.002
     4300000: Plane
     4300002: Plane.000
     4300004: Plane.013
@@ -85,6 +105,11 @@ ModelImporter:
     4300026: Plane.002
     4300028: Plane.003
     4300030: Plane.001
+    4300032: Cylinder.002
+    4300034: Cylinder.001
+    4300036: Cylinder
+    4300038: Buttons
+    4300042: Buttons.001
     9500000: //RootNode
   materials:
     importMaterials: 1

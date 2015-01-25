@@ -16,6 +16,11 @@ ModelImporter:
     100020: Plane.004
     100022: Plane.005
     100024: Plane.006
+    100026: Plane.007
+    100028: Plane.008
+    100030: Plane.009
+    100032: Plane.010
+    100034: Plane.011
     400000: Buttons
     400002: Buttons.001
     400004: Cylinder
@@ -29,6 +34,11 @@ ModelImporter:
     400020: Plane.004
     400022: Plane.005
     400024: Plane.006
+    400026: Plane.007
+    400028: Plane.008
+    400030: Plane.009
+    400032: Plane.010
+    400034: Plane.011
     2300000: Buttons
     2300002: Buttons.001
     2300004: Cylinder
@@ -41,6 +51,11 @@ ModelImporter:
     2300018: Plane.004
     2300020: Plane.005
     2300022: Plane.006
+    2300024: Plane.007
+    2300026: Plane.008
+    2300028: Plane.009
+    2300030: Plane.010
+    2300032: Plane.011
     3300000: Buttons
     3300002: Buttons.001
     3300004: Cylinder
@@ -53,6 +68,11 @@ ModelImporter:
     3300018: Plane.004
     3300020: Plane.005
     3300022: Plane.006
+    3300024: Plane.007
+    3300026: Plane.008
+    3300028: Plane.009
+    3300030: Plane.010
+    3300032: Plane.011
     4300000: Cylinder.002
     4300002: Cylinder.001
     4300004: Cylinder
@@ -65,6 +85,11 @@ ModelImporter:
     4300018: Plane.001
     4300020: Plane
     4300022: Buttons.001
+    4300024: Plane.011
+    4300026: Plane.010
+    4300028: Plane.009
+    4300030: Plane.008
+    4300032: Plane.007
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -85,7 +110,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: .00999999978
+    globalScale: 1.20000005
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
