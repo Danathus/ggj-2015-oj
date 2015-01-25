@@ -507,13 +507,31 @@ public class UnstableHand : Scenario {
 		//buttonBehaviorList.Add(new WrongButtonBehavior("wrong button push", mWrongButton, mHand, 2));
 
 		float speed = 0.01f;
+		// automatic controls
 		mControls.AddControl(new TrueSignal(),          					new UnstableBehavior("unstable hand", mHand));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          	new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          	new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          	new TranslateBehavior("player1 move left",  mHand, new Vector3( 1,  0, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          	new TranslateBehavior("player1 move right", mHand, new Vector3(-1,  0, 0) * speed));
+
+		// first player
+		Behavior p1Up    = new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed);
+		Behavior p1Down  = new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed);
+		Behavior p1Left  = new TranslateBehavior("player1 move left",  mHand, new Vector3( 1,  0, 0) * speed);
+		Behavior p1Right = new TranslateBehavior("player1 move right", mHand, new Vector3(-1,  0, 0) * speed);
+		//   keyboard
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W), p1Up   );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S), p1Down );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A), p1Left );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D), p1Right);
+		//   gamepad
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p1Up    );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p1Down  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p1Left  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p1Right );
+
+		// second player
 		mHandPushBehavior = new PushBehavior("finger push", mHand, mElevateKeyPad);
+		//   keyboard
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),	mHandPushBehavior);
+		//   gamepad
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), mHandPushBehavior);
 		//mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("wrong button push", mWrongButton, mHand, 2));
