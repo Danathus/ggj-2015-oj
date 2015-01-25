@@ -8,49 +8,59 @@ public struct ScenarioData {
 	public int someOtherValue;
 }
 
-// a scenario includes an ordered set of behaviors that can be done
-class Scenario
-{
-	List<Behavior> mBehaviors = new List<Behavior>();
-	Dictionary<string, Behavior> mNameToBehavior = new Dictionary<string, Behavior>();
-
-	public void AddBehavior(Behavior behavior)
-	{
-		mBehaviors.Add(behavior);
-		mNameToBehavior[behavior.mName] = behavior;
-	}
-	public Behavior GetBehavior(string name)
-	{
-		return mNameToBehavior[name];
-	}
-}
-
 public class ScenarioManager : Singleton<ScenarioManager>
 {
 	protected ScenarioManager () {}
 
-	public ControlScheme mControls = new ControlScheme();
-
 	public List<ScenarioData> m_Scenarios = new List<ScenarioData>();
 	private int mCurrentScenario = -1;
+
+	private List<State> mStates = new List<State>();
+	private State mCurrentState = null;
 
 	// Use this for initialization
 	void Start () {
 		DontDestroyOnLoad(gameObject);
 
-		Shuffle();
+		SetupStates();
 	}
 
 	// called once per timestep update (critical: do game state updates here!!!)
 	void FixedUpdate()
 	{
-		if (!ReplayManager.Instance.mIsReplaying) {
-			mControls.Update();
+		if (mCurrentState != null) {
+			mCurrentState.Update();
+		}
+	}
+
+	private void SetupStates() {
+		mStates.Add(new IntroState());
+		mStates.Add(new PlayState());
+		mStates.Add(new ReplayState());
+
+		ActivateState("Intro");
+	}
+
+	public string CurrentState() {
+		if (mCurrentState != null) {
+			return mCurrentState.mName;
+		}
+		return "";
+	}
+
+	public bool ActivateState(string name) {
+		for (int i = 0; i < mStates.Count; ++i) {
+			if (mStates[i].mName == name) {
+				if (mCurrentState != null) {
+					mCurrentState.Leave();
+				}
+				mCurrentState = mStates[i];
+				mStates[i].Enter();
+				return true;
+			}
 		}
 
-		if (Input.GetKey(KeyCode.Return)) {
-			NextScenario();
-		}
+		return false;
 	}
 
 	public void Shuffle() {
@@ -72,8 +82,6 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		if (mCurrentScenario < m_Scenarios.Count) {
 			ScenarioData data = m_Scenarios[mCurrentScenario];
 			Application.LoadLevel(data.scenarioName);
-			mControls.Clear();
-			ReplayManager.Instance.Clear();
 		}
 	}
 }
