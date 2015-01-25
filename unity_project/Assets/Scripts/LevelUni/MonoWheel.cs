@@ -52,24 +52,8 @@ public class MonoWheel : Scenario {
 		Behavior p2Right = new MovementCallbackBehavior("player2 move right", this.gameObject, new Vector3( 1,  0, 0), MovePlayer2);
 		
 		// create the control scheme that maps inputs to these behaviors
-		mControls = new ControlScheme();
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          p1Up   );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          p1Down );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          p1Left );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          p1Right);
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    p2Up   );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  p2Down );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  p2Left );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), p2Right);
-		//
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p1Up    );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p1Down  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p1Left  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p1Right );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p2Up    );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p2Down  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p2Left  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p2Right );
+		SetControlScheme(0, p1Up, p1Down, p1Left, p1Right);
+		SetControlScheme(1, p2Up, p2Down, p2Left, p2Right);
 	}
 
 	void OnTriggerEnter(Collider other) {

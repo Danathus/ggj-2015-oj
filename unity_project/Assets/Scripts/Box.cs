@@ -45,15 +45,8 @@ public class Box : Scenario {
 		// rig control scheme
 		mControls.AddControl(new TrueSignal(), 							   p2Wind );
 		//   for buttons		
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    p2Up   );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  p2Down );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  p2Left );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), p2Right);
-		//   for gamepads
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p2Up    );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p2Down  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p2Left  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p2Right );
+
+		SetControlScheme(1, p2Up, p2Down, p2Left, p2Right);
 
 		Reset();
 	}
