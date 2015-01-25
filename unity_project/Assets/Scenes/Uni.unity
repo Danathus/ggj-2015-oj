@@ -3273,7 +3273,7 @@ GameObject:
   - 114: {fileID: 906783778}
   m_Layer: 5
   m_Name: Text
-  m_TagString: Untagged
+  m_TagString: Player1Text
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3290,20 +3290,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: .944827676, g: 1, b: 0, a: 1}
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
-    m_FontStyle: 0
+    m_FontSize: 20
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 1
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Peddle counter-clockwise
+  m_Text: 'Player {{1}}
+
+    Spin this counter-clockwise'
 --- !u!222 &906783779
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3324,8 +3326,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -400, y: 100}
-  m_SizeDelta: {x: 180, y: 30}
+  m_AnchoredPosition: {x: -397, y: 100}
+  m_SizeDelta: {x: 300, y: 90}
   m_Pivot: {x: .5, y: .5}
 --- !u!1 &927699637
 GameObject:
@@ -5946,7 +5948,7 @@ GameObject:
   - 114: {fileID: 2000998758}
   m_Layer: 5
   m_Name: Text
-  m_TagString: Untagged
+  m_TagString: Player2Text
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5965,8 +5967,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 435, y: 100}
-  m_SizeDelta: {x: 180, y: 30}
+  m_AnchoredPosition: {x: 403, y: 100}
+  m_SizeDelta: {x: 300, y: 90}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &2000998758
 MonoBehaviour:
@@ -5980,20 +5982,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 0, a: 1}
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
-    m_FontStyle: 0
+    m_FontSize: 20
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 1
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Peddle clockwise
+  m_Text: 'Player {{2}}
+
+    Spin this clockwise'
 --- !u!222 &2000998759
 CanvasRenderer:
   m_ObjectHideFlags: 0
