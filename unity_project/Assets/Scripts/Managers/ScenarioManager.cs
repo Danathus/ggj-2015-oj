@@ -35,6 +35,10 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		}
 	}
 
+	public bool isInitialized() {
+		return m_Scenarios.Count > 0;
+	}
+
 	private void SetupStates() {
 		mStates.Add(new IntroState());
 		mStates.Add(new PlayState());
