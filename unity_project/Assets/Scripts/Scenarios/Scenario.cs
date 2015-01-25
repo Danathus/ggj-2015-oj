@@ -13,9 +13,8 @@ public abstract class Scenario: MonoBehaviour {
 	
 	// Update is called once per frame
 	public void ScenarioUpdate() {
-		if (!ScenarioManager.Instance.isInitialized()) {
-			mControls.Update();
-		}
+		// initialize ScenarioManager
+		ScenarioManager manager = ScenarioManager.Instance;
 
 		if (m_TimeLimit > -1) {
 			m_TimeLimit -= Time.fixedDeltaTime;
