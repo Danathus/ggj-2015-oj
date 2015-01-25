@@ -65,12 +65,13 @@ public class TitleScreen : MonoBehaviour {
 		m_RightTransform = m_RightPart.GetComponent<RectTransform>() as RectTransform;
 
 		float speed = 20.0f;
-		Behavior p1Mag   = new MagneticBehavior("player1 magnetic", 	   m_LeftPart, 10.0f);
+		float magnetForce = 15.0f;
+		Behavior p1Mag   = new MagneticBehavior("player1 magnetic", 	   m_LeftPart, magnetForce);
 		Behavior p1Up    = new RectTranslateBehavior("player1 move up",    m_LeftPart, new Vector3( 0,  1, 0) * speed);
 		Behavior p1Down  = new RectTranslateBehavior("player1 move down",  m_LeftPart, new Vector3( 0, -1, 0) * speed);
 		Behavior p1Left  = new RectTranslateBehavior("player1 move left",  m_LeftPart, new Vector3(-1,  0, 0) * speed);
 		Behavior p1Right = new RectTranslateBehavior("player1 move right", m_LeftPart, new Vector3( 1,  0, 0) * speed);
-		Behavior p2Mag   = new MagneticBehavior("player2 magnetic", 	   m_RightPart, 10.0f);
+		Behavior p2Mag   = new MagneticBehavior("player2 magnetic", 	   m_RightPart, magnetForce);
 		Behavior p2Up    = new RectTranslateBehavior("player2 move up",    m_RightPart, new Vector3( 0,  1, 0) * speed);
 		Behavior p2Down  = new RectTranslateBehavior("player2 move down",  m_RightPart, new Vector3( 0, -1, 0) * speed);
 		Behavior p2Left  = new RectTranslateBehavior("player2 move left",  m_RightPart, new Vector3(-1,  0, 0) * speed);
