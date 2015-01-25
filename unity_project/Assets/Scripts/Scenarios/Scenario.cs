@@ -27,6 +27,30 @@ public abstract class Scenario: MonoBehaviour {
 		}
 	}
 
+	public void SetControlScheme(int player, Behavior up, Behavior down, Behavior left, Behavior right) {
+		if (ScenarioManager.Instance.m_PrimaryPlayer == player) {
+			mControls.AddControl(new KeyCodeControlSignal(KeyCode.W), up   );
+			mControls.AddControl(new KeyCodeControlSignal(KeyCode.S), down );
+			mControls.AddControl(new KeyCodeControlSignal(KeyCode.A), left );
+			mControls.AddControl(new KeyCodeControlSignal(KeyCode.D), right);
+			//   for gamepads
+			mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), up    );
+			mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), down  );
+			mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), left  );
+			mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), right );
+		} else {
+			mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    up   );
+			mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  down );
+			mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  left );
+			mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), right);
+			//   for gamepads
+			mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), up    );
+			mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), down  );
+			mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), left  );
+			mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), right );
+		}
+	}
+
 	public void Victory() {
 		ScenarioManager.Instance.HideTimeLimit();
 		m_TimeLimit = -1;
