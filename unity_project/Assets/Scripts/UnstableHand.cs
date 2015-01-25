@@ -200,8 +200,8 @@ public class ButtonPushBehavior : Behavior {
 		pushing = false;
 		mTriggered = false;
 		mFloor = floor;
-		helper = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		helper.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+		//helper = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		//helper.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
 	}
 	
 	// input: signal -- degree [0.0, 1.0] to which signal should be operated (0.0 means do nothing, generally)
@@ -214,7 +214,7 @@ public class ButtonPushBehavior : Behavior {
 			mPusher.transform.position.x,
 			mPusher.transform.position.y,
 			mPusher.transform.position.z);
-		helper.transform.position = finger_tip;
+		//helper.transform.position = finger_tip;
 		if (signal > 0.0f)
 		{	
 			Rect button_bounds = new Rect(mOperand.transform.position.x - mOperand.renderer.bounds.size.x/2, 
