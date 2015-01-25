@@ -30,9 +30,28 @@ public class IntroState: State {
 		if (Input.GetKey(KeyCode.Return)) {
 			ScenarioManager.Instance.ActivateState("Play");
 		}
-		if (Input.GetButton("joystick 1 button 0"))
-		{
-			Debug.Log("yeah");
-		}
+		//*
+		GamepadInput.GamepadState state = GamepadInput.GamePad.GetState(GamepadInput.GamePad.Index.One);
+		if (state.A)             { Debug.Log("A"); }
+		if (state.B)             { Debug.Log("B"); }
+		if (state.X)             { Debug.Log("X"); }
+		if (state.Y)             { Debug.Log("Y"); }
+		if (state.Start)         { Debug.Log("Start"); }
+		if (state.Back)          { Debug.Log("Back"); }
+		if (state.Left)          { Debug.Log("Left"); }
+		if (state.Right)         { Debug.Log("Right"); }
+		if (state.Up)            { Debug.Log("Up"); }
+		if (state.Down)          { Debug.Log("Down"); }
+		if (state.LeftStick)     { Debug.Log("LeftStick"); }
+		if (state.RightStick)    { Debug.Log("RightStick"); }
+		if (state.RightShoulder) { Debug.Log("RightShoulder"); }
+		if (state.LeftShoulder)  { Debug.Log("LeftShoulder"); }
+        //public Vector2 LeftStickAxis = Vector2.zero;
+        //public Vector2 rightStickAxis = Vector2.zero;
+        //public Vector2 dPadAxis = Vector2.zero;
+
+        //public float LeftTrigger = 0;
+        //public float RightTrigger = 0;
+		//*/
 	}
 }
