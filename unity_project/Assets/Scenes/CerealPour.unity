@@ -483,6 +483,18 @@ Prefab:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 13700002, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700004, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700012, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2bde4cfc68d3ad34b8f392c083306b29, type: 3}
   m_RootGameObject: {fileID: 1505154505}
@@ -1394,7 +1406,7 @@ SkinnedMeshRenderer:
     type: 3}
   m_PrefabInternal: {fileID: 255165959}
   m_GameObject: {fileID: 564484246}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_LightmapIndex: 255
@@ -2946,7 +2958,7 @@ SkinnedMeshRenderer:
     type: 3}
   m_PrefabInternal: {fileID: 255165959}
   m_GameObject: {fileID: 1317621301}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_LightmapIndex: 255
@@ -3492,7 +3504,7 @@ SkinnedMeshRenderer:
     type: 3}
   m_PrefabInternal: {fileID: 255165959}
   m_GameObject: {fileID: 1553360180}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_LightmapIndex: 255
