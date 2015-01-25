@@ -2708,6 +2708,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_TimeLimit: 25
   speed: 5
+  _punch_sound: {fileID: 8300000, guid: 3585784c967080f40b86ff784336de73, type: 3}
 --- !u!95 &1230901295
 Animator:
   serializedVersion: 3
