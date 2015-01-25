@@ -22,11 +22,7 @@ public class FroggerCamera : Scenario {
 
 		// rig control scheme
 		//   for buttons
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  p2Left );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), p2Right);
-		//   for gamepads
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p2Left  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p2Right );
+		SetControlScheme(1, null, null, p2Left, p2Right);
 	}
 	
 	// Update is called once per frame
