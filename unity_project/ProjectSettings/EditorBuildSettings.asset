@@ -17,3 +17,5 @@ EditorBuildSettings:
     path: Assets/Scenes/CerealPour.unity
   - enabled: 1
     path: Assets/Scenes/main_menu.unity
+  - enabled: 1
+    path: Assets/Scenes/FroggerMan.unity
