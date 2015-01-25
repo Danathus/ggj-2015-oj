@@ -122,10 +122,10 @@ public class PushBehavior : Behavior {
 		//Debug.Log("PushBehavior Operate");
 		if (signal > 0.0f)
 		{
-			Debug.Log("signal from PushBehavior" + signal.ToString());
+			//Debug.Log("signal from PushBehavior" + signal.ToString());
 			pushing = true;
 			
-			Debug.Log("coliding: " + mColiding);
+			//Debug.Log("coliding: " + mColiding);
 		} 
 		if(pushing)
 		{
@@ -166,7 +166,7 @@ public class PushBehavior : Behavior {
 				forward = true;
 				mColiding = false;
 			}
-			Debug.Log("push: " + pushing + " forward: " + forward + " mColliding: " + mColiding);
+			//Debug.Log("push: " + pushing + " forward: " + forward + " mColliding: " + mColiding);
 			return true;
 		}
 		return false;
@@ -491,9 +491,10 @@ public class UnstableHand : Scenario {
 		
 		mOriginal_position = mHand.transform.position;
 
-		List<ButtonPushBehavior> buttonBehaviorList = new List<ButtonPushBehavior>();
-		buttonBehaviorList.Add(new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
-		buttonBehaviorList.Add(new WrongButtonBehavior("wrong button push", mWrongButton, mHand, 2));
+		// these are not presently actually used
+		//List<ButtonPushBehavior> buttonBehaviorList = new List<ButtonPushBehavior>();
+		//buttonBehaviorList.Add(new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
+		//buttonBehaviorList.Add(new WrongButtonBehavior("wrong button push", mWrongButton, mHand, 2));
 
 		float speed = 0.01f;
 		mControls.AddControl(new TrueSignal(),          					new UnstableBehavior("unstable hand", mHand));
@@ -502,7 +503,7 @@ public class UnstableHand : Scenario {
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          	new TranslateBehavior("player1 move left",  mHand, new Vector3( 1,  0, 0) * speed));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          	new TranslateBehavior("player1 move right", mHand, new Vector3(-1,  0, 0) * speed));
 		mHandPushBehavior = new PushBehavior("finger push", mHand, mElevateKeyPad);
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),	mHandPushBehavior);
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),	mHandPushBehavior);
 		//mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("wrong button push", mWrongButton, mHand, 2));
