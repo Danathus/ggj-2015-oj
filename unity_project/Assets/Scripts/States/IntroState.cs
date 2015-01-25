@@ -21,7 +21,7 @@ public class IntroState: State {
 	}
 	
 	public override void Update () {
-		if (Input.GetKey(KeyCode.Return)) {
+		if (base.ShouldAdvanceState()) {
 			ScenarioManager.Instance.ActivateState("Play");
 		}
 
