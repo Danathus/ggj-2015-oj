@@ -31,7 +31,7 @@ public class ReplayState: State {
 			}
 		}
 
-		if (Input.GetKey(KeyCode.Return)) {
+		if (base.ShouldAdvanceState()) {
 			ScenarioManager.Instance.ActivateState("Play");
 		}
 	}
