@@ -13,13 +13,20 @@ public class FroggerMan : Scenario {
 
 	float _horizontalWeight = 0.0f;
 	float _VerticalWeight = 0.0f;
+	int _randomSeed;
 
 	public override void Reset ()
 	{
+		//UnityEngine.Random.seed = _randomSeed;
+		foreach (Car car in UnityEngine.Object.FindObjectsOfType<Car>()) {
+			Destroy(car.gameObject);
+		}
 	}
 
 	// Use this for initialization
 	void Start () {
+		_randomSeed = UnityEngine.Random.seed;
+
 		_animator = GetComponent<Animator>();
 
 		// create behaviors
