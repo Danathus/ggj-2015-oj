@@ -22,7 +22,7 @@ public class PlayState: State {
 			mScenarioList = null;
 		}
 		// keep track in the replay manager of when we stopped
-		ReplayManager.Instance.AddEvent(new BookendEvent());
+		//ReplayManager.Instance.AddEvent(new BookendEvent()); // now done in the next state
 	}
 	
 	public override void Update () {

@@ -36,6 +36,7 @@ public class ReviewState: State {
 				}
 				if (updatedSomeScenario) {
 					Debug.Log("Replay!");
+					ReplayManager.Instance.AddEvent(new BookendEvent()); // add a bookend first to mark end
 					ReplayManager.Instance.Play();
 				}
 			}
