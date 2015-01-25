@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -12,6 +13,7 @@ public class Main : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		try {
 		// create mock scene with two player objects
 		mPlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		mPlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -44,7 +46,7 @@ public class Main : MonoBehaviour
 
 		// // create the behaviors in this scene
 		// Scenario scenario = new Scenario();
-		// float speed = 0.025f;
+		float speed = 0.025f;
 		// scenario.AddBehavior(new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0) * speed));
 		// scenario.AddBehavior(new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0) * speed));
 		// scenario.AddBehavior(new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0) * speed));
@@ -55,15 +57,19 @@ public class Main : MonoBehaviour
 		// scenario.AddBehavior(new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0) * speed));
 
 		// // create the control scheme that maps inputs to these behaviors
-		// mControls = new ControlScheme();
-		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          scenario.GetBehavior("player1 move up"));
-		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          scenario.GetBehavior("player1 move down"));
-		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          scenario.GetBehavior("player1 move left"));
-		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          scenario.GetBehavior("player1 move right"));
-		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    scenario.GetBehavior("player2 move up"));
-		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  scenario.GetBehavior("player2 move down"));
-		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  scenario.GetBehavior("player2 move left"));
-		// mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), scenario.GetBehavior("player2 move right"));
+		mControls = new ControlScheme();
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          new TranslateBehavior("player1 move right", mPlayer1, new Vector3( 1,  0, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    new TranslateBehavior("player2 move up",    mPlayer2, new Vector3( 0,  1, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  new TranslateBehavior("player2 move down",  mPlayer2, new Vector3( 0, -1, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  new TranslateBehavior("player2 move left",  mPlayer2, new Vector3(-1,  0, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0) * speed));
+		} catch (Exception e)
+		{
+			Debug.Log(e);
+		}
 	}
 	
 	// Update is called once per frame
