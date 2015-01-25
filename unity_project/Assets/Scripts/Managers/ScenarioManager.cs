@@ -52,6 +52,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		// mStates.Add(new ReplayState());
 		mStates.Add(new VictoryState());
 		mStates.Add(new FailureState());
+		mStates.Add(new EndState());
 
 		ActivateState("Intro");
 	}
@@ -92,6 +93,13 @@ public class ScenarioManager : Singleton<ScenarioManager>
 
 		if (mCurrentScenario >= m_Scenarios.Count) {
 			mCurrentScenario = 0;
+
+			if (m_PrimaryPlayer == 1) {
+				ActivateState("End");
+				m_Scenarios.Clear();
+				return;
+			}
+
 			m_PrimaryPlayer ^= 1;
 			Shuffle();
 		}
