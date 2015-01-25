@@ -2640,7 +2640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9ddcbfef76666c41972894f14f6f5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTimeLimit: 5
+  m_TimeLimit: 10
   speed: 4
 --- !u!95 &1230901295
 Animator:
@@ -3769,7 +3769,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd5b99e6b02589d41829ae1770f25e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTimeLimit: 5
+  m_TimeLimit: 10
   cameraTarget: {fileID: 1865713776}
   targetDist: 4
   targetY: 2.5
