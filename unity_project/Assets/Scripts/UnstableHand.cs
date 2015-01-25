@@ -469,8 +469,30 @@ public class ElevatorMoveBehavior : Behavior {
 	}
 }
 
-public class UnstableHand : Scenario {
+struct FlatTransform
+{
+	public Vector3    m_position;
+	public Quaternion m_rotation;
+	public Vector3    m_localScale;
 
+	public void Read(Transform transform)
+	{
+		m_position   = transform.position;
+		m_rotation   = transform.rotation;
+		m_localScale = transform.localScale;
+	}
+
+	public void Write(Transform transform)
+	{
+		transform.position   = m_position;
+		transform.rotation   = m_rotation;
+		transform.localScale = m_localScale;
+	}
+}
+
+public class UnstableHand : Scenario
+{
+	static public RandomReverter mRandomReverter = null;
 	private GameObject mHand;
 	private GameObject mElevateKeyPad;
 	private GameObject mCorrectButton;
@@ -481,12 +503,88 @@ public class UnstableHand : Scenario {
 	private List<FloorChangeSignal> mButtonPushSignals = new List<FloorChangeSignal>();
 	private PushBehavior mHandPushBehavior;
 
-	private Vector3 mOriginal_position;
 	private bool replaying = false;
+	
+	public ControlScheme mIndirectControls;
+
+	// remembered IK control states
+	//   game objects
+	GameObject mGameObject_IK_Control;
+	GameObject mGameObject_RightArm;
+	GameObject mGameObject_RightForeArm;
+	GameObject mGameObject_RightHand;
+	GameObject mGameObject_IK_fingertip;
+	GameObject mGameObject_IK_elbow;
+	//   flattened transforms
+	FlatTransform mRememberedTransform_IK_Control   = new FlatTransform();
+	FlatTransform mRememberedTransform_RightArm     = new FlatTransform();
+	FlatTransform mRememberedTransform_RightForeArm = new FlatTransform();
+	FlatTransform mRememberedTransform_RightHand    = new FlatTransform();
+	FlatTransform mRememberedTransform_IK_fingertip = new FlatTransform();
+	FlatTransform mRememberedTransform_IK_elbow     = new FlatTransform();
+
+	public override void Reset()
+	{
+		mRandomReverter.Revert();
+		mElevatorFloor.transform.position = new Vector3(1.87f, 0.0f, -2.76f);
+		//Debug.Log("mElevatorFloor: " + mElevatorFloor.name);
+
+		mRememberedTransform_IK_Control.Write  (mGameObject_IK_Control.transform);
+		mRememberedTransform_RightArm.Write    (mGameObject_RightArm.transform);
+		mRememberedTransform_RightForeArm.Write(mGameObject_RightForeArm.transform);
+		mRememberedTransform_RightHand.Write   (mGameObject_RightHand.transform);
+		mRememberedTransform_IK_fingertip.Write(mGameObject_IK_fingertip.transform);
+		mRememberedTransform_IK_elbow.Write    (mGameObject_IK_elbow.transform);
+		//
+		mGameObject_IK_Control.GetComponent<IKScriptNew>().Reset();
+
+		// create indirect controls
+		mIndirectControls = new ControlScheme();
+
+		Dictionary<int, string> floorMap = new Dictionary<int, string>();
+		mFloorSignals.Clear();
+		mButtonPushSignals.Clear();
+		floorMap.Add(1, "hell");
+		mFloorSignals.Add(new FloorChangeSignal(1));
+		mButtonPushSignals.Add(new FloorChangeSignal(1));
+		floorMap.Add(2, "heaven");
+		mFloorSignals.Add(new FloorChangeSignal(2));
+		mButtonPushSignals.Add(new FloorChangeSignal(2));
+		floorMap.Add(3, "heaven");
+		mFloorSignals.Add(new FloorChangeSignal(3));
+		mButtonPushSignals.Add(new FloorChangeSignal(3));
+		
+		GameObject leftDoor = GameObject.Find("left door");
+		GameObject rightDoor = GameObject.Find("right door");
+
+		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor, this);
+		for(int i = 0; i < mFloorSignals.Count; ++i)
+		{
+			mIndirectControls.AddControl(mFloorSignals[i],          elevatorMover);
+			GameObject obj = GameObject.Find("button.00" + (i+1).ToString());
+			//Debug.Log(obj.name);
+			mIndirectControls.AddControl(mButtonPushSignals[i],          new CorrectButtonBehavior("correct button push", obj, mHand, i));
+			/*
+			ButtonPushBehavior pushBehavior;
+			if (i == 0)
+			{
+				pushBehavior = new CorrectButtonBehavior("correct button push", obj, mHand, i, this);
+			}
+			else
+			{
+				pushBehavior = new WrongButtonBehavior("wrong button push", obj, mHand, i);
+			}
+			mIndirectControls.AddControl(mButtonPushSignals[i], pushBehavior);
+			//*/
+		}
+	}
 
 	// Use this for initialization
 	void Start ()
 	{
+		mRandomReverter = new RandomReverter();
+
+		// find key game objects
 		mHand = GameObject.Find("IK_fingertip");
 		//Debug.Log("hand obj name: " + mHand.name);
 		mElevateKeyPad = GameObject.Find("elevator button keypad");
@@ -495,11 +593,25 @@ public class UnstableHand : Scenario {
 		mWrongButton = GameObject.Find("button.002");
 		mGameCamera = GameObject.Find("Main Camera");
 		mElevatorFloor = GameObject.Find("big ground");
-		mElevatorFloor.transform.position = new Vector3(1.87f, 0.0f, -2.76f);
-		//Debug.Log("mElevatorFloor: " + mElevatorFloor.name);
 		GameObject elevatorWall = GameObject.Find("elevator walls");
-		
-		mOriginal_position = mHand.transform.position;
+		//
+		mGameObject_IK_Control   = GameObject.Find("IK_Control");
+		mGameObject_RightArm     = GameObject.Find("mixamorig:RightArm");
+		mGameObject_RightForeArm = GameObject.Find("mixamorig:RightForeArm");
+		mGameObject_RightHand    = GameObject.Find("mixamorig:RightHand");
+		mGameObject_IK_fingertip = GameObject.Find("IK_fingertip");
+		mGameObject_IK_elbow     = GameObject.Find("IK_elbow");
+
+		// sample initial state first-time through
+		mRememberedTransform_IK_Control.Read  (mGameObject_IK_Control.transform);
+		mRememberedTransform_RightArm.Read    (mGameObject_RightArm.transform);
+		mRememberedTransform_RightForeArm.Read(mGameObject_RightForeArm.transform);
+		mRememberedTransform_RightHand.Read   (mGameObject_RightHand.transform);
+		mRememberedTransform_IK_fingertip.Read(mGameObject_IK_fingertip.transform);
+		mRememberedTransform_IK_elbow.Read    (mGameObject_IK_elbow.transform);
+
+		// initialize state
+		Reset();
 
 		// these are not presently actually used
 		//List<ButtonPushBehavior> buttonBehaviorList = new List<ButtonPushBehavior>();
@@ -535,43 +647,6 @@ public class UnstableHand : Scenario {
 		//mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("wrong button push", mWrongButton, mHand, 2));
-		
-		Dictionary<int, string> floorMap = new Dictionary<int, string>();
-		mFloorSignals.Clear();
-		mButtonPushSignals.Clear();
-		floorMap.Add(1, "hell");
-		mFloorSignals.Add(new FloorChangeSignal(1));
-		mButtonPushSignals.Add(new FloorChangeSignal(1));
-		floorMap.Add(2, "heaven");
-		mFloorSignals.Add(new FloorChangeSignal(2));
-		mButtonPushSignals.Add(new FloorChangeSignal(2));
-		floorMap.Add(3, "heaven");
-		mFloorSignals.Add(new FloorChangeSignal(3));
-		mButtonPushSignals.Add(new FloorChangeSignal(3));
-		
-		GameObject leftDoor = GameObject.Find("left door");
-		GameObject rightDoor = GameObject.Find("right door");
-
-		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor, this);
-		for(int i = 0; i < mFloorSignals.Count; ++i)
-		{
-			mControls.AddControl(mFloorSignals[i],          elevatorMover);
-			GameObject obj = GameObject.Find("button.00" + (i+1).ToString());
-			//Debug.Log(obj.name);
-			mControls.AddControl(mButtonPushSignals[i],          new CorrectButtonBehavior("correct button push", obj, mHand, i));
-			/*
-			ButtonPushBehavior pushBehavior;
-			if (i == 0)
-			{
-				pushBehavior = new CorrectButtonBehavior("correct button push", obj, mHand, i, this);
-			}
-			else
-			{
-				pushBehavior = new WrongButtonBehavior("wrong button push", obj, mHand, i);
-			}
-			mControls.AddControl(mButtonPushSignals[i], pushBehavior);
-			//*/
-		}
 	}
 
 
@@ -585,11 +660,13 @@ public class UnstableHand : Scenario {
 	{
 		ScenarioUpdate();
 
-		if (Input.GetKey(KeyCode.Space))
-		{
-			Victory();
-			// BeginReplay();
-		}
+		mIndirectControls.Update();
+
+		//if (Input.GetKey(KeyCode.Space))
+		//{
+		//	Victory();
+		//	// BeginReplay();
+		//}
 	}
 	
 	void OnTriggerEnter(Collider button) {
@@ -616,11 +693,5 @@ public class UnstableHand : Scenario {
 		{
 			mHandPushBehavior.mColiding = true;
 		}
-	}
-	
-	// helper functions
-	public override void Reset()
-	{
-		mHand.transform.position = mOriginal_position;
 	}
 }
