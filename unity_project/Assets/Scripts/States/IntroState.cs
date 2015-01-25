@@ -26,7 +26,7 @@ public class IntroState: State {
 		}
 
 		// optional
-		TestGamepads();
+		//TestGamepads();
 	}
 
 	void TestGamepads()

@@ -543,7 +543,7 @@ State:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Locomotion
-  m_Speed: 1
+  m_Speed: 2
   m_CycleOffset: 0
   m_Motions:
   - {fileID: 20679955}
@@ -575,17 +575,17 @@ StateMachine:
       first: {fileID: 110200000}
       second: []
     data:
-      first: {fileID: 110238060}
+      first: {fileID: 110212377}
       second:
-      - {fileID: 110183647}
+      - {fileID: 110199075}
     data:
       first: {fileID: 110212922}
       second:
       - {fileID: 110113724}
     data:
-      first: {fileID: 110212377}
+      first: {fileID: 110238060}
       second:
-      - {fileID: 110199075}
+      - {fileID: 110183647}
     data:
       first: {fileID: 110279955}
       second:
