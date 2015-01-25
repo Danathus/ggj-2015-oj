@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
   
-[RequireComponent(typeof(Animator))] 
+//[RequireComponent(typeof(Animator))] 
 public class IKControl : MonoBehaviour
 {
 	//protected Animator animator;
@@ -10,23 +10,27 @@ public class IKControl : MonoBehaviour
 	//public bool ikActive = false;
 	//public Transform rightHandObj = null;
 
-	//
+	// inputs
 	public Transform target;
-	public Transform handTransform;
-	
-	public Transform shoulderTransform;
 	public Transform shoulderElbowPoint;
-	public float shoulderLength;
-	
-	public Transform wristTransform;
 	public Transform wristElbowPoint;
-	public float wristLength;
-	
 	public Transform elbowWeight;
-	
+
+	// outputs
+	public Transform handTransform;
+	public Transform shoulderTransform;
+	public Transform wristTransform;
+
+	// constat state
+	public float shoulderLength;
+	public float wristLength;
+
+	// dynamic state (exposed for debugging)
 	public float elbowZ;
 	public float distToTarget;
-	//
+	public bool distanceFarEnough;
+	public bool distanceCloseEnough;
+	public bool distToTargetInRange;
 
 	void Start()
 	{
@@ -43,6 +47,7 @@ public class IKControl : MonoBehaviour
 	{
 		handTransform.rotation = target.rotation;
 		handTransform.position = wristTransform.position;
+
 		transform.LookAt(target, transform.position - elbowWeight.position);
 		distToTarget = Vector3.Distance(target.position, shoulderTransform.position);
 		elbowZ = (Mathf.Pow(distToTarget, 2) - Mathf.Pow(wristLength, 2) + Mathf.Pow(shoulderLength,2))/(distToTarget * 2);
@@ -50,17 +55,22 @@ public class IKControl : MonoBehaviour
 		Vector3 wristPos = wristTransform.localPosition;
 		wristPos.z = Mathf.Clamp(distToTarget, 0, wristLength + shoulderLength);
 		wristTransform.localPosition = wristPos;
-		
-		if (distToTarget < shoulderLength + wristLength && distToTarget > Mathf.Max(shoulderLength, wristLength) - Mathf.Min(shoulderLength, wristLength)){
+
+		distanceFarEnough   = distToTarget > Mathf.Max (shoulderLength, wristLength) - Mathf.Min (shoulderLength, wristLength);
+		distanceCloseEnough = distToTarget < shoulderLength + wristLength;
+		distToTargetInRange = distanceFarEnough && distanceCloseEnough;
+		if (distToTargetInRange){
 			shoulderTransform.localRotation = Quaternion.Euler(Mathf.Acos(elbowZ/shoulderLength) * Mathf.Rad2Deg, 0, 0);
-			wristTransform.localRotation = Quaternion.Euler( -(Mathf.Acos((distToTarget - elbowZ)/wristLength) * Mathf.Rad2Deg), 0, 0);}
+			wristTransform.localRotation = Quaternion.Euler( -(Mathf.Acos((distToTarget - elbowZ)/wristLength) * Mathf.Rad2Deg), 0, 0);
+			distToTargetInRange = true;
+		}
 		
-		if (distToTarget >= shoulderLength + wristLength)
+		if (!distanceCloseEnough)
 		{
 			shoulderTransform.localRotation = Quaternion.Euler(0,0,0);
 			wristTransform.localRotation = Quaternion.Euler(0,0,0);
 		}
-		if (distToTarget <= Mathf.Max(shoulderLength, wristLength) - Mathf.Min(shoulderLength, wristLength))
+		if (!distanceFarEnough)
 		{
 			shoulderTransform.localRotation = Quaternion.Euler(0,0,0);
 			wristTransform.localRotation = Quaternion.Euler(180,0,0);
