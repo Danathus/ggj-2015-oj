@@ -167,7 +167,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
       propertyPath: m_Scenarios.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
       propertyPath: m_LocalPosition.x
@@ -215,7 +215,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
       propertyPath: m_Scenarios.Array.data[3]
-      value: 
+      value: Uni
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
@@ -257,6 +257,7 @@ MonoBehaviour:
   - FroggerMan
   - elevator_button
   - CerealPour
+  - Uni
 --- !u!4 &1810358421
 Transform:
   m_ObjectHideFlags: 0
