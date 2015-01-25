@@ -99,6 +99,8 @@ public class PushBehavior : Behavior {
 	private bool forward;
 	private bool pushing;
 	private GameObject mObstacle;
+	public bool mColiding;
+	
 	public PushBehavior(string name, GameObject operand, GameObject obstacle=null)
 		:base(name, operand)
 	{
@@ -108,6 +110,7 @@ public class PushBehavior : Behavior {
 		originPosition = mOperand.transform.position;
 		forward = true;
 		pushing = false;
+		mColiding = false;
 	}
 	
 	// input: signal -- degree [0.0, 1.0] to which signal should be operated (0.0 means do nothing, generally)
@@ -119,6 +122,7 @@ public class PushBehavior : Behavior {
 		{
 			//Debug.Log("signal from PushBehavior" + signal.ToString());
 			pushing = true;
+			Debug.Log("coliding: " + mColiding);
 		} 
 		if(pushing)
 		{
@@ -133,7 +137,7 @@ public class PushBehavior : Behavior {
 					mOperand.transform.position.y + mOperand.renderer.bounds.size.y/2,
 					mOperand.transform.position.z - mOperand.renderer.bounds.size.z/2 - 0.12f);
 				float finger_z_position = finger_tip.z;
-				if((finger_z_position) <= z_boundary)
+				if(mColiding)
 				{
 					forward = false;
 				}
@@ -147,6 +151,7 @@ public class PushBehavior : Behavior {
 			{
 				pushing = false;
 				forward = true;
+				mColiding = false;
 			}
 			return true;
 		}
@@ -192,8 +197,8 @@ public class ButtonPushBehavior : Behavior {
 		//float finger_z_position = mPusher.transform.position.z + (mPusher.renderer.bounds.size.z/2 * mPusher.transform.localScale.z);
 		Vector3 finger_tip = new Vector3(
 			mPusher.transform.position.x,
-			mPusher.transform.position.y + mPusher.renderer.bounds.size.y/2,
-			mPusher.transform.position.z - mPusher.renderer.bounds.size.z/2 - 0.12f);
+			mPusher.transform.position.y + mPusher.renderer.bounds.size.y/2*mPusher.transform.localScale.y,
+			mPusher.transform.position.z - mPusher.renderer.bounds.size.z/2*mPusher.transform.localScale.z);
 		helper.transform.position = finger_tip;
 		if (signal > 0.0f)
 		{	
@@ -217,21 +222,26 @@ public class ButtonPushBehavior : Behavior {
 		} 
 		if(pushing)
 		{
-			float z_boundary = originPosition.z + mOperand.renderer.bounds.size.z/2;
+			//Debug.Log ("pushing");
 			if(push_down)
 			{
+				//Debug.Log ("push down check");
 				if(mOperand.transform.position.z < originPosition.z - mOperand.renderer.bounds.size.z)
 				{
+					//Debug.Log ("stop push down");
 					push_down = false;
 				}
 			}
 			float delta = (push_down) ? (-0.0006f) : (0.0006f);
+			//Debug.Log ("push by" + delta.ToString());
 			mOperand.transform.position = new Vector3(
 				mOperand.transform.position.x,
 				mOperand.transform.position.y,
 				mOperand.transform.position.z + delta);
+			//Debug.Log("z: " + mOperand.transform.position.z.ToString());
 			if(mOperand.transform.position.z >= originPosition.z)
 			{
+				//Debug.Log ("stop pushing");
 				pushing = false;
 				push_down = true;
 			}
@@ -302,7 +312,7 @@ public class FloorChangeSignal : ControlSignal
 		//Debug.Log(mFloor.ToString() + " FloorChangeSignal PollSignal");
 		if(mTriggered)
 		{
-			Debug.Log("floor " + mFloor.ToString() + " triggered");
+			//Debug.Log("floor " + mFloor.ToString() + " triggered");
 			mTriggered = false;
 			return mFloor;
 		}
@@ -314,11 +324,13 @@ public class ElevatorMoveBehavior : Behavior {
 	private int mCurrFloor;
 	Dictionary<int, string> mFloorMap;
 	private float mHeight;
+	private Vector3 position_offset;
 	
 	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap)
 		: base(name, operand)
 	{
-		mCurrFloor = 1;
+		mCurrFloor = 0;
+		mOperand.transform.position = new Vector3(1.87f, 0.0f, -2.76f);
 	}
 	
 	public override bool Operate(float signal)
@@ -333,19 +345,25 @@ public class ElevatorMoveBehavior : Behavior {
 				Debug.Log("go to " + mCurrFloor.ToString() + " floor");
 				mHeight = (float)mCurrFloor * 2.0f;
 			}
-			if(mOperand.transform.position.y != mHeight)
-			{
-				mOperand.transform.position = new Vector3 ( mOperand.transform.position.x, mOperand.transform.position.y + 0.1f, mOperand.transform.position.z);
-			}
+			
+		}
+		if(mOperand.transform.position.y != mHeight)
+		{
+			float delta = (mHeight - mOperand.transform.position.y)*Time.deltaTime;
+			Vector3 oriPosition = mOperand.transform.position;
+			mOperand.transform.position = new Vector3 ( mOperand.transform.position.x, mOperand.transform.position.y + delta, mOperand.transform.position.z);
+			Debug.Log ("target height: " + mHeight.ToString() + " current height: " + mOperand.transform.position.y);
+			position_offset = mOperand.transform.position - oriPosition;
 			return true;
 		}
+		
 		return false;
 	}
 	
 	public override Behavior GenerateRecordedBehavior()
 	{
 		//Debug.Log("UnstableBehavior GenerateRecordedBehavior");
-		//TranslateBehavior generated_behavior = new TranslateBehavior("auto generate unstable behavior",    mOperand, position_offset);
+		TranslateBehavior generated_behavior = new TranslateBehavior("auto generate unstable behavior",    mOperand, position_offset);
 		
 		return this;
 	}
@@ -361,6 +379,7 @@ public class UnstableHand : Scenario {
 	private GameObject mElevatorFloor;
 	private List<FloorChangeSignal> mFloorSignals = new List<FloorChangeSignal>();
 	private List<FloorChangeSignal> mButtonPushSignals = new List<FloorChangeSignal>();
+	private PushBehavior mHandPushBehavior;
 	
 	private Vector3 mOriginal_position;
 	private bool replaying = false;
@@ -368,12 +387,17 @@ public class UnstableHand : Scenario {
 	void Start () {
 		
 		mHand = GameObject.Find("Automatic Rifle Standard");
+		//Debug.Log("hand obj name: " + mHand.name);
 		mElevateKeyPad = GameObject.Find("elevator button keypad");
+		//Debug.Log("mElevateKeyPad name: " + mElevateKeyPad.name);
 		mCorrectButton = GameObject.Find("button.001");
 		mWrongButton = GameObject.Find("button.002");
 		mGameCamera = GameObject.Find("Main Camera");
+		mElevatorFloor = GameObject.Find("big ground");
+		mElevatorFloor.transform.position = new Vector3(1.87f, 0.0f, -2.76f);
+		//Debug.Log("mElevatorFloor: " + mElevatorFloor.name);
 		GameObject elevatorWall = GameObject.Find("elevator walls");
-		mElevateKeyPad.transform.parent = elevatorWall.transform;
+		
 		
 		mOriginal_position = mHand.transform.position;
 		
@@ -389,7 +413,8 @@ public class UnstableHand : Scenario {
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          	new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          	new TranslateBehavior("player1 move left",  mHand, new Vector3( 1,  0, 0) * speed));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          	new TranslateBehavior("player1 move right", mHand, new Vector3(-1,  0, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),	new PushBehavior("finger push", mHand, mElevateKeyPad));
+		mHandPushBehavior = new PushBehavior("finger push", mHand, mElevateKeyPad);
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),	mHandPushBehavior);
 		//mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("wrong button push", mWrongButton, mHand, 2));
@@ -406,13 +431,16 @@ public class UnstableHand : Scenario {
 		floorMap.Add(3, "heaven");
 		mFloorSignals.Add(new FloorChangeSignal(3));
 		mButtonPushSignals.Add(new FloorChangeSignal(3));
+		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap);
 		for(int i = 0; i < mFloorSignals.Count; ++i)
 		{
-			mControls.AddControl(mFloorSignals[i],          new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap));
+			mControls.AddControl(mFloorSignals[i],          elevatorMover);
 			GameObject obj = GameObject.Find("button.00" + (i+1).ToString());
-			Debug.Log(obj.name);
+			//Debug.Log(obj.name);
 			mControls.AddControl(mButtonPushSignals[i],          new CorrectButtonBehavior("correct button push", obj, mHand, i));
 		}
+		
+
 	}
 
 
@@ -424,6 +452,7 @@ public class UnstableHand : Scenario {
 	
 	void FixedUpdate()
 	{
+		
 
 		AloneUpdate();
 
@@ -450,6 +479,10 @@ public class UnstableHand : Scenario {
 		{
 			mFloorSignals[2].mTriggered = true;
 			mButtonPushSignals[2].mTriggered = true;
+		}
+		else
+		{
+			mHandPushBehavior.mColiding = true;
 		}
 	}
 	
