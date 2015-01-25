@@ -313,7 +313,7 @@ public class FloorChangeSignal : ControlSignal
 public class ElevatorMoveBehavior : Behavior {
 	private int mCurrFloor;
 	Dictionary<int, string> mFloorMap;
-	private int mHeight;
+	private float mHeight;
 	
 	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap)
 		: base(name, operand)
@@ -331,14 +331,11 @@ public class ElevatorMoveBehavior : Behavior {
 				mCurrFloor = (int)signal;
 				
 				Debug.Log("go to " + mCurrFloor.ToString() + " floor");
-				mHeight = mCurrFloor * 2.0f;
+				mHeight = (float)mCurrFloor * 2.0f;
 			}
 			if(mOperand.transform.position.y != mHeight)
 			{
-				mOperand.transform.position = new Vector3 (
-					mOperand.transform.position.x,
-					mOperand.transform.position.y += 0.1,
-					mOperand.transform.position.z);
+				mOperand.transform.position = new Vector3 ( mOperand.transform.position.x, mOperand.transform.position.y + 0.1f, mOperand.transform.position.z);
 			}
 			return true;
 		}
@@ -427,13 +424,7 @@ public class UnstableHand : Scenario {
 	
 	void FixedUpdate()
 	{
-		GameObject floor = GameObject.Find("elevator floor");
-		if(false)
-			floor.transform.position = new Vector3 (
-				floor.transform.position.x,
-				floor.transform.position.y +0.1f,
-				floor.transform.position.z
-			);
+
 		AloneUpdate();
 
 		if (Input.GetKey(KeyCode.Space))
