@@ -10,8 +10,8 @@ GameObject:
   - 4: {fileID: 430622}
   - 95: {fileID: 9530632}
   - 114: {fileID: 11430632}
-  - 65: {fileID: 6554598}
   - 54: {fileID: 5464982}
+  - 65: {fileID: 6554598}
   m_Layer: 0
   m_Name: Car
   m_TagString: Untagged
