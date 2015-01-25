@@ -96,6 +96,7 @@ public class UnstableBehavior: Behavior
 public class PushBehavior : Behavior {
 	
 	private Vector3 originPosition;
+	private Vector3 originObstaclePosition;
 	private bool forward;
 	private bool pushing;
 	private GameObject mObstacle;
@@ -108,6 +109,7 @@ public class PushBehavior : Behavior {
 		mOperand = operand;
 		mObstacle = obstacle;
 		originPosition = mOperand.transform.position;
+		originObstaclePosition = obstacle.transform.position;
 		forward = true;
 		pushing = false;
 		mColiding = false;
@@ -120,8 +122,9 @@ public class PushBehavior : Behavior {
 		//Debug.Log("PushBehavior Operate");
 		if (signal > 0.0f)
 		{
-			//Debug.Log("signal from PushBehavior" + signal.ToString());
+			Debug.Log("signal from PushBehavior" + signal.ToString());
 			pushing = true;
+			
 			Debug.Log("coliding: " + mColiding);
 		} 
 		if(pushing)
@@ -134,25 +137,36 @@ public class PushBehavior : Behavior {
 			{
 				Vector3 finger_tip = new Vector3(
 					mOperand.transform.position.x,
-					mOperand.transform.position.y + mOperand.renderer.bounds.size.y/2,
-					mOperand.transform.position.z - mOperand.renderer.bounds.size.z/2 - 0.12f);
+					mOperand.transform.position.y,
+					mOperand.transform.position.z);
 				float finger_z_position = finger_tip.z;
-				if(mColiding)
+				if(mColiding || finger_z_position <= mObstacle.transform.position.z)
 				{
 					forward = false;
 				}
 			}
-			float delta = (forward) ? (-0.005f) : (0.005f);
-			mOperand.transform.position = new Vector3(
-				mOperand.transform.position.x,
-				mOperand.transform.position.y,
-				mOperand.transform.position.z + delta);
-			if(mOperand.transform.position.z >= originPosition.z)
+			if(forward) {
+				float delta = -0.005f;
+				mOperand.transform.position = new Vector3(
+					mOperand.transform.position.x,
+					mOperand.transform.position.y,
+					mOperand.transform.position.z + delta);
+			}
+			else
+			{
+				float delta = 0.005f;
+				mOperand.transform.position = new Vector3(
+					mOperand.transform.position.x,
+					mOperand.transform.position.y,
+					mOperand.transform.position.z + delta);
+			}
+			if(mOperand.transform.position.z >= originPosition.z && !forward)
 			{
 				pushing = false;
 				forward = true;
 				mColiding = false;
 			}
+			Debug.Log("push: " + pushing + " forward: " + forward + " mColliding: " + mColiding);
 			return true;
 		}
 		return false;
@@ -197,8 +211,8 @@ public class ButtonPushBehavior : Behavior {
 		//float finger_z_position = mPusher.transform.position.z + (mPusher.renderer.bounds.size.z/2 * mPusher.transform.localScale.z);
 		Vector3 finger_tip = new Vector3(
 			mPusher.transform.position.x,
-			mPusher.transform.position.y + mPusher.renderer.bounds.size.y/2*mPusher.transform.localScale.y,
-			mPusher.transform.position.z - mPusher.renderer.bounds.size.z/2*mPusher.transform.localScale.z);
+			mPusher.transform.position.y,
+			mPusher.transform.position.z);
 		helper.transform.position = finger_tip;
 		if (signal > 0.0f)
 		{	
@@ -325,18 +339,25 @@ public class ElevatorMoveBehavior : Behavior {
 	Dictionary<int, string> mFloorMap;
 	private float mHeight;
 	private Vector3 position_offset;
+	private bool jump;
+	private Vector3 original_position;
+	private bool back;
 	
 	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap)
 		: base(name, operand)
 	{
 		mCurrFloor = 0;
 		mOperand.transform.position = new Vector3(1.87f, 0.0f, -2.76f);
+		jump = false;
+		original_position = mOperand.transform.position;
 	}
 	
 	public override bool Operate(float signal)
 	{
 		if (signal > 0.0f)
 		{
+			jump = true;
+			back = false;
 			//Debug.Log("signal: " + signal.ToString());
 			if(mCurrFloor != (int)signal)
 			{
@@ -347,12 +368,21 @@ public class ElevatorMoveBehavior : Behavior {
 			}
 			
 		}
-		if(mOperand.transform.position.y != mHeight)
+		if(jump)
 		{
-			float delta = (mHeight - mOperand.transform.position.y)*Time.deltaTime;
+			float delta = (!back) ? 0.01f : (-0.01f);
 			Vector3 oriPosition = mOperand.transform.position;
+			if(!back && mOperand.transform.position.y > original_position.y + 0.2f)
+			{
+				delta = -0.01f;
+				back = true;
+			}
 			mOperand.transform.position = new Vector3 ( mOperand.transform.position.x, mOperand.transform.position.y + delta, mOperand.transform.position.z);
-			Debug.Log ("target height: " + mHeight.ToString() + " current height: " + mOperand.transform.position.y);
+			if(mOperand.transform.position.y <= original_position.y)
+			{
+				jump = false;
+			}
+			//Debug.Log ("target height: " + mHeight.ToString() + " current height: " + mOperand.transform.position.y);
 			position_offset = mOperand.transform.position - oriPosition;
 			return true;
 		}
@@ -386,7 +416,7 @@ public class UnstableHand : Scenario {
 	// Use this for initialization
 	void Start () {
 		
-		mHand = GameObject.Find("Automatic Rifle Standard");
+		mHand = GameObject.Find("IK_fingertip");
 		//Debug.Log("hand obj name: " + mHand.name);
 		mElevateKeyPad = GameObject.Find("elevator button keypad");
 		//Debug.Log("mElevateKeyPad name: " + mElevateKeyPad.name);
@@ -469,16 +499,19 @@ public class UnstableHand : Scenario {
 		{
 			mFloorSignals[0].mTriggered = true;
 			mButtonPushSignals[0].mTriggered = true;
+			mHandPushBehavior.mColiding = true;
 		}
 		else if(button.name == "button.002" )
 		{
 			mFloorSignals[1].mTriggered = true;
 			mButtonPushSignals[1].mTriggered = true;
+			mHandPushBehavior.mColiding = true;
 		}
 		else if(button.name == "button.003" )
 		{
 			mFloorSignals[2].mTriggered = true;
 			mButtonPushSignals[2].mTriggered = true;
+			mHandPushBehavior.mColiding = true;
 		}
 		else
 		{
