@@ -348,14 +348,15 @@ public class ElevatorMoveBehavior : Behavior {
 	private GameObject mHellBackground;
 	private GameObject mHeavenBackground;
 	private GameObject mBathroomBackground;
-
+	private AudioSource mElevatorBell;
+	private bool bell_ring;
 	
 	protected bool IsRightFloor()
 	{
 		return mFloorMap[mCurrFloor] == "heaven";
 	}
 	
-	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor, Scenario scenario, GameObject hell, GameObject heaven, GameObject bathroom)
+	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor, Scenario scenario, GameObject hell, GameObject heaven, GameObject bathroom, AudioSource bell)
 		: base(name, operand)
 	{
 		mCurrFloor = 0;
@@ -374,6 +375,9 @@ public class ElevatorMoveBehavior : Behavior {
 		mBathroomBackground = bathroom;
 		//hellTex = hell;
 		mFloorMap = floorMap;
+		mElevatorBell = bell;
+		bell_ring = false;
+		
 	}
 	
 	public override bool Operate(float signal)
@@ -442,6 +446,11 @@ public class ElevatorMoveBehavior : Behavior {
 		}
 		if(openDoor)
 		{
+			if(!bell_ring)
+			{
+				mRightDoor.audio.PlayOneShot(mElevatorBell, 0.7f);
+				bell_ring = true;
+			}
 			if(mLeftDoor.transform.position.x >= left_door_position.x + 0.9f)
 			{
 				openDoor = false;
@@ -544,6 +553,8 @@ public class UnstableHand : Scenario
 	public Texture hellTex;
 	public Texture heavenTex;
 	public Texture bathroomTex;
+	public AudioSource elevator_bell;
+	public AudioClip elevator_sound_clip;
 
 	private bool replaying = false;
 	
@@ -629,7 +640,7 @@ public class UnstableHand : Scenario
 		GameObject leftDoor = GameObject.Find("left door");
 		GameObject rightDoor = GameObject.Find("right door");
 
-		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor, this, mHellBackground, mHeavenBackground, mBathroomBackground);
+		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor, this, mHellBackground, mHeavenBackground, mBathroomBackground, elevator_bell);
 		for(int i = 0; i < mFloorSignals.Count; ++i)
 		{
 			mIndirectControls.AddControl(mFloorSignals[i],          elevatorMover);
