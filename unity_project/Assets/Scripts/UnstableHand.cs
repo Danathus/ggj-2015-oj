@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 /// <summary>
 /// Rshaking: http://forum.unity3d.com/threads/camera-shake-script-c.142764/
 
@@ -11,6 +12,8 @@ public class TrueSignal : ControlSignal
 		return 1.0f;
 	}
 }
+
+
 public class UnstableBehavior: Behavior
 {
 	private Vector3 originPosition;
@@ -19,7 +22,7 @@ public class UnstableBehavior: Behavior
 	private float shake_decay;
 	private float shake_intensity;
 	private float drunk_level = 2.0f;
-	private float camera_range = 0.5f;
+	private Vector2 camera_range = new Vector2(1.0f, 2.0f);
 	private float diff_time;
 	private float x_delta;
 	private float y_delta;
@@ -46,8 +49,8 @@ public class UnstableBehavior: Behavior
 			//Debug.Log("UnstableBehavior Operate");
 			if(shake_intensity > 0){
 				Vector3 start_position = mOperand.transform.position;
-				Vector3 min_moving_range = originPosition - new Vector3 (camera_range, camera_range, 0);
-				Vector3 max_moving_range = originPosition + new Vector3 (camera_range, camera_range, 0);
+				Vector3 min_moving_range = originPosition - new Vector3 (camera_range.x, camera_range.y, 0);
+				Vector3 max_moving_range = originPosition + new Vector3 (camera_range.x, camera_range.y, 0);
 				diff_time += Time.deltaTime;
 				//Debug.Log("change delta value, diff time: " + diff_time.ToString());
 				if(diff_time > Random.Range(3.0f, 5.0f)) {
@@ -97,6 +100,7 @@ public class PushBehavior : Behavior {
 	private bool pushing;
 	private GameObject mObstacle;
 	public PushBehavior(string name, GameObject operand, GameObject obstacle=null)
+		:base(name, operand)
 	{
 		mName = name;
 		mOperand = operand;
@@ -155,7 +159,10 @@ public class ButtonPushBehavior : Behavior {
 	private bool push_down;
 	private bool pushing;
 	private GameObject mPusher;
-	public ButtonPushBehavior(string name, GameObject operand, GameObject pusher)
+	public bool mTriggered;
+	public int mFloor;
+	public ButtonPushBehavior(string name, GameObject operand, GameObject pusher, int floor)
+		:base(name, operand)
 	{
 		mName = name;
 		mOperand = operand;
@@ -163,6 +170,8 @@ public class ButtonPushBehavior : Behavior {
 		originPosition = mOperand.transform.position;
 		push_down = true;
 		pushing = false;
+		mTriggered = false;
+		mFloor = floor;
 	}
 	
 	// input: signal -- degree [0.0, 1.0] to which signal should be operated (0.0 means do nothing, generally)
@@ -171,18 +180,22 @@ public class ButtonPushBehavior : Behavior {
 	{
 		//Debug.Log("PushBehavior Operate");
 		float finger_z_position = mPusher.transform.position.z + (mPusher.renderer.bounds.size.z/2 * mPusher.transform.localScale.z);
-		
+		Vector3 finger_tip = new Vector3(
+			mPusher.transform.position.x,
+			mPusher.transform.position.y + mPusher.renderer.bounds.size.y/2,
+			mPusher.transform.position.z + mPusher.renderer.bounds.size.z/2);
 		if (signal > 0.0f)
 		{	
 			Rect button_bounds = new Rect(mOperand.transform.position.x - mOperand.renderer.bounds.size.x/2, mOperand.transform.position.y - mOperand.renderer.bounds.size.y/2, mOperand.transform.position.x + mOperand.renderer.bounds.size.x/2, mOperand.transform.position.y + mOperand.renderer.bounds.size.y/2);
-			Vector2 finger_position = new Vector2(mPusher.transform.position.x, mPusher.transform.position.y + mPusher.renderer.bounds.size.y/2);
-			Debug.Log("button_bounds " + button_bounds.ToString());
-			Debug.Log("finger position " + finger_position.ToString());
-			Debug.Log("inside? "  + button_bounds.Contains(finger_position));
+			Vector2 finger_position = new Vector2(finger_tip.x, finger_tip.y);
+			//Debug.Log("button_bounds " + button_bounds.ToString());
+			//Debug.Log("finger position " + finger_position.ToString());
+			//Debug.Log("inside? "  + button_bounds.Contains(finger_position));
 				if( button_bounds.Contains(finger_position) &&
-				((finger_z_position) >= mOperand.transform.position.z - mOperand.renderer.bounds.size.z/2))
+			   ((finger_tip.z) >= mOperand.transform.position.z - mOperand.renderer.bounds.size.z/2))
 			{
 				pushing = true;
+				mTriggered = true;
 			}
 		} 
 		if(pushing)
@@ -190,7 +203,7 @@ public class ButtonPushBehavior : Behavior {
 			float z_boundary = originPosition.z + mOperand.renderer.bounds.size.z/2;
 			if(push_down)
 			{
-				if((finger_z_position) <= mOperand.transform.position.z - mOperand.renderer.bounds.size.z/2)
+				if((finger_tip.z) <= mOperand.transform.position.z - mOperand.renderer.bounds.size.z/2)
 				{
 					push_down = false;
 				}
@@ -217,28 +230,76 @@ public class ButtonPushBehavior : Behavior {
 }
 
 public class CorrectButtonBehavior : ButtonPushBehavior {
-	
-	private Vector3 originPosition;
-	private bool push_down;
-	private bool pushing;
-	private GameObject mPusher;
-	public CorrectButtonBehavior(string name, GameObject operand, GameObject pusher)
-		:base (name, operand, pusher)
-	{
 
+	public CorrectButtonBehavior(string name, GameObject operand, GameObject pusher, int floor)
+		:base (name, operand, pusher, floor)
+	{
+		
 	}
+	
+
 }
 
 public class WrongButtonBehavior : ButtonPushBehavior {
 	
-	private Vector3 originPosition;
-	private bool push_down;
-	private bool pushing;
-	private GameObject mPusher;
-	public WrongButtonBehavior(string name, GameObject operand, GameObject pusher)
-		:base (name, operand, pusher)
+
+	public WrongButtonBehavior(string name, GameObject operand, GameObject pusher, int floor)
+		:base (name, operand, pusher, floor)
 	{
 		
+	}
+}
+
+public class CorrectLevelSignal : ControlSignal
+{
+	ButtonPushBehavior mButtomBehavior; 
+	public CorrectLevelSignal(ButtonPushBehavior buttomBehavior)
+		: base()
+	{
+		mButtomBehavior = buttomBehavior;
+	}
+	public override float PollSignal()
+	{
+		if(mButtomBehavior.mTriggered)
+		{
+			mButtomBehavior.mTriggered = false;
+			return mButtomBehavior.mFloor;
+		}
+		return 0.0f;
+	}
+}
+public class ElevatorMoveBehavior : Behavior {
+	private int mCurrFloor;
+	Dictionary<int, string> mFloorMap;
+	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap)
+		: base(name, operand)
+	{
+		mCurrFloor = 1;
+	}
+	
+	public override bool Operate(float signal)
+	{
+		if (signal > 0.0f)
+		{
+			Debug.Log("signal: " + signal.ToString());
+			if(mCurrFloor != (int)signal)
+			{
+				mCurrFloor = (int)signal;
+				
+				Debug.Log("go to " + mCurrFloor.ToString() + " floor");
+				
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public override Behavior GenerateRecordedBehavior()
+	{
+		//Debug.Log("UnstableBehavior GenerateRecordedBehavior");
+		//TranslateBehavior generated_behavior = new TranslateBehavior("auto generate unstable behavior",    mOperand, position_offset);
+		
+		return this;
 	}
 }
 
@@ -248,6 +309,7 @@ public class UnstableHand : MonoBehaviour {
 	private GameObject mElevateKeyPad;
 	private GameObject mCorrectButton;
 	private GameObject mWrongButton;
+	private GameObject mGameCamera;
 	
 	private ControlScheme mControls;
 	private Vector3 mOriginal_position;
@@ -258,14 +320,24 @@ public class UnstableHand : MonoBehaviour {
 		mElevateKeyPad = GameObject.Find("wallBrickExposedShort");
 		mCorrectButton = GameObject.Find("Correct Button Test");
 		mWrongButton = GameObject.Find("Wrong Button Test");
+		mGameCamera = GameObject.Find("Main Camera");
 		
 		mOriginal_position = mHand.transform.position;
 		
 		Scenario scenario = new Scenario();
 		scenario.AddBehavior(new UnstableBehavior("unstable hand", mHand));
 		scenario.AddBehavior(new PushBehavior("finger push", mHand, mElevateKeyPad));
-		scenario.AddBehavior(new CorrectButtonBehavior("correct button push", mCorrectButton, mHand));
-		scenario.AddBehavior(new WrongButtonBehavior("wrong button push", mWrongButton, mHand));
+		List<ButtonPushBehavior> buttonBehaviorList = new List<ButtonPushBehavior>();
+		buttonBehaviorList.Add(new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
+		buttonBehaviorList.Add(new WrongButtonBehavior("wrong button push", mWrongButton, mHand, 2));
+		for(int i = 0; i < buttonBehaviorList.Count; ++i)
+		{
+			scenario.AddBehavior(buttonBehaviorList[i]);
+		}
+		Dictionary<int, string> floorMap = new Dictionary<int, string>();
+		floorMap.Add(1, "hell");
+		floorMap.Add(2, "heaven");
+		scenario.AddBehavior(new ElevatorMoveBehavior("elevator move", mElevateKeyPad, floorMap));
 		float speed = 0.1f;
 		scenario.AddBehavior(new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
 		scenario.AddBehavior(new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
@@ -276,7 +348,7 @@ public class UnstableHand : MonoBehaviour {
 		mControls = new ControlScheme();
 		ControlSignal trueSignal;
 		
-		mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
+		//mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
 		mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("correct button push"));
 		mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("wrong button push"));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          scenario.GetBehavior("player1 move up"));
@@ -284,12 +356,22 @@ public class UnstableHand : MonoBehaviour {
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          scenario.GetBehavior("player1 move left"));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          scenario.GetBehavior("player1 move right"));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),          scenario.GetBehavior("finger push"));
+		for(int i = 0; i < buttonBehaviorList.Count; ++i)
+		{
+			mControls.AddControl(new CorrectLevelSignal(buttonBehaviorList[i]),          scenario.GetBehavior("elevator move"));
+		}
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		Vector3 finger_tip = new Vector3(
+			mHand.transform.position.x,
+			mHand.transform.position.y + mHand.renderer.bounds.size.y/2,
+			mHand.transform.position.z + mHand.renderer.bounds.size.z/2);
+		//GameObject helper = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		//helper.transform.position = finger_tip;
+		//mGameCamera.transform.LookAt(finger_tip);
 		///transform.Translate(Vector3.forward * Time.deltaTime);
 	}
 	// called once per timestep update (critical: do game state updates here!!!)
