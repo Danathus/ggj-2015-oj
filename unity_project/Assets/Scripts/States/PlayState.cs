@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayState: State {
 
-	private Scenario mScenario = null;
+	private Scenario[] mScenarioList = null;
 
 	public PlayState() {
 		mName = "Play";
@@ -15,19 +16,22 @@ public class PlayState: State {
 	}
 
 	public override void Leave() {
-		if (mScenario != null) {
-			mScenario.Reset();
-			mScenario = null;
+		if (mScenarioList != null) {
+			foreach(var scenario in mScenarioList)
+			{
+				scenario.Reset();
+			}
+			mScenarioList = null;
 		}
 	}
 	
 	public override void Update () {
-		if (mScenario == null) {
-			mScenario = Object.FindObjectOfType(typeof(Scenario)) as Scenario;
+		if (mScenarioList == null) {
+			mScenarioList = Object.FindObjectsOfType<Scenario>();
 		}
 
-		if (mScenario != null) {
-			mScenario.mControls.Update();
+		foreach (var scenario in mScenarioList) {
+			scenario.mControls.Update();
 		}
 
 		if (Input.GetKey(KeyCode.Return)) {
