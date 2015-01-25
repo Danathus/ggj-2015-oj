@@ -603,37 +603,6 @@ public class UnstableHand : Scenario
 		// create indirect controls
 		mIndirectControls = new ControlScheme();
 
-		Dictionary<int, string> floorMap = new Dictionary<int, string>();
-		int heavenFloor = Random.Range(1, 4);
-		floorMap.Add(heavenFloor, "heaven");
-		string team_instructions = "";
-		switch(heavenFloor)
-		{
-			case 1:
-			{
-			floorMap.Add(2, "hell");
-			floorMap.Add(3, "bathroom");
-			team_instructions = "Ground floor exit!\nGo!";
-			}
-			break;
-			case 2:
-			{
-			floorMap.Add(1, "hell");
-			floorMap.Add(3, "bathroom");
-			team_instructions = "1st floor exit!\nGo!";
-			}
-			break;
-			case 3:
-			{
-			floorMap.Add(2, "hell");
-			floorMap.Add(1, "bathroom");
-			team_instructions = "2nd floor exit!\nGo!";
-			}
-			break;
-		}
-		GameObject instructions = GameObject.Find("team instructions");
-		Text text = instructions.GetComponent<Text>() as Text;
-		text.text =  team_instructions;
 		mFloorSignals.Clear();
 		mButtonPushSignals.Clear();
 		//floorMap.Add(1, "hell");
@@ -645,9 +614,75 @@ public class UnstableHand : Scenario
 		//floorMap.Add(3, "bathroom");
 		mFloorSignals.Add(new FloorChangeSignal(3));
 		mButtonPushSignals.Add(new FloorChangeSignal(3));
-		
+	}
+
+	// Use this for initialization
+	void Start ()
+	{
+		mRandomReverter = new RandomReverter();
+
+		Dictionary<int, string> floorMap = new Dictionary<int, string>();
+		int heavenFloor = Random.Range(1, 4);
+		floorMap.Add(heavenFloor, "heaven");
+		string team_instructions = "";
+		switch(heavenFloor)
+		{
+		case 1:
+			floorMap.Add(2, "hell");
+			floorMap.Add(3, "bathroom");
+			team_instructions = "Ground floor exit!\nGo!";
+			break;
+		case 2:
+			floorMap.Add(1, "hell");
+			floorMap.Add(3, "bathroom");
+			team_instructions = "1st floor exit!\nGo!";
+			break;
+		case 3:
+			floorMap.Add(2, "hell");
+			floorMap.Add(1, "bathroom");
+			team_instructions = "2nd floor exit!\nGo!";
+			break;
+		}
+
+		GameObject instructions = GameObject.Find("team instructions");
+		Text text = instructions.GetComponent<Text>() as Text;
+		text.text =  team_instructions;
+
 		GameObject leftDoor = GameObject.Find("left door");
 		GameObject rightDoor = GameObject.Find("right door");
+
+		// find key game objects
+		mHand = GameObject.Find("IK_fingertip");
+		//Debug.Log("hand obj name: " + mHand.name);
+		mElevateKeyPad = GameObject.Find("elevator button keypad");
+		//Debug.Log("mElevateKeyPad name: " + mElevateKeyPad.name);
+		mCorrectButton = GameObject.Find("button.001");
+		mWrongButton = GameObject.Find("button.002");
+		mGameCamera = GameObject.Find("Main Camera");
+		mElevatorFloor = GameObject.Find("big ground");
+		GameObject elevatorWall = GameObject.Find("elevator walls");
+		mHellBackground = GameObject.Find("outside environment_hell");
+		mHeavenBackground = GameObject.Find("outside environment_heaven");
+		mBathroomBackground = GameObject.Find("outside environment_bathroom");
+
+		// find IK objects
+		mGameObject_IK_Control   = GameObject.Find("IK_Control");
+		mGameObject_RightArm     = GameObject.Find("mixamorig:RightArm");
+		mGameObject_RightForeArm = GameObject.Find("mixamorig:RightForeArm");
+		mGameObject_RightHand    = GameObject.Find("mixamorig:RightHand");
+		mGameObject_IK_fingertip = GameObject.Find("IK_fingertip");
+		mGameObject_IK_elbow     = GameObject.Find("IK_elbow");
+
+		// sample initial state first-time through
+		mRememberedTransform_IK_Control.Read  (mGameObject_IK_Control.transform);
+		mRememberedTransform_RightArm.Read    (mGameObject_RightArm.transform);
+		mRememberedTransform_RightForeArm.Read(mGameObject_RightForeArm.transform);
+		mRememberedTransform_RightHand.Read   (mGameObject_RightHand.transform);
+		mRememberedTransform_IK_fingertip.Read(mGameObject_IK_fingertip.transform);
+		mRememberedTransform_IK_elbow.Read    (mGameObject_IK_elbow.transform);
+
+		// initialize state
+		Reset();
 
 		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor, this, mHellBackground, mHeavenBackground, mBathroomBackground, elevator_bell);
 		for(int i = 0; i < mFloorSignals.Count; ++i)
@@ -669,44 +704,6 @@ public class UnstableHand : Scenario
 			mIndirectControls.AddControl(mButtonPushSignals[i], pushBehavior);
 			//*/
 		}
-	}
-
-	// Use this for initialization
-	void Start ()
-	{
-		mRandomReverter = new RandomReverter();
-
-		// find key game objects
-		mHand = GameObject.Find("IK_fingertip");
-		//Debug.Log("hand obj name: " + mHand.name);
-		mElevateKeyPad = GameObject.Find("elevator button keypad");
-		//Debug.Log("mElevateKeyPad name: " + mElevateKeyPad.name);
-		mCorrectButton = GameObject.Find("button.001");
-		mWrongButton = GameObject.Find("button.002");
-		mGameCamera = GameObject.Find("Main Camera");
-		mElevatorFloor = GameObject.Find("big ground");
-		GameObject elevatorWall = GameObject.Find("elevator walls");
-		mHellBackground = GameObject.Find("outside environment_hell");
-		mHeavenBackground = GameObject.Find("outside environment_heaven");
-		mBathroomBackground = GameObject.Find("outside environment_bathroom");
-		//
-		mGameObject_IK_Control   = GameObject.Find("IK_Control");
-		mGameObject_RightArm     = GameObject.Find("mixamorig:RightArm");
-		mGameObject_RightForeArm = GameObject.Find("mixamorig:RightForeArm");
-		mGameObject_RightHand    = GameObject.Find("mixamorig:RightHand");
-		mGameObject_IK_fingertip = GameObject.Find("IK_fingertip");
-		mGameObject_IK_elbow     = GameObject.Find("IK_elbow");
-
-		// sample initial state first-time through
-		mRememberedTransform_IK_Control.Read  (mGameObject_IK_Control.transform);
-		mRememberedTransform_RightArm.Read    (mGameObject_RightArm.transform);
-		mRememberedTransform_RightForeArm.Read(mGameObject_RightForeArm.transform);
-		mRememberedTransform_RightHand.Read   (mGameObject_RightHand.transform);
-		mRememberedTransform_IK_fingertip.Read(mGameObject_IK_fingertip.transform);
-		mRememberedTransform_IK_elbow.Read    (mGameObject_IK_elbow.transform);
-
-		// initialize state
-		Reset();
 
 		// these are not presently actually used
 		//List<ButtonPushBehavior> buttonBehaviorList = new List<ButtonPushBehavior>();
