@@ -31,7 +31,7 @@ public class FroggerCamera : Scenario {
 	
 	// Update is called once per frame
 	void FixedUpdate() {
-		Debug.Log (Input.GetKey (KeyCode.LeftArrow));
+		//Debug.Log (Input.GetKey (KeyCode.LeftArrow));
 		this.transform.LookAt(cameraTarget);
 
 		Vector3 position = this.transform.position;
@@ -42,7 +42,8 @@ public class FroggerCamera : Scenario {
 		position.y = targetY;
 		this.transform.position = position;
 
-		mControls.Update ();
+		mControls.Update();
+		//ScenarioUpdate();
 	}
 
 	private void Move(GameObject gameObject, Vector3 offset) {

@@ -56,6 +56,7 @@ public class ReplayManager : Singleton<ReplayManager> {
 
     if (mCurrentEvent > -1 && mCurrentEvent < mEventList.Count) {
       while (mCurrentEvent < mEventList.Count && mEventList[mCurrentEvent].mTime <= mCurrentTime) {
+		  Debug.Log("UpdateReplay");
         mEventList[mCurrentEvent].Activate();
         mCurrentEvent++;
       }
