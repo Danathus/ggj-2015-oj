@@ -7,6 +7,7 @@ public class Box : Scenario {
 	public Rigidbody cereal;
 	public Transform generationPoint1, generationPoint2;
 	public float speed = 5.0f, rotateSpeed = 2.5f, minSpawnOffset = 0.0f, maxSpawnOffset = 0.2f, spawnPerSecond = 10.0f;
+	public Renderer bounds;
 
 	private float _spawnTimeAccum = 0.0f;
 
@@ -14,6 +15,7 @@ public class Box : Scenario {
 
 	private GameObjectReverter _reverter;
 	private RandomReverter _random;
+	private Bounder _bounder;
 
 	public override void Reset() {
 		foreach (Cereal cereal in Object.FindObjectsOfType<Cereal>()) {
@@ -28,6 +30,7 @@ public class Box : Scenario {
 	void Start() {
 		_reverter = new GameObjectReverter (this.gameObject);
 		_random = new RandomReverter ();
+		_bounder = new Bounder (bounds);
 
 		Behavior p2Up    = new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  0, -1) * speed * Time.fixedDeltaTime, Move);
 		Behavior p2Down  = new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0,  0,  1) * speed * Time.fixedDeltaTime, Move);
@@ -48,7 +51,8 @@ public class Box : Scenario {
 	}
 
 	void Move(GameObject gameObject, Vector3 offset) {
-		this.rigidbody.position -= new Vector3(offset.x, 0, 0);
+		float x = _bounder.Translate(this.rigidbody.position, offset).x;
+		this.rigidbody.position += new Vector3(x, 0, 0);
 		this.rigidbody.rotation *= new Quaternion(Mathf.Sin(offset.z), 0, 0, Mathf.Cos(offset.z));
 		
 	}
