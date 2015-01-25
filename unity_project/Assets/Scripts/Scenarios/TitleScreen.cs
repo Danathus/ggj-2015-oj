@@ -54,19 +54,23 @@ public class TitleScreen : MonoBehaviour {
 	private float m_FinishedTimer = 5.0f;
 
 	private Vector3 m_FinishedCenter;
+	public float m_holdAccum = 0.0f;
+	public float m_holdTimeRequirement = 1.0f;
 
 	// Use this for initialization
 	void Start () {
+		m_holdAccum = 0.0f;
+
 		m_LeftTransform  = m_LeftPart.GetComponent<RectTransform>() as RectTransform;
 		m_RightTransform = m_RightPart.GetComponent<RectTransform>() as RectTransform;
 
 		float speed = 20.0f;
-		Behavior p1Mag   = new MagneticBehavior("player1 magnetic", 	   m_LeftPart, 3.0f);
+		Behavior p1Mag   = new MagneticBehavior("player1 magnetic", 	   m_LeftPart, 10.0f);
 		Behavior p1Up    = new RectTranslateBehavior("player1 move up",    m_LeftPart, new Vector3( 0,  1, 0) * speed);
 		Behavior p1Down  = new RectTranslateBehavior("player1 move down",  m_LeftPart, new Vector3( 0, -1, 0) * speed);
 		Behavior p1Left  = new RectTranslateBehavior("player1 move left",  m_LeftPart, new Vector3(-1,  0, 0) * speed);
 		Behavior p1Right = new RectTranslateBehavior("player1 move right", m_LeftPart, new Vector3( 1,  0, 0) * speed);
-		Behavior p2Mag   = new MagneticBehavior("player2 magnetic", 	   m_RightPart, 3.0f);
+		Behavior p2Mag   = new MagneticBehavior("player2 magnetic", 	   m_RightPart, 10.0f);
 		Behavior p2Up    = new RectTranslateBehavior("player2 move up",    m_RightPart, new Vector3( 0,  1, 0) * speed);
 		Behavior p2Down  = new RectTranslateBehavior("player2 move down",  m_RightPart, new Vector3( 0, -1, 0) * speed);
 		Behavior p2Left  = new RectTranslateBehavior("player2 move left",  m_RightPart, new Vector3(-1,  0, 0) * speed);
@@ -95,25 +99,32 @@ public class TitleScreen : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update() {
 		if (!m_IsFinished) {
 			if (m_Controls != null) {
 				m_Controls.Update();
 			}
 
 			if (m_LeftTransform != null && m_RightTransform != null) {
-				Vector3 offset = (m_LeftTransform.position + new Vector3(30, 0, 0)) - (m_RightTransform.position - new Vector3(30, 0, 0));
+				Vector3 offset = (m_LeftTransform.position + new Vector3(17, 0, 0)) - (m_RightTransform.position - new Vector3(17, 0, 0));
 				if (offset.magnitude < 5) {
-					m_IsFinished = true;
-					m_FinishedCenter = (m_LeftTransform.position + new Vector3(30, 0, 0)) - (offset * 0.5f);
+					m_holdAccum += Time.deltaTime;
+					if (m_holdAccum > m_holdTimeRequirement) {
+						m_IsFinished = true;
+						m_FinishedCenter = (m_LeftTransform.position + new Vector3(17, 0, 0)) - (offset * 0.5f);
 
-					m_LeftPart.GetComponent<PulseImage>().enabled = false;
-					m_RightPart.GetComponent<PulseImage>().enabled = false;
+						m_LeftPart.GetComponent<PulseImage>().enabled = false;
+						m_RightPart.GetComponent<PulseImage>().enabled = false;
+					}
+				}
+				else {
+					m_holdAccum = 0.0f;
 				}
 			} else {
 				m_IsFinished = true;
 			}
 		} else {
+			// we're finished -- slide together
 			if (m_LeftTransform != null && m_RightTransform != null) {
 				Vector3 offset = (m_FinishedCenter - new Vector3(17, 0, 0)) - m_LeftTransform.position;
 				offset *= 3.0f * Time.fixedDeltaTime;
