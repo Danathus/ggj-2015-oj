@@ -15,11 +15,23 @@ public class FroggerMan : Scenario {
 	float _VerticalWeight = 0.0f;
 	int _randomSeed;
 
-	public override void Reset ()
+	GameObjectReverter _manReverter = null;
+
+	public override void Reset()
 	{
 		//UnityEngine.Random.seed = _randomSeed;
 		foreach (Car car in UnityEngine.Object.FindObjectsOfType<Car>()) {
 			Destroy(car.gameObject);
+		}
+
+		foreach (var body in this.GetComponentsInChildren<Rigidbody>()) {
+			body.isKinematic = true;
+			body.collider.enabled = false;
+		}
+		this.collider.enabled = true;
+		if (_manReverter != null)
+		{
+			_manReverter.Revert();
 		}
 	}
 
@@ -47,11 +59,9 @@ public class FroggerMan : Scenario {
 		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p1Left  );
 		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p1Right );
 
-		foreach (var body in this.GetComponentsInChildren<Rigidbody>()) {
-			body.isKinematic = true;
-			body.collider.enabled = false;
-		}
-		this.collider.enabled = true;
+		_manReverter = null;
+		Reset();
+		_manReverter = new GameObjectReverter(this.gameObject);
 	}
 	
 	// Update is called once per frame

@@ -167,7 +167,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
       propertyPath: m_Scenarios.Array.size
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
       propertyPath: m_LocalPosition.x
@@ -255,8 +255,6 @@ MonoBehaviour:
   m_FailureScreen: {fileID: 177286, guid: 8f15fcb271816854982a033c78640c44, type: 2}
   m_Scenarios:
   - FroggerMan
-  - elevator_button
-  - CerealPour
 --- !u!4 &1810358421
 Transform:
   m_ObjectHideFlags: 0
