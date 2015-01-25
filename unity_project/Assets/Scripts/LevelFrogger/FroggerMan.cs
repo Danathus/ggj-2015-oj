@@ -83,6 +83,7 @@ public class FroggerMan : Scenario {
 			}	
 			_animator.enabled = false;
 			_enabled = false;
+			Failure();
 		}
 	}
 
