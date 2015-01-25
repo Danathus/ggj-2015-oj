@@ -12,7 +12,7 @@ public abstract class Scenario: MonoBehaviour {
 	
 	// Update is called once per frame
 	public void AloneUpdate() {
-		if (ScenarioManager.Instance.m_Scenarios.Count == 0) {
+		if (!ScenarioManager.Instance.isInitialized()) {
 			mControls.Update();
 		}
 
