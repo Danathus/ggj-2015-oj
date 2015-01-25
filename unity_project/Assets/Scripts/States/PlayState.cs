@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayState: State {
 
-	private Scenario mScenario = null;
+	private Scenario[] mScenarioList = null;
 
 	public PlayState() {
 		mName = "Play";
@@ -12,25 +13,28 @@ public class PlayState: State {
 	public override void Enter() {
 		ReplayManager.Instance.Clear();
 		ScenarioManager.Instance.NextScenario();
+		// keep track in the replay manager of when we started
+		ReplayManager.Instance.AddEvent(new BookendEvent());
 	}
 
 	public override void Leave() {
-		if (mScenario != null) {
-			mScenario.Reset();
-			mScenario = null;
+		if (mScenarioList != null) {
+			mScenarioList = null;
 		}
+		// keep track in the replay manager of when we stopped
+		//ReplayManager.Instance.AddEvent(new BookendEvent()); // now done in the next state
 	}
 	
 	public override void Update () {
-		if (mScenario == null) {
-			mScenario = Object.FindObjectOfType(typeof(Scenario)) as Scenario;
+		if (mScenarioList == null) {
+			mScenarioList = Object.FindObjectsOfType<Scenario>();
 		}
 
-		if (mScenario != null) {
-			mScenario.mControls.Update();
+		foreach (var scenario in mScenarioList) {
+			scenario.mControls.Update();
 		}
 
-		if (Input.GetKey(KeyCode.Return)) {
+		if (base.ShouldAdvanceState()) {
 			ScenarioManager.Instance.ActivateState("Play");
 		}
 	}

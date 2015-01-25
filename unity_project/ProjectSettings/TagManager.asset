@@ -7,7 +7,10 @@ TagManager:
   - RightHand
   - RightShoulder
   - ReplayCamera
+  - 
   - Bowl
+  - Player1Text
+  - Player2Text
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX

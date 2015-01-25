@@ -21,16 +21,20 @@ public class IntroState: State {
 	}
 	
 	public override void Update () {
-		if (Input.GetKey(KeyCode.Return)) {
+		if (base.ShouldAdvanceState()) {
 			ScenarioManager.Instance.ActivateState("Play");
 		}
 
 		// optional
-		TestGamepads();
+		//TestGamepads();
 	}
 
 	void TestGamepads()
 	{
+		//Debug.Log("controllers: " +
+		//	GamepadInput.GamePad.GetJoystickName(GamepadInput.GamePad.Index.One)
+		//	+ " and " +
+		//	GamepadInput.GamePad.GetJoystickName(GamepadInput.GamePad.Index.Two));
 		GamepadInput.GamepadState state = GamepadInput.GamePad.GetState(GamepadInput.GamePad.Index.One);
 		if (state.A)             { Debug.Log("1 A"); }
 		if (state.B)             { Debug.Log("1 B"); }
