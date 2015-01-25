@@ -250,6 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9276dccee39be3948b40671b36e97f65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_PrimaryPlayer: 0
   m_TimeScreen: {fileID: 181074, guid: cd1005fbb7e002f4388b490df8706792, type: 2}
   m_VinetteScreen: {fileID: 171972, guid: b19abdb2e388c6744b458d898bb03e7f, type: 2}
   m_VictoryScreen: {fileID: 177286, guid: ee67869aac9cdc842a9215ec9a031aa8, type: 2}
