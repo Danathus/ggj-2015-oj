@@ -9,6 +9,11 @@ public class IntroState: State {
 
 	public override void Enter() {
 		ScenarioManager.Instance.Shuffle();
+		if (!ScenarioManager.Instance.isInitialized()) {
+			Application.LoadLevel("main_menu");
+		} else {
+			ScenarioManager.Instance.ActivateState("Play");
+		}
 	}
 
 	public override void Leave() {
@@ -16,6 +21,8 @@ public class IntroState: State {
 	}
 	
 	public override void Update () {
-		ScenarioManager.Instance.ActivateState("Play");
+		if (Input.GetKey(KeyCode.Return)) {
+			ScenarioManager.Instance.ActivateState("Play");
+		}
 	}
 }
