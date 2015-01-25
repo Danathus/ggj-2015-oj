@@ -13,8 +13,7 @@ public class Box : Scenario {
 	private static Stack<GameObject> _freeCereal = new Stack<GameObject>();
 
 	private GameObjectReverter _reverter;
-	private System.Random _random = new System.Random(12345);
-	private int _randomSeed;
+	private RandomReverter _random;
 
 	public override void Reset() {
 		foreach (Cereal cereal in Object.FindObjectsOfType<Cereal>()) {
@@ -23,13 +22,12 @@ public class Box : Scenario {
 		_freeCereal.Clear ();
 
 		_reverter.Revert ();
-		Random.seed = _randomSeed;
-		_random = new System.Random (12345);
+		_random.Revert ();
 	}
 
 	void Start() {
 		_reverter = new GameObjectReverter (this.gameObject);
-		//_randomSeed = _random.;	
+		_random = new RandomReverter ();
 
 		Behavior p2Up    = new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  0, -1) * speed * Time.fixedDeltaTime, Move);
 		Behavior p2Down  = new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0,  0,  1) * speed * Time.fixedDeltaTime, Move);
@@ -91,8 +89,8 @@ public class Box : Scenario {
 				var forward = Vector3.Cross(left, up);
 				for(int i = 0; i < spawnCount; i ++)
 				{
-					var offsetAngle = Random.Range(0, 2 * Mathf.PI);
-					var offsetDistance = Random.Range(minSpawnOffset, maxSpawnOffset);
+					var offsetAngle = _random.Range(0, 2 * Mathf.PI);
+					var offsetDistance = _random.Range(minSpawnOffset, maxSpawnOffset);
 					var offset = (left * Mathf.Sin(offsetAngle) + forward * Mathf.Cos(offsetAngle)) * offsetDistance;
 
 					if(tiltAngle > 0) {
