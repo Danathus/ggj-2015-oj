@@ -15,7 +15,7 @@ public class Main : MonoBehaviour
 	{
 		// create mock scene with two player objects
 		mPlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		mPlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		mPlayer2 = GameObject.Find("CubeHand");
 		Vector3 scale = new Vector3(0.1f, 0.1f, 0.1f);
 		mPlayer1.transform.localScale = scale;
 		mPlayer2.transform.localScale = scale;
@@ -52,28 +52,36 @@ public class Main : MonoBehaviour
 		// restart the scene
 		Restart();
 
-		// // create the behaviors in this scene
-		// Scenario scenario = new Scenario();
+		// create the behaviors in this scene
 		float speed = 0.025f;
-		// scenario.AddBehavior(new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0) * speed));
-		// scenario.AddBehavior(new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0) * speed));
-		// scenario.AddBehavior(new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0) * speed));
-		// scenario.AddBehavior(new TranslateBehavior("player1 move right", mPlayer1, new Vector3( 1,  0, 0) * speed));
-		// scenario.AddBehavior(new TranslateBehavior("player2 move up",    mPlayer2, new Vector3( 0,  1, 0) * speed));
-		// scenario.AddBehavior(new TranslateBehavior("player2 move down",  mPlayer2, new Vector3( 0, -1, 0) * speed));
-		// scenario.AddBehavior(new TranslateBehavior("player2 move left",  mPlayer2, new Vector3(-1,  0, 0) * speed));
-		// scenario.AddBehavior(new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0) * speed));
+		Behavior p1Up    = new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0) * speed);
+		Behavior p1Down  = new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0) * speed);
+		Behavior p1Left  = new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0) * speed);
+		Behavior p1Right = new TranslateBehavior("player1 move right", mPlayer1, new Vector3( 1,  0, 0) * speed);
+		Behavior p2Up    = new TranslateBehavior("player2 move up",    mPlayer2, new Vector3( 0,  1, 0) * speed);
+		Behavior p2Down  = new TranslateBehavior("player2 move down",  mPlayer2, new Vector3( 0, -1, 0) * speed);
+		Behavior p2Left  = new TranslateBehavior("player2 move left",  mPlayer2, new Vector3(-1,  0, 0) * speed);
+		Behavior p2Right = new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0) * speed);
 
-		// // create the control scheme that maps inputs to these behaviors
+		// create the control scheme that maps inputs to these behaviors
 		mControls = new ControlScheme();
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          new TranslateBehavior("player1 move up",    mPlayer1, new Vector3( 0,  1, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          new TranslateBehavior("player1 move down",  mPlayer1, new Vector3( 0, -1, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          new TranslateBehavior("player1 move left",  mPlayer1, new Vector3(-1,  0, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          new TranslateBehavior("player1 move right", mPlayer1, new Vector3( 1,  0, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    new TranslateBehavior("player2 move up",    mPlayer2, new Vector3( 0,  1, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  new TranslateBehavior("player2 move down",  mPlayer2, new Vector3( 0, -1, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  new TranslateBehavior("player2 move left",  mPlayer2, new Vector3(-1,  0, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), new TranslateBehavior("player2 move right", mPlayer2, new Vector3( 1,  0, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          p1Up   );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          p1Down );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          p1Left );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          p1Right);
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    p2Up   );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  p2Down );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  p2Left );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), p2Right);
+		//
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p1Up    );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p1Down  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p1Left  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p1Right );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p2Up    );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p2Down  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p2Left  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p2Right );
 	}
 	
 	// Update is called once per frame
