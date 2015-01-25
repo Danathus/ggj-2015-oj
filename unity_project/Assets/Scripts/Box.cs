@@ -12,30 +12,54 @@ public class Box : Scenario {
 
 	private static Stack<GameObject> _freeCereal = new Stack<GameObject>();
 
+	private GameObjectReverter _reverter;
+	private System.Random _random = new System.Random(12345);
+	private int _randomSeed;
 
-	// Use this for initialization
-	void CreateCereal(Vector3 position)
-	{
-		if (_freeCereal.Count > 0) {
-			GameObject gameObject = _freeCereal.Pop();
-			gameObject.transform.position = gameObject.rigidbody.position = position;
-			gameObject.rigidbody.velocity = gameObject.rigidbody.angularVelocity = new Vector3();
-			gameObject.SetActiveRecursively(true);
-		} else {
-			Instantiate(cereal, position, new Quaternion());
+	public override void Reset() {
+		foreach (Cereal cereal in Object.FindObjectsOfType<Cereal>()) {
+			Destroy(cereal.gameObject);
 		}
+		_freeCereal.Clear ();
+
+		_reverter.Revert ();
+		Random.seed = _randomSeed;
+		_random = new System.Random (12345);
 	}
 
-	public static void DestroyCereal(GameObject gameObject) {
-		gameObject.SetActiveRecursively(false);
-		_freeCereal.Push(gameObject);
+	void Start() {
+		_reverter = new GameObjectReverter (this.gameObject);
+		//_randomSeed = _random.;	
+
+		Behavior p2Up    = new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  0, -1) * speed * Time.fixedDeltaTime, Move);
+		Behavior p2Down  = new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0,  0,  1) * speed * Time.fixedDeltaTime, Move);
+		Behavior p2Left  = new MovementCallbackBehavior("player1 move left",  this.gameObject, new Vector3( 1,  0,  0) * speed * Time.fixedDeltaTime, Move);
+		Behavior p2Right = new MovementCallbackBehavior("player1 move right", this.gameObject, new Vector3(-1,  0,  0) * speed * Time.fixedDeltaTime, Move);
+		
+		// rig control scheme
+		//   for buttons
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),    p2Up   );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.DownArrow),  p2Down );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.LeftArrow),  p2Left );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.RightArrow), p2Right);
+		//   for gamepads
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p2Up    );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p2Down  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p2Left  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p2Right );
+	}
+
+	void Move(GameObject gameObject, Vector3 offset) {
+		this.rigidbody.position -= new Vector3(offset.x, 0, 0);
+		this.rigidbody.rotation *= new Quaternion(Mathf.Sin(offset.z), 0, 0, Mathf.Cos(offset.z));
+		
 	}
 
 	// Update is called once per frame
 	void FixedUpdate() {
 		ScenarioUpdate();
 
-		float x = 0, y = 0;
+		/*float x = 0, y = 0;
 
 		if (Input.GetKey(KeyCode.LeftArrow)) {
 			x -= 1;
@@ -51,10 +75,7 @@ public class Box : Scenario {
 		}
 
 		x *= speed * Time.fixedDeltaTime;
-		y *= speed * Time.fixedDeltaTime;
-
-		this.rigidbody.position -= new Vector3(x, 0, 0);
-		this.rigidbody.rotation *= new Quaternion(Mathf.Sin(y), 0, 0, Mathf.Cos(y));
+		y *= speed * Time.fixedDeltaTime;*/
 
 		var up = this.rigidbody.rotation * new Vector3(0, 1, 0);
 		var tiltAngle = Mathf.Atan2 (up.x, up.y) * (180 / Mathf.PI);
@@ -88,7 +109,22 @@ public class Box : Scenario {
 		}
 	}
 
-	public override void Reset() {
-		
+	// Use this for initialization
+	void CreateCereal(Vector3 position)
+	{
+		if (_freeCereal.Count > 0) {
+			GameObject gameObject = _freeCereal.Pop();
+			gameObject.transform.position = gameObject.rigidbody.position = position;
+			gameObject.rigidbody.velocity = gameObject.rigidbody.angularVelocity = new Vector3();
+			gameObject.SetActiveRecursively(true);
+		} else {
+			Instantiate(cereal, position, new Quaternion());
+		}
 	}
+	
+	public static void DestroyCereal(GameObject gameObject) {
+		gameObject.SetActiveRecursively(false);
+		_freeCereal.Push(gameObject);
+	}
+	
 }

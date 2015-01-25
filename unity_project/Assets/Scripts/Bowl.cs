@@ -8,9 +8,13 @@ public class Bowl : Scenario {
 	private int _totalCaught = 0;
 	private float _playTime = 0.0f;
 	private bool _hasEnded = false;
+	private Vector3 _accum = new Vector3();
+
+	private GameObjectReverter _reverter;
 
 	public override void Reset ()
 	{
+		_reverter.Revert ();
 	}
 
 	public void CaughtCereal()
@@ -20,6 +24,27 @@ public class Bowl : Scenario {
 
 	// Use this for initialization
 	void Start () {
+		_reverter = new GameObjectReverter (this.gameObject);
+
+		Behavior p1Up    = new MovementCallbackBehavior("player1 move up",    this.gameObject, new Vector3( 0,  1, 0) * speed, Move);
+		Behavior p1Down  = new MovementCallbackBehavior("player1 move down",  this.gameObject, new Vector3( 0, -1, 0) * speed, Move);
+		Behavior p1Left  = new MovementCallbackBehavior("player1 move left",  this.gameObject, new Vector3(-1,  0, 0) * speed, Move);
+		Behavior p1Right = new MovementCallbackBehavior("player1 move right", this.gameObject, new Vector3( 1,  0, 0) * speed, Move);
+
+		// create the control scheme that maps inputs to these behaviors
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          p1Up   );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          p1Down );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          p1Left );
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          p1Right);
+		//
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p1Up    );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p1Down  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p1Left  );
+		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p1Right );
+	}
+	
+	void Move(GameObject gameObject, Vector3 offset) {
+		_accum += new Vector3 (offset.x, 0, offset.y) * -Time.fixedDeltaTime;
 	}
 	
 	// Update is called once per frame
@@ -28,7 +53,7 @@ public class Bowl : Scenario {
 
 		//this.rigidbody.velocity = new Vector3(0, 1, 0);
 
-		if (Input.GetKey(KeyCode.A)) {
+		/*if (Input.GetKey(KeyCode.A)) {
 			x -= speed;
 		}
 		if (Input.GetKey(KeyCode.D)) {
@@ -39,7 +64,7 @@ public class Bowl : Scenario {
 		}
 		if (Input.GetKey(KeyCode.S)) {
 			y -= speed;
-		}
+		}*/
 
 		if (!_hasEnded) {
 			_playTime += Time.fixedDeltaTime;
@@ -47,18 +72,18 @@ public class Bowl : Scenario {
 			{
 				this.Victory();
 				_hasEnded = true;
-				Debug.Log ("Victory");
 			}
 			else if (_playTime > 15) {
 				this.Failure();
 				_hasEnded = true;
-				Debug.Log ("Failure");
 			}
 		}
 
 		//this.rigidbody.position += new Vector3(x, 0, y);
-		this.rigidbody.velocity = new Vector3 (x, 0, y) * -Time.fixedDeltaTime;
 		// Debug.Log (Time.fixeadDeltaTime);
 		//Debug.Log (this.rigidbody.velocity);
+
+		this.rigidbody.velocity = _accum;
+		_accum.Set (0, 0, 0);
 	}
 }
