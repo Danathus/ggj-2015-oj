@@ -6,6 +6,7 @@ TagManager:
   - LeftHand
   - RightHand
   - RightShoulder
+  - ReplayCamera
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX

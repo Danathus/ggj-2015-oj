@@ -39,6 +39,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9276dccee39be3948b40671b36e97f65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_VictoryScreen: {fileID: 177286, guid: ee67869aac9cdc842a9215ec9a031aa8, type: 2}
+  m_FailureScreen: {fileID: 177286, guid: 8f15fcb271816854982a033c78640c44, type: 2}
+  m_Scenarios: []
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

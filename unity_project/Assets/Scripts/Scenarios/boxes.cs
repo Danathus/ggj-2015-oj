@@ -30,7 +30,7 @@ public class boxes : Scenario
 
 		if (Input.GetKey(KeyCode.Space))
 		{
-			BeginReplay();
+			Victory();
 		}
 	}
 
