@@ -10,7 +10,6 @@ public class ReviewState: State {
 
 	public override void Enter() {
 		mCountdownToReplay = 3.0f;
-		ReplayManager.Instance.Play();
 
 		GameObject replayCamera = GameObject.FindWithTag("ReplayCamera");
 		if (replayCamera != null) {
