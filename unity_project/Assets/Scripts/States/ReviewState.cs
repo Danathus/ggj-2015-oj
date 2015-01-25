@@ -2,14 +2,14 @@ using UnityEngine;
 using System.Collections;
 
 public class ReviewState: State {
-
-	private Scenario[] mScenarioList = null;
+	float mCountdownToReplay;
 
 	public ReviewState() {
 		mName = "Review";
 	}
 
 	public override void Enter() {
+		mCountdownToReplay = 3.0f;
 		ReplayManager.Instance.Play();
 
 		GameObject replayCamera = GameObject.FindWithTag("ReplayCamera");
@@ -22,20 +22,20 @@ public class ReviewState: State {
 	public override void Leave() {
 		ReplayManager.Instance.Stop();
 	}
-	
+
+	// called at FixedUpdate()
 	public override void Update () {
 		if (!ReplayManager.Instance.mIsReplaying) {
-			if (mScenarioList == null) {
-				mScenarioList = Object.FindObjectsOfType<Scenario>();
-			}
-
-			if (Input.GetKey(KeyCode.Space)) {
+			mCountdownToReplay -= Time.fixedDeltaTime;
+			if (mCountdownToReplay <= 0.0f) {
 				bool updatedSomeScenario = false;
-				foreach (var scenario in mScenarioList) {
+				Scenario[] scenarioList = Object.FindObjectsOfType<Scenario>();
+				foreach (var scenario in scenarioList) {
 					scenario.Reset();
 					updatedSomeScenario = true;
 				}
 				if (updatedSomeScenario) {
+					Debug.Log("Replay!");
 					ReplayManager.Instance.Play();
 				}
 			}

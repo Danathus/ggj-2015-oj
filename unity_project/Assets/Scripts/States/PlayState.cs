@@ -17,10 +17,6 @@ public class PlayState: State {
 
 	public override void Leave() {
 		if (mScenarioList != null) {
-			foreach(var scenario in mScenarioList)
-			{
-				scenario.Reset();
-			}
 			mScenarioList = null;
 		}
 	}
