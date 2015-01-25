@@ -121,6 +121,7 @@ public class PushBehavior : Behavior {
 		} 
 		if(pushing)
 		{
+			Debug.Log("obstacle is null? " + mObstacle == null);
 			float z_boundary = (mObstacle != null)?
 				mObstacle.transform.position.z - (mObstacle.renderer.bounds.size.z/2 * mObstacle.transform.localScale.z) : 
 				originPosition.z + 1.0f;
@@ -316,9 +317,9 @@ public class UnstableHand : Scenario {
 	// Use this for initialization
 	void Start () {
 		mHand = GameObject.Find("Automatic Rifle Standard");
-		mElevateKeyPad = GameObject.Find("wallBrickExposedShort");
-		mCorrectButton = GameObject.Find("Correct Button Test");
-		mWrongButton = GameObject.Find("Wrong Button Test");
+		mElevateKeyPad = GameObject.Find("elevator button keypad");
+		mCorrectButton = GameObject.Find("button.001");
+		mWrongButton = GameObject.Find("button.002");
 		mGameCamera = GameObject.Find("Main Camera");
 		
 		mOriginal_position = mHand.transform.position;
@@ -326,38 +327,36 @@ public class UnstableHand : Scenario {
 		List<ButtonPushBehavior> buttonBehaviorList = new List<ButtonPushBehavior>();
 		buttonBehaviorList.Add(new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
 		buttonBehaviorList.Add(new WrongButtonBehavior("wrong button push", mWrongButton, mHand, 2));
-		for(int i = 0; i < buttonBehaviorList.Count; ++i)
-		{
-			scenario.AddBehavior(buttonBehaviorList[i]);
-		}
-		Dictionary<int, string> floorMap = new Dictionary<int, string>();
-		floorMap.Add(1, "hell");
-		floorMap.Add(2, "heaven");
-		scenario.AddBehavior(new ElevatorMoveBehavior("elevator move", mElevateKeyPad, floorMap));
+
+
+
 		float speed = 0.1f;
 		mControls.AddControl(new TrueSignal(),          					new UnstableBehavior("unstable hand", mHand));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W),          	new TranslateBehavior("player1 move up",    mHand, new Vector3( 0,  1, 0) * speed));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S),          	new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          	new TranslateBehavior("player1 move left",  mHand, new Vector3(-1,  0, 0) * speed));
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          	new TranslateBehavior("player1 move right", mHand, new Vector3( 1,  0, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A),          	new TranslateBehavior("player1 move left",  mHand, new Vector3( 1,  0, 0) * speed));
+		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D),          	new TranslateBehavior("player1 move right", mHand, new Vector3(-1,  0, 0) * speed));
 		mControls.AddControl(new KeyCodeControlSignal(KeyCode.KeypadEnter),	new PushBehavior("finger push", mHand, mElevateKeyPad));
 		//mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
-		mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("correct button push"));
-		mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("wrong button push"));
+		mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
+		mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("wrong button push", mWrongButton, mHand, 2));
+		
+		Dictionary<int, string> floorMap = new Dictionary<int, string>();
+		floorMap.Add(1, "hell");
+		floorMap.Add(2, "heaven");
 		for(int i = 0; i < buttonBehaviorList.Count; ++i)
 		{
-			mControls.AddControl(new CorrectLevelSignal(buttonBehaviorList[i]),          scenario.GetBehavior("elevator move"));
+			mControls.AddControl(new CorrectLevelSignal(buttonBehaviorList[i]),          new ElevatorMoveBehavior("elevator move", mElevateKeyPad, floorMap));
 		}
 	}
-	
-		Vector3 finger_tip = new Vector3(
-			mHand.transform.position.x,
-			mHand.transform.position.y + mHand.renderer.bounds.size.y/2,
-			mHand.transform.position.z + mHand.renderer.bounds.size.z/2);
+
+
 		//GameObject helper = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		//helper.transform.position = finger_tip;
 		//mGameCamera.transform.LookAt(finger_tip);
+
 	// called once per timestep update (critical: do game state updates here!!!)
+	
 	void FixedUpdate()
 	{
 		if (Input.GetKey(KeyCode.Space))
