@@ -344,17 +344,17 @@ public class ElevatorMoveBehavior : Behavior {
 	private Vector3 left_door_position;
 	private Vector3 right_door_position;
 	Scenario mScenario;
-	private GameObject mBackgroundCanvas;
-	private Texture hellTex;
-	private Texture heavenTex;
-	private Texture bathroomTex;
+	private GameObject mHellBackground;
+	private GameObject mHeavenBackground;
+	private GameObject mBathroomBackground;
+
 	
 	protected bool IsRightFloor()
 	{
 		return mCurrFloor == 1;
 	}
 	
-	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor, Scenario scenario, GameObject background, Texture hell, Texture heaven, Texture bathroom)
+	public ElevatorMoveBehavior(string name, GameObject operand, Dictionary<int, string> floorMap, GameObject leftdoor, GameObject rightdoor, Scenario scenario, GameObject hell, GameObject heaven, GameObject bathroom)
 		: base(name, operand)
 	{
 		mCurrFloor = 0;
@@ -368,9 +368,11 @@ public class ElevatorMoveBehavior : Behavior {
 		left_door_position = mLeftDoor.transform.position;
 		right_door_position = mRightDoor.transform.position;
 		mScenario = scenario;
-		mBackgroundCanvas = background;
+		mHellBackground = hell;
+		mHeavenBackground = heaven;
+		mBathroomBackground = bathroom;
+		//hellTex = hell;
 		mFloorMap = floorMap;
-		hellTex = hell;
 	}
 	
 	public override bool Operate(float signal)
@@ -391,15 +393,27 @@ public class ElevatorMoveBehavior : Behavior {
 					//mHeight = (float)mCurrFloor * 2.0f;
 					if(floorcontext == "hell")
 					{
-						mBackgroundCanvas.renderer.material.SetTexture("_MainTex", hellTex);
+						//mBackgroundCanvas.renderer.material.SetTexture("_MainTex", hellTex);
+						//mBackgroundCanvas.renderer.renderer.enabled = false;
+						mHellBackground.renderer.enabled = true;
+						mHeavenBackground.renderer.enabled = false;
+						mBathroomBackground.renderer.enabled = false;
 					}
 					else if(floorcontext == "heaven")
 					{
-						mBackgroundCanvas.renderer.material.SetTexture("_MainTex", heavenTex);
+						//mBackgroundCanvas.renderer.material.SetTexture("_MainTex", heavenTex);
+						//mBackgroundCanvas.renderer.renderer.enabled = true;
+						mHellBackground.renderer.enabled = false;
+						mHeavenBackground.renderer.enabled = true;
+						mBathroomBackground.renderer.enabled = false;
 					}
 					else if(floorcontext == "bathroom")
 					{
-						mBackgroundCanvas.renderer.material.SetTexture("_MainTex", bathroomTex);
+						//mBackgroundCanvas.renderer.material.SetTexture("_MainTex", bathroomTex);
+						//mBackgroundCanvas.renderer.renderer.enabled = false;
+						mHellBackground.renderer.enabled = false;
+						mHeavenBackground.renderer.enabled = false;
+						mBathroomBackground.renderer.enabled = true;
 					}
 					
 				}
@@ -501,7 +515,9 @@ public class UnstableHand : Scenario {
 	private List<FloorChangeSignal> mFloorSignals = new List<FloorChangeSignal>();
 	private List<FloorChangeSignal> mButtonPushSignals = new List<FloorChangeSignal>();
 	private PushBehavior mHandPushBehavior;
-	private GameObject mBackgroundCanvas;
+	private GameObject mHellBackground;
+	private GameObject mHeavenBackground;
+	private GameObject mBathroomBackground;
 	public Texture hellTex;
 	public Texture heavenTex;
 	public Texture bathroomTex;
@@ -523,7 +539,9 @@ public class UnstableHand : Scenario {
 		mElevatorFloor.transform.position = new Vector3(1.87f, 0.0f, -2.76f);
 		//Debug.Log("mElevatorFloor: " + mElevatorFloor.name);
 		GameObject elevatorWall = GameObject.Find("elevator walls");
-		mBackgroundCanvas = GameObject.Find("outside environment");
+		mHellBackground = GameObject.Find("outside environment_hell");
+		mHeavenBackground = GameObject.Find("outside environment_heaven");
+		mBathroomBackground = GameObject.Find("outside environment_bathroom");
 		
 		mOriginal_position = mHand.transform.position;
 
@@ -541,23 +559,12 @@ public class UnstableHand : Scenario {
 		Behavior p1Down  = new TranslateBehavior("player1 move down",  mHand, new Vector3( 0, -1, 0) * speed);
 		Behavior p1Left  = new TranslateBehavior("player1 move left",  mHand, new Vector3( 1,  0, 0) * speed);
 		Behavior p1Right = new TranslateBehavior("player1 move right", mHand, new Vector3(-1,  0, 0) * speed);
-		//   keyboard
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.W), p1Up   );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.S), p1Down );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.A), p1Left );
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.D), p1Right);
-		//   gamepad
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), p1Up    );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y, -1.0f), p1Down  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X, -1.0f), p1Left  );
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.One, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.X,  1.0f), p1Right );
+		SetControlScheme(0, p1Up, p1Down, p1Left, p1Right);
 
 		// second player
 		mHandPushBehavior = new PushBehavior("finger push", mHand, mElevateKeyPad);
-		//   keyboard
-		mControls.AddControl(new KeyCodeControlSignal(KeyCode.UpArrow),	mHandPushBehavior);
-		//   gamepad
-		mControls.AddControl(new GamepadAxisControlSignal(GamepadInput.GamePad.Index.Two, GamepadInput.GamePad.Axis.LeftStick, GamepadAxisControlSignal.Dimension.Y,  1.0f), mHandPushBehavior);
+		SetControlScheme(1, mHandPushBehavior, null, null, null);
+
 		//mControls.AddControl(new TrueSignal(),          scenario.GetBehavior("unstable hand"));
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("correct button push", mCorrectButton, mHand, 1));
 		//mControls.AddControl(new TrueSignal(),          new CorrectButtonBehavior("wrong button push", mWrongButton, mHand, 2));
@@ -578,7 +585,7 @@ public class UnstableHand : Scenario {
 		GameObject leftDoor = GameObject.Find("left door");
 		GameObject rightDoor = GameObject.Find("right door");
 
-		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor, this, mBackgroundCanvas, hellTex, heavenTex, bathroomTex);
+		ElevatorMoveBehavior elevatorMover = new ElevatorMoveBehavior("elevator move", mElevatorFloor, floorMap, leftDoor, rightDoor, this, mHellBackground, mHeavenBackground, mBathroomBackground);
 		for(int i = 0; i < mFloorSignals.Count; ++i)
 		{
 			mControls.AddControl(mFloorSignals[i],          elevatorMover);

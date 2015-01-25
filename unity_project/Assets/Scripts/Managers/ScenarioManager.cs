@@ -7,6 +7,8 @@ public class ScenarioManager : Singleton<ScenarioManager>
 {
 	protected ScenarioManager () {}
 
+	public int m_PrimaryPlayer = 0;
+
 	public GameObject m_TimeScreen = null;
 	private GameObject mShowingTimeScreen = null;
 
@@ -90,6 +92,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 
 		if (mCurrentScenario >= m_Scenarios.Count) {
 			mCurrentScenario = 0;
+			m_PrimaryPlayer ^= 1;
 		}
 
 		if (mCurrentScenario < m_Scenarios.Count) {
