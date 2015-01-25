@@ -34,7 +34,7 @@ public class PlayState: State {
 			scenario.mControls.Update();
 		}
 
-		if (Input.GetKey(KeyCode.Return)) {
+		if (base.ShouldAdvanceState()) {
 			ScenarioManager.Instance.ActivateState("Play");
 		}
 	}

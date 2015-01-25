@@ -41,7 +41,7 @@ public class ReviewState: State {
 			}
 		}
 
-		if (Input.GetKey(KeyCode.Return)) {
+		if (base.ShouldAdvanceState()) {
 			ScenarioManager.Instance.ActivateState("Play");
 		}
 	}
