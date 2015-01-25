@@ -13,12 +13,16 @@ public class PlayState: State {
 	public override void Enter() {
 		ReplayManager.Instance.Clear();
 		ScenarioManager.Instance.NextScenario();
+		// keep track in the replay manager of when we started
+		ReplayManager.Instance.AddEvent(new BookendEvent());
 	}
 
 	public override void Leave() {
 		if (mScenarioList != null) {
 			mScenarioList = null;
 		}
+		// keep track in the replay manager of when we stopped
+		ReplayManager.Instance.AddEvent(new BookendEvent());
 	}
 	
 	public override void Update () {
