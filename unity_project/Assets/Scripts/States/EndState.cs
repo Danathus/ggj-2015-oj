@@ -17,5 +17,8 @@ public class EndState: State {
 	}
 	
 	public override void Update () {
+		if (base.ShouldAdvanceState()) {
+			ScenarioManager.Instance.NextScenario();
+		}
 	}
 }
