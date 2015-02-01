@@ -53,6 +53,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	// losses
 	int mNumLosses = 0;
 	public int NumLives = 3;
+	public int LivesRemaining() { return NumLives - mNumLosses; }
 
 	// rounds
 	private int mCurrentRound = 0;
