@@ -68,10 +68,12 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		for (int i = 0; i < mStates.Count; ++i) {
 			if (mStates[i].mName == name) {
 				if (mCurrentState != null) {
+					Debug.Log("Leaving state " + mCurrentState.mName);
 					mCurrentState.Leave();
 				}
 				mCurrentState = mStates[i];
-				mStates[i].Enter();
+				Debug.Log("Entering state " + mCurrentState.mName);
+				mCurrentState.Enter();
 				return true;
 			}
 		}
@@ -89,26 +91,34 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	}
 
 	public void NextScenario() {
-		mCurrentScenario++;
+
+		if (CurrentState() == "End") {
+			// cycle back to beginning
+			ActivateState("Intro");
+			return;
+		}
+
+		++mCurrentScenario;
 
 		if (mCurrentScenario >= m_Scenarios.Count) {
-			mCurrentScenario = 0;
-
 			if (m_PrimaryPlayer == 1) {
+				mCurrentScenario = -1;
 				ActivateState("End");
-				m_Scenarios.Clear();
-				return;
 			}
-
+			else {
+				mCurrentScenario = 0;
+			}
 			m_PrimaryPlayer ^= 1;
 			Shuffle();
 		}
 
-		if (mCurrentScenario < m_Scenarios.Count) {
+		if (0 <= mCurrentScenario && mCurrentScenario < m_Scenarios.Count) {
 			string scenarioName = m_Scenarios[mCurrentScenario];
 			ReplayManager.Instance.Stop();
 			ReplayManager.Instance.Clear();
+			Debug.Log("Loading scenario " + scenarioName);
 			Application.LoadLevel(scenarioName);
+			ScenarioManager.Instance.ActivateState("Play");
 		}
 	}
 
