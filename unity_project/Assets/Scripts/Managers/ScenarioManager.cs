@@ -23,9 +23,40 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	private List<State> mStates = new List<State>();
 	private State mCurrentState = null;
 
+	// difficulty
+	public enum DifficultyLevelType { Easy, Medium, Hard, Invalid };
+	public DifficultyLevelType mDifficultyLevel = DifficultyLevelType.Invalid;
+	public DifficultyLevelType NextDifficultyLevel(DifficultyLevelType level)
+	{
+		switch (level)
+		{
+		case DifficultyLevelType.Invalid: return DifficultyLevelType.Easy;
+		case DifficultyLevelType.Easy:    return DifficultyLevelType.Medium;
+		case DifficultyLevelType.Medium:  return DifficultyLevelType.Hard;
+		case DifficultyLevelType.Hard:    return DifficultyLevelType.Easy;
+		}
+		return DifficultyLevelType.Invalid;
+	}
+	public DifficultyLevel GetDifficultyInfo()
+	{
+		string objName = "<invalid>";
+		switch (mDifficultyLevel)
+		{
+		case DifficultyLevelType.Easy:   objName = "Easy";   break;
+		case DifficultyLevelType.Medium: objName = "Medium"; break;
+		case DifficultyLevelType.Hard:   objName = "Hard";   break;
+		}
+		DifficultyLevel difficultyObj = GameObject.Find(objName).GetComponent<DifficultyLevel>();
+		return difficultyObj;
+	}
+
 	// rounds
 	private int mCurrentRound = 0;
-	public void StartFirstRound() { mCurrentRound = 0; }
+	public void StartFirstRound()
+	{
+		mDifficultyLevel = DifficultyLevelType.Easy;
+		mCurrentRound = 0;
+	}
 	public int CurrentRound() { return mCurrentRound; }
 	public int mNumTotalRounds = 3; // constant
 	public void NextRound()
@@ -33,6 +64,8 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		++mCurrentRound;
 		m_PrimaryPlayer ^= 1;
 		Shuffle();
+
+		mDifficultyLevel = NextDifficultyLevel(mDifficultyLevel);
 	}
 
 	// Use this for initialization
