@@ -1168,10 +1168,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 461544191}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9c1bb4313c56404a95da9e96713d791, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ef74bee9443f44498dce57ea84d7c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   TimeLimitInSeconds: 10
+  windSpeedMult: 1
+  cerealCatchCount: 50
 --- !u!1 &478755428
 GameObject:
   m_ObjectHideFlags: 0
@@ -1424,7 +1426,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41763b1676fe8a34097f67822b0f967d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: -1
   speed: 150
   bounds: {fileID: 1063947279}
 --- !u!64 &531414027
@@ -1709,10 +1710,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 603861809}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9c1bb4313c56404a95da9e96713d791, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ef74bee9443f44498dce57ea84d7c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeLimitInSeconds: 10
+  TimeLimitInSeconds: 30
+  windSpeedMult: .100000001
+  cerealCatchCount: 30
 --- !u!1 &627537644
 GameObject:
   m_ObjectHideFlags: 0
@@ -2166,10 +2169,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 850026422}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9c1bb4313c56404a95da9e96713d791, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ef74bee9443f44498dce57ea84d7c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeLimitInSeconds: 10
+  TimeLimitInSeconds: 15
+  windSpeedMult: .600000024
+  cerealCatchCount: 40
 --- !u!4 &850026424
 Transform:
   m_ObjectHideFlags: 0
@@ -4870,7 +4875,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e459c3dc8a238c24782d54196a1349da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: 10
   cereal: {fileID: 5480792, guid: 36f5a49c770a7074c922d17831c2bd48, type: 2}
   generationPoint1: {fileID: 290757905}
   generationPoint2: {fileID: 632791345}
