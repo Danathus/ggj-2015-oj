@@ -45,7 +45,7 @@ public class ReviewState: State {
 		}
 
 		if (base.ShouldAdvanceState()) {
-			ScenarioManager.Instance.ActivateState("Play");
+			ScenarioManager.Instance.NextScenario();
 		}
 	}
 }

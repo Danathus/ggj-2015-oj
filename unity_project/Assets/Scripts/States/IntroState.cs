@@ -11,6 +11,7 @@ public class IntroState: State {
 		ScenarioManager.Instance.Shuffle();
 		if (ScenarioManager.Instance.isInitialized()) {
 			Application.LoadLevel("main_menu");
+			ScenarioManager.Instance.StartFirstRound();
 		} else {
 			ScenarioManager.Instance.ActivateState("Play");
 		}
@@ -22,7 +23,7 @@ public class IntroState: State {
 	
 	public override void Update () {
 		if (base.ShouldAdvanceState()) {
-			ScenarioManager.Instance.ActivateState("Play");
+			ScenarioManager.Instance.NextScenario();
 		}
 
 		// optional
