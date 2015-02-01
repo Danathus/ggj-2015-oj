@@ -621,6 +621,15 @@ public class UnstableHand : Scenario
 	{
 		mRandomReverter = new RandomReverter();
 
+		GameObject ArrowIndicator = GameObject.Find("ArrowIndicator");
+		ElevatorArrow ArrowScript = null;
+
+		if (ScenarioManager.Instance.GetDifficultyInfo().name == "Easy") {
+			if (ArrowIndicator != null) {
+				ArrowScript = ArrowIndicator.GetComponent<ElevatorArrow>() as ElevatorArrow;
+			}
+		}
+
 		Dictionary<int, string> floorMap = new Dictionary<int, string>();
 		int heavenFloor = Random.Range(1, 4);
 		floorMap.Add(heavenFloor, "heaven");
@@ -631,16 +640,25 @@ public class UnstableHand : Scenario
 			floorMap.Add(2, "hell");
 			floorMap.Add(3, "bathroom");
 			team_instructions = "Ground floor exit!\nGo!";
+			if (ArrowScript != null) {
+				ArrowScript.m_FloorGArrow.SetActive(true);
+			}
 			break;
 		case 2:
 			floorMap.Add(1, "hell");
 			floorMap.Add(3, "bathroom");
 			team_instructions = "1st floor exit!\nGo!";
+			if (ArrowScript != null) {
+				ArrowScript.m_Floor1Arrow.SetActive(true);
+			}
 			break;
 		case 3:
 			floorMap.Add(2, "hell");
 			floorMap.Add(1, "bathroom");
 			team_instructions = "2nd floor exit!\nGo!";
+			if (ArrowScript != null) {
+				ArrowScript.m_Floor2Arrow.SetActive(true);
+			}
 			break;
 		}
 
