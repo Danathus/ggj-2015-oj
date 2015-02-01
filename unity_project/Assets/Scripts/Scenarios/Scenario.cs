@@ -3,7 +3,7 @@ using System.Collections;
 
 public abstract class Scenario: MonoBehaviour {
 
-	public float m_TimeLimit = 10.0f;
+	private float m_TimeLimit = 10.0f;
 	public ControlScheme mControls = new ControlScheme();
 
 	private bool m_Initialized = false;
@@ -12,6 +12,10 @@ public abstract class Scenario: MonoBehaviour {
 	public void ScenarioUpdate() {
 		if (!m_Initialized) {
 			m_Initialized = true;
+
+			DifficultyLevel difficultyInfo = ScenarioManager.Instance.GetDifficultyInfo();
+			m_TimeLimit = difficultyInfo.TimeLimitInSeconds;
+			Debug.Log("*** difficulty level: " + ScenarioManager.Instance.mDifficultyLevel + ", time limit: " + m_TimeLimit);
 
 			ScenarioManager.Instance.ShowTimeLimit();
 			ScenarioManager.Instance.UpdatePlayerInstructions();
