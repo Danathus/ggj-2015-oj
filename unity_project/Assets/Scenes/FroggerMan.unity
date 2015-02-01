@@ -600,10 +600,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 231795807}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9c1bb4313c56404a95da9e96713d791, type: 3}
+  m_Script: {fileID: 11500000, guid: e1b2822f71cccae40adabd29b4887b03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeLimitInSeconds: 15
+  TimeLimitInSeconds: 45
+  minCarSpawnTime: 5
+  maxCarSpawnTime: 15
+  carSpeed: 20
 --- !u!4 &231795809
 Transform:
   m_ObjectHideFlags: 0
@@ -2109,10 +2112,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 901651088}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9c1bb4313c56404a95da9e96713d791, type: 3}
+  m_Script: {fileID: 11500000, guid: e1b2822f71cccae40adabd29b4887b03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   TimeLimitInSeconds: 15
+  minCarSpawnTime: 1
+  maxCarSpawnTime: 3
+  carSpeed: 50
 --- !u!1 &909242445
 GameObject:
   m_ObjectHideFlags: 0
@@ -2497,10 +2503,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1009032210}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9c1bb4313c56404a95da9e96713d791, type: 3}
+  m_Script: {fileID: 11500000, guid: e1b2822f71cccae40adabd29b4887b03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeLimitInSeconds: 15
+  TimeLimitInSeconds: 30
+  minCarSpawnTime: 2
+  maxCarSpawnTime: 5
+  carSpeed: 30
 --- !u!1 &1023330527
 GameObject:
   m_ObjectHideFlags: 0
@@ -2628,7 +2637,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ea417642a25d74599921fcfb01f64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: -1
   car: {fileID: 169576, guid: f201cb7c76307a847be75a4e6791d229, type: 2}
   vehicles:
   - {fileID: 180582, guid: f8600c2b1a14ec04fba286cdd283cfa2, type: 2}
@@ -2763,7 +2771,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ea417642a25d74599921fcfb01f64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: -1
   car: {fileID: 169576, guid: f201cb7c76307a847be75a4e6791d229, type: 2}
   vehicles:
   - {fileID: 114688, guid: d89c15bbf810daf43a8c46ba972fd6a7, type: 2}
@@ -2875,7 +2882,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9ddcbfef76666c41972894f14f6f5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: 15
   speed: 5
   _punch_sound: {fileID: 8300000, guid: 3585784c967080f40b86ff784336de73, type: 3}
 --- !u!95 &1230901295
@@ -3723,7 +3729,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ea417642a25d74599921fcfb01f64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: -1
   car: {fileID: 169576, guid: f201cb7c76307a847be75a4e6791d229, type: 2}
   vehicles:
   - {fileID: 114688, guid: d89c15bbf810daf43a8c46ba972fd6a7, type: 2}
@@ -4260,7 +4265,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd5b99e6b02589d41829ae1770f25e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: -1
   cameraTarget: {fileID: 1865713776}
   targetDist: 4
   targetY: 2.5
@@ -4898,7 +4902,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ea417642a25d74599921fcfb01f64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: -1
   car: {fileID: 169576, guid: f201cb7c76307a847be75a4e6791d229, type: 2}
   vehicles:
   - {fileID: 180582, guid: f8600c2b1a14ec04fba286cdd283cfa2, type: 2}
@@ -5733,7 +5736,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ea417642a25d74599921fcfb01f64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: -1
   car: {fileID: 169576, guid: f201cb7c76307a847be75a4e6791d229, type: 2}
   vehicles:
   - {fileID: 114688, guid: d89c15bbf810daf43a8c46ba972fd6a7, type: 2}
@@ -5887,7 +5889,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ea417642a25d74599921fcfb01f64a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: -1
   car: {fileID: 169576, guid: f201cb7c76307a847be75a4e6791d229, type: 2}
   vehicles:
   - {fileID: 180582, guid: f8600c2b1a14ec04fba286cdd283cfa2, type: 2}

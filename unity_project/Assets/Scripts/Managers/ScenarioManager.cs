@@ -44,6 +44,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		{
 		case DifficultyLevelType.Easy:   objName = "Easy";   break;
 		case DifficultyLevelType.Medium: objName = "Medium"; break;
+		default:
 		case DifficultyLevelType.Hard:   objName = "Hard";   break;
 		}
 		DifficultyLevel difficultyObj = GameObject.Find(objName).GetComponent<DifficultyLevel>();
