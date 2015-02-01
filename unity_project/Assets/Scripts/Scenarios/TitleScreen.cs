@@ -109,7 +109,7 @@ public class TitleScreen : MonoBehaviour {
 			if (m_LeftTransform != null && m_RightTransform != null) {
 				Vector3 offset = m_LeftTransform.position - m_RightTransform.position;
 				float goal = Screen.width / 100.0f;
-				Debug.Log("Mag: " + offset.magnitude + " of " + goal);
+				// Debug.Log("Mag: " + offset.magnitude + " of " + goal);
 				if (offset.magnitude < goal) {
 					m_holdAccum += Time.deltaTime;
 					if (m_holdAccum > m_holdTimeRequirement) {
