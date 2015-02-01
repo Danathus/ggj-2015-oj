@@ -68,10 +68,12 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		for (int i = 0; i < mStates.Count; ++i) {
 			if (mStates[i].mName == name) {
 				if (mCurrentState != null) {
+					Debug.Log("Leaving state " + mCurrentState.mName);
 					mCurrentState.Leave();
 				}
 				mCurrentState = mStates[i];
-				mStates[i].Enter();
+				Debug.Log("Entering state " + mCurrentState.mName);
+				mCurrentState.Enter();
 				return true;
 			}
 		}
@@ -114,7 +116,9 @@ public class ScenarioManager : Singleton<ScenarioManager>
 			string scenarioName = m_Scenarios[mCurrentScenario];
 			ReplayManager.Instance.Stop();
 			ReplayManager.Instance.Clear();
+			Debug.Log("Loading scenario " + scenarioName);
 			Application.LoadLevel(scenarioName);
+			ScenarioManager.Instance.ActivateState("Play");
 		}
 	}
 
