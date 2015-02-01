@@ -5814,7 +5814,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 506845abe9ff23045b127e13b3b96fb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeLimitInSeconds: 10
+  TimeLimitInSeconds: 15
   angleThreshold: 45
 --- !u!1 &1844635031
 GameObject:
