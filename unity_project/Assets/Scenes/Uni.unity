@@ -999,10 +999,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 243900472}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9c1bb4313c56404a95da9e96713d791, type: 3}
+  m_Script: {fileID: 11500000, guid: 506845abe9ff23045b127e13b3b96fb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   TimeLimitInSeconds: 20
+  angleThreshold: 45
 --- !u!4 &243900474
 Transform:
   m_ObjectHideFlags: 0
@@ -2810,10 +2811,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 703904756}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9c1bb4313c56404a95da9e96713d791, type: 3}
+  m_Script: {fileID: 11500000, guid: 506845abe9ff23045b127e13b3b96fb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeLimitInSeconds: 20
+  TimeLimitInSeconds: 30
+  angleThreshold: 90
 --- !u!1 &713562387
 GameObject:
   m_ObjectHideFlags: 0
@@ -3375,7 +3377,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1801dce231943544bb1297686a6561d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: 20
   wheelMount: {fileID: 950416616}
   unicycle: {fileID: 887653391}
   player1Wheel: {fileID: 535383744}
@@ -5810,10 +5811,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1826868697}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9c1bb4313c56404a95da9e96713d791, type: 3}
+  m_Script: {fileID: 11500000, guid: 506845abe9ff23045b127e13b3b96fb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeLimitInSeconds: 20
+  TimeLimitInSeconds: 15
+  angleThreshold: 45
 --- !u!1 &1844635031
 GameObject:
   m_ObjectHideFlags: 0
@@ -6866,7 +6868,7 @@ Transform:
   - {fileID: 243900474}
   - {fileID: 1826868698}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
 --- !u!1 &2106251542
 GameObject:
   m_ObjectHideFlags: 0

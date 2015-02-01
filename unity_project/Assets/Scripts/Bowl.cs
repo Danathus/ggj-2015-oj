@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using System;
 
 public class Bowl : Scenario {
 
@@ -28,11 +30,19 @@ public class Bowl : Scenario {
 		_accum = new Vector3();
 
 		_difficulty = ScenarioManager.Instance.GetDifficultyInfo() as CerealDifficulty;
+		UpdateCount ();
+	}
+
+	public void UpdateCount()
+	{
+		Text text = GameObject.Find ("CaughtCereal").GetComponent<Text>();
+		text.text = String.Format ("Caught Cereal: {0}/{1}", Math.Min(_totalCaught, _difficulty.cerealCatchCount), _difficulty.cerealCatchCount);
 	}
 
 	public void CaughtCereal()
 	{
 		_totalCaught ++;
+		UpdateCount ();
 	}
 
 	// Use this for initialization
