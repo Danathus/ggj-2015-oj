@@ -11,6 +11,7 @@ public class IntroState: State {
 		ScenarioManager.Instance.Shuffle();
 		if (ScenarioManager.Instance.isInitialized()) {
 			Application.LoadLevel("main_menu");
+			ScenarioManager.Instance.StartFirstRound();
 		} else {
 			ScenarioManager.Instance.ActivateState("Play");
 		}
