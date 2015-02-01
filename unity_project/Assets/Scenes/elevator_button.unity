@@ -1345,7 +1345,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9c1bb4313c56404a95da9e96713d791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeLimitInSeconds: 10
+  TimeLimitInSeconds: 5
 --- !u!1 &538243795
 GameObject:
   m_ObjectHideFlags: 0
@@ -1903,7 +1903,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab506bf28947f584882440a50272c31e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: -1
   hellTex: {fileID: 0}
   heavenTex: {fileID: 0}
   bathroomTex: {fileID: 0}
@@ -2946,7 +2945,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab506bf28947f584882440a50272c31e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeLimit: 10
   hellTex: {fileID: 2800000, guid: 1bf840e1b034efb49a1d8640314c3478, type: 3}
   heavenTex: {fileID: 2800000, guid: 8ec227ae1f81a8640aeb3b4aedaa4d88, type: 3}
   bathroomTex: {fileID: 2800000, guid: e2a2122a306232d49afdc4ef6ed327e9, type: 3}
@@ -4024,7 +4022,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9c1bb4313c56404a95da9e96713d791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeLimitInSeconds: 10
+  TimeLimitInSeconds: 20
 --- !u!1 &1534388508
 GameObject:
   m_ObjectHideFlags: 0
