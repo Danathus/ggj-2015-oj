@@ -34,7 +34,7 @@ public class Cereal : MonoBehaviour {
 
 		if (_inBowl) {
 			_timeInBowl += Time.fixedDeltaTime;
-			if(_timeInBowl > 1.0f)
+			if(_timeInBowl > 0.5f)
 			{
 				Box.DestroyCereal(this.gameObject);
 				GetBowl().CaughtCereal();
