@@ -169,6 +169,10 @@ Prefab:
       propertyPath: m_Scenarios.Array.size
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
+      propertyPath: m_ScenarioNames.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -217,6 +221,22 @@ Prefab:
       propertyPath: m_Scenarios.Array.data[3]
       value: Uni
       objectReference: {fileID: 0}
+    - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
+      propertyPath: m_ScenarioNames.Array.data[0]
+      value: Cross The Street
+      objectReference: {fileID: 0}
+    - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
+      propertyPath: m_ScenarioNames.Array.data[1]
+      value: Elevator Action
+      objectReference: {fileID: 0}
+    - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
+      propertyPath: m_ScenarioNames.Array.data[2]
+      value: Breakfast of Champions
+      objectReference: {fileID: 0}
+    - target: {fileID: 11430260, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
+      propertyPath: m_ScenarioNames.Array.data[3]
+      value: Unicycle Rider
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 88521f5fc3f28914cb9f01d7384cac6a, type: 2}
   m_RootGameObject: {fileID: 1810358419}
@@ -261,6 +281,14 @@ MonoBehaviour:
   - elevator_button
   - CerealPour
   - Uni
+  m_ScenarioNames:
+  - Cross The Street
+  - Elevator Action
+  - Breakfast of Champions
+  - Unicycle Rider
+  mDifficultyLevel: 3
+  NumLives: 3
+  mNumTotalRounds: 3
 --- !u!4 &1810358421
 Transform:
   m_ObjectHideFlags: 0

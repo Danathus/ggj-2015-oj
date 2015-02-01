@@ -18,10 +18,14 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	private GameObject mShowingScreen = null;
 
 	public List<string> m_Scenarios = new List<string>();
+	public List<string> m_ScenarioNames = new List<string>();
 	private int mCurrentScenario = -1;
 
 	private List<State> mStates = new List<State>();
 	private State mCurrentState = null;
+
+	private Dictionary<string, int> mWinCounts = new Dictionary<string, int>();
+	private Dictionary<string, int> mLossCounts = new Dictionary<string, int>();
 
 	// difficulty
 	public enum DifficultyLevelType { Easy, Medium, Hard, Invalid };
@@ -42,6 +46,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		string objName = "<invalid>";
 		switch (mDifficultyLevel)
 		{
+		default:
 		case DifficultyLevelType.Easy:   objName = "Easy";   break;
 		case DifficultyLevelType.Medium: objName = "Medium"; break;
 		case DifficultyLevelType.Hard:   objName = "Hard";   break;
@@ -62,6 +67,8 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		mDifficultyLevel = DifficultyLevelType.Easy;
 		mCurrentRound = 0;
 		mNumLosses = 0;
+		mWinCounts.Clear ();
+		mLossCounts.Clear ();
 	}
 	public int CurrentRound() { return mCurrentRound; }
 	public int mNumTotalRounds = 3; // constant
@@ -214,6 +221,38 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		}
 	}
 
+	public string GenerateStatsText()
+	{
+		string ret = "";
+		int count = System.Math.Min(m_Scenarios.Count, m_ScenarioNames.Count);
+		for (int i = 0; i < count; i ++)
+		{
+			string scenario = m_Scenarios[i];
+			int wins = mWinCounts.ContainsKey(scenario) ? mWinCounts[scenario] : 0;
+			int loss = mLossCounts.ContainsKey(scenario) ? mLossCounts[scenario] : 0;
+			ret += m_ScenarioNames[i] + ":\n" + new string(' ', 10) + wins + " Wins " + loss + " Losses\n";
+		}
+		return ret;
+	}
+
+	public void AddVictoryStat() {
+		string scenario = CurrentScenario ();
+		if (mWinCounts.ContainsKey (scenario)) {
+			mWinCounts [scenario] ++;
+		} else {
+			mWinCounts [scenario] = 1;
+		}
+	}
+
+	public void AddFailStat() {
+		string scenario = CurrentScenario ();
+		if (mLossCounts.ContainsKey (scenario)) {
+			mLossCounts [scenario] ++;
+		} else {
+			mLossCounts [scenario] = 1;
+		}
+	}
+	
 	public void ShowVictory() {
 		HideVictory();
 		if (m_VictoryScreen != null) {

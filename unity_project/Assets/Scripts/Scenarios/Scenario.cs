@@ -62,6 +62,7 @@ public abstract class Scenario: MonoBehaviour {
 		ScenarioManager.Instance.HideTimeLimit();
 		m_TimeLimit = -1;
 		if (ScenarioManager.Instance.CurrentState() == "Play") {
+			ScenarioManager.Instance.AddVictoryStat();
 			ScenarioManager.Instance.ActivateState("Victory");
 		}
 	}
@@ -70,6 +71,7 @@ public abstract class Scenario: MonoBehaviour {
 		ScenarioManager.Instance.HideTimeLimit();
 		m_TimeLimit = -1;
 		if (ScenarioManager.Instance.CurrentState() == "Play") {
+			ScenarioManager.Instance.AddFailStat();
 			ScenarioManager.Instance.ActivateState("Failure");
 		}
 	}
