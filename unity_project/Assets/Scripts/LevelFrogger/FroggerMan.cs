@@ -118,7 +118,9 @@ public class FroggerMan : Scenario {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		if (_enabled && other.name.StartsWith ("Car")) {
+		//if (_enabled && other.name.StartsWith ("Car")) {
+		if (_enabled && other.tag == "FroggerCollider")
+		{
 			GoRagdoll();
 			AudioSource audio = this.gameObject.AddComponent<AudioSource>();
 			audio.clip = _punch_sound;

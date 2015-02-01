@@ -23,6 +23,18 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	private List<State> mStates = new List<State>();
 	private State mCurrentState = null;
 
+	// rounds
+	private int mCurrentRound = 0;
+	public void StartFirstRound() { mCurrentRound = 0; }
+	public int CurrentRound() { return mCurrentRound; }
+	public int mNumTotalRounds = 3; // constant
+	public void NextRound()
+	{
+		++mCurrentRound;
+		m_PrimaryPlayer ^= 1;
+		Shuffle();
+	}
+
 	// Use this for initialization
 	void Start () {
 		DontDestroyOnLoad(gameObject);
@@ -48,6 +60,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 
 	private void SetupStates() {
 		mStates.Add(new IntroState());
+		mStates.Add(new GetReadyState());
 		mStates.Add(new PlayState());
 		// mStates.Add(new ReplayState());
 		mStates.Add(new VictoryState());
@@ -63,15 +76,24 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		}
 		return "";
 	}
+	
+	public string CurrentScenario() {
+		string scenarioName = mCurrentScenario >= 0 && mCurrentScenario < m_Scenarios.Count
+			? m_Scenarios[mCurrentScenario]
+			: "";
+		return scenarioName;
+	}
 
 	public bool ActivateState(string name) {
 		for (int i = 0; i < mStates.Count; ++i) {
 			if (mStates[i].mName == name) {
 				if (mCurrentState != null) {
+					Debug.Log("Leaving state " + mCurrentState.mName);
 					mCurrentState.Leave();
 				}
 				mCurrentState = mStates[i];
-				mStates[i].Enter();
+				Debug.Log("Entering state " + mCurrentState.mName);
+				mCurrentState.Enter();
 				return true;
 			}
 		}
@@ -99,22 +121,20 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		++mCurrentScenario;
 
 		if (mCurrentScenario >= m_Scenarios.Count) {
-			if (m_PrimaryPlayer == 1) {
+			if (CurrentRound() == mNumTotalRounds-1) { // end of third round
 				mCurrentScenario = -1;
 				ActivateState("End");
 			}
 			else {
 				mCurrentScenario = 0;
 			}
-			m_PrimaryPlayer ^= 1;
-			Shuffle();
+			NextRound();
 		}
 
 		if (0 <= mCurrentScenario && mCurrentScenario < m_Scenarios.Count) {
-			string scenarioName = m_Scenarios[mCurrentScenario];
 			ReplayManager.Instance.Stop();
 			ReplayManager.Instance.Clear();
-			Application.LoadLevel(scenarioName);
+			ScenarioManager.Instance.ActivateState("GetReady");
 		}
 	}
 

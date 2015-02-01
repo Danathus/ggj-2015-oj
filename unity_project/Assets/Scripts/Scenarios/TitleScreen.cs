@@ -26,7 +26,7 @@ public class MagneticBehavior: Behavior
 		{
 			m_Delta = m_Target - m_Transform.position;
 			m_Delta *= m_Strength * Time.fixedDeltaTime;
-			// Debug.Log("" + (m_Transform.position - m_Target) + ", " + m_Delta);
+			//Debug.Log("" + (m_Transform.position - m_Target) + ", " + m_Delta);
 
 			m_Transform.position += m_Delta;
 			return true;
@@ -149,7 +149,7 @@ public class TitleScreen : MonoBehaviour {
 
 			m_FinishedTimer -= Time.fixedDeltaTime;
 			if (m_FinishedTimer <= 0.0f) {
-				ScenarioManager.Instance.ActivateState("Play");
+				ScenarioManager.Instance.NextScenario();
 			}
 		}
 	}
