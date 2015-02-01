@@ -48,6 +48,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 
 	private void SetupStates() {
 		mStates.Add(new IntroState());
+		mStates.Add(new GetReadyState());
 		mStates.Add(new PlayState());
 		// mStates.Add(new ReplayState());
 		mStates.Add(new VictoryState());
@@ -122,7 +123,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		if (0 <= mCurrentScenario && mCurrentScenario < m_Scenarios.Count) {
 			ReplayManager.Instance.Stop();
 			ReplayManager.Instance.Clear();
-			ScenarioManager.Instance.ActivateState("Play");
+			ScenarioManager.Instance.ActivateState("GetReady");
 		}
 	}
 
