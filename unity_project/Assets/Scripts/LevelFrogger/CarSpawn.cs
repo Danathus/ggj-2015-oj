@@ -3,17 +3,20 @@ using System.Collections;
 
 public class CarSpawn : Scenario {
 
-	public Object car;
-	public Object[] vehicles;
+	public GameObject car;
+	public GameObject[] vehicles;
 	public bool reversed = false;
 	public float spawnTimeMin = 1, spawnTimeMax = 4;
 
 	private float _timeToNextSpawn;
 	private RandomReverter _random;
 
+	private FroggerManDifficulty _difficulty;
+
 	public override void Reset()
 	{
 		_random.Revert();
+		_difficulty = ScenarioManager.Instance.GetDifficultyInfo () as FroggerManDifficulty;
 		SetNextSpawn();
 	}
 
@@ -32,18 +35,20 @@ public class CarSpawn : Scenario {
 	}
 
 	void Spawn() {
+		GameObject nextVehicle = GetNextVehicle (); 
+		Vector3 position = this.transform.position;
+		position.y = nextVehicle.transform.position.y;
 		Quaternion rotation = new Quaternion ();
 		rotation.eulerAngles = new Vector3 (0, reversed ? 270 : 90, 0);
-		Object nextVehicle = GetNextVehicle (); 
-		Instantiate(nextVehicle, this.transform.position, rotation);
+		Instantiate(nextVehicle, position, rotation);
 		SetNextSpawn();
 	}
 	
 	void SetNextSpawn() {
-		_timeToNextSpawn = _random.Range(spawnTimeMin, spawnTimeMax);
+		_timeToNextSpawn = _random.Range(_difficulty.minCarSpawnTime, _difficulty.maxCarSpawnTime);
 	}
 
-	Object GetNextVehicle()
+	GameObject GetNextVehicle()
 	{
 		int size = vehicles.Length;
 		if (size == 0) {
