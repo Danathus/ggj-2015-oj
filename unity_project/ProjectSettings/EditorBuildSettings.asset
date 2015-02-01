@@ -23,3 +23,5 @@ EditorBuildSettings:
     path: Assets/Scenes/Uni.unity
   - enabled: 1
     path: Assets/Scenes/end_game.unity
+  - enabled: 1
+    path: Assets/Scenes/get_ready.unity
