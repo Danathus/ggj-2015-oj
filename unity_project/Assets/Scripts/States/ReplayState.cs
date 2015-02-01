@@ -22,13 +22,6 @@ public class ReplayState: State {
 			if (mScenario == null) {
 				mScenario = Object.FindObjectOfType(typeof(Scenario)) as Scenario;
 			}
-
-			if (Input.GetKey(KeyCode.Space)) {
-				if (mScenario != null) {
-					mScenario.Reset();
-					ReplayManager.Instance.Play();
-				}
-			}
 		}
 
 		if (base.ShouldAdvanceState()) {
