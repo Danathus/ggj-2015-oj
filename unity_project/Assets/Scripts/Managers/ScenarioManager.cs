@@ -50,12 +50,17 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		return difficultyObj;
 	}
 
+	// losses
+	int mNumLosses = 0;
+	public int NumLives = 3;
+
 	// rounds
 	private int mCurrentRound = 0;
 	public void StartFirstRound()
 	{
 		mDifficultyLevel = DifficultyLevelType.Easy;
 		mCurrentRound = 0;
+		mNumLosses = 0;
 	}
 	public int CurrentRound() { return mCurrentRound; }
 	public int mNumTotalRounds = 3; // constant
@@ -99,6 +104,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		mStates.Add(new VictoryState());
 		mStates.Add(new FailureState());
 		mStates.Add(new EndState());
+		mStates.Add(new GameLostState());
 
 		ActivateState("Intro");
 	}
@@ -145,7 +151,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 
 	public void NextScenario() {
 
-		if (CurrentState() == "End") {
+		if (CurrentState() == "End" || CurrentState() == "GameLost") {
 			// cycle back to beginning
 			ActivateState("Intro");
 			return;
@@ -164,9 +170,16 @@ public class ScenarioManager : Singleton<ScenarioManager>
 			NextRound();
 		}
 
+		ReplayManager.Instance.Stop();
+		ReplayManager.Instance.Clear();
+
+		// if we have failed too many times, game over
+		if (mNumLosses >= NumLives) {
+			ScenarioManager.Instance.ActivateState("GameLost");
+			return;
+		}
+
 		if (0 <= mCurrentScenario && mCurrentScenario < m_Scenarios.Count) {
-			ReplayManager.Instance.Stop();
-			ReplayManager.Instance.Clear();
 			ScenarioManager.Instance.ActivateState("GetReady");
 		}
 	}
@@ -215,6 +228,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	}
 
 	public void ShowFailure() {
+		++mNumLosses;
 		HideFailure();
 		if (m_FailureScreen != null) {
 			mShowingScreen = Instantiate(m_FailureScreen, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
