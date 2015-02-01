@@ -13,6 +13,8 @@ public abstract class State {
 	protected bool ShouldAdvanceState()
 	{
 		return Input.GetKey(KeyCode.Return) ||
+			Input.GetKey(KeyCode.Alpha1) ||
+			Input.GetKey(KeyCode.Alpha2) ||
 			GamepadInput.GamePad.GetButton(
 				GamepadInput.GamePad.Button.Start,
 				GamepadInput.GamePad.Index.One) ||
