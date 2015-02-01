@@ -42,7 +42,6 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		string objName = "<invalid>";
 		switch (mDifficultyLevel)
 		{
-		default:
 		case DifficultyLevelType.Easy:   objName = "Easy";   break;
 		case DifficultyLevelType.Medium: objName = "Medium"; break;
 		case DifficultyLevelType.Hard:   objName = "Hard";   break;
