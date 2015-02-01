@@ -22,7 +22,7 @@ public class IntroState: State {
 	
 	public override void Update () {
 		if (base.ShouldAdvanceState()) {
-			ScenarioManager.Instance.ActivateState("Play");
+			ScenarioManager.Instance.NextScenario();
 		}
 
 		// optional
