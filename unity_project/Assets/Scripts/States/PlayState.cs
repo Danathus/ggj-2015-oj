@@ -14,6 +14,12 @@ public class PlayState: State {
 		ReplayManager.Instance.Clear();
 		// keep track in the replay manager of when we started
 		ReplayManager.Instance.AddEvent(new BookendEvent());
+
+		if (ScenarioManager.Instance.isInitialized()) {
+			string scenarioName = ScenarioManager.Instance.CurrentScenario();
+			Debug.Log("Loading scenario " + scenarioName);
+			Application.LoadLevel(scenarioName);
+		}
 	}
 
 	public override void Leave() {

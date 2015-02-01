@@ -63,6 +63,13 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		}
 		return "";
 	}
+	
+	public string CurrentScenario() {
+		string scenarioName = mCurrentScenario >= 0 && mCurrentScenario < m_Scenarios.Count
+			? m_Scenarios[mCurrentScenario]
+			: "";
+		return scenarioName;
+	}
 
 	public bool ActivateState(string name) {
 		for (int i = 0; i < mStates.Count; ++i) {
@@ -113,11 +120,8 @@ public class ScenarioManager : Singleton<ScenarioManager>
 		}
 
 		if (0 <= mCurrentScenario && mCurrentScenario < m_Scenarios.Count) {
-			string scenarioName = m_Scenarios[mCurrentScenario];
 			ReplayManager.Instance.Stop();
 			ReplayManager.Instance.Clear();
-			Debug.Log("Loading scenario " + scenarioName);
-			Application.LoadLevel(scenarioName);
 			ScenarioManager.Instance.ActivateState("Play");
 		}
 	}
