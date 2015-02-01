@@ -62,6 +62,9 @@ public class MonoWheel : Scenario {
 		// create the control scheme that maps inputs to these behaviors
 		SetControlScheme(0, p1Up, p1Down, p1Left, p1Right);
 		SetControlScheme(1, p2Up, p2Down, p2Left, p2Right);
+
+		UnicycleDifficulty difficulty = ScenarioManager.Instance.GetDifficultyInfo() as UnicycleDifficulty;
+		angleDeviation = difficulty.angleThreshold;
 	}
 
 	void OnTriggerEnter(Collider other) {
