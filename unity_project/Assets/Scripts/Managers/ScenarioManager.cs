@@ -89,22 +89,28 @@ public class ScenarioManager : Singleton<ScenarioManager>
 	}
 
 	public void NextScenario() {
-		mCurrentScenario++;
+
+		if (CurrentState() == "End") {
+			// cycle back to beginning
+			ActivateState("Intro");
+			return;
+		}
+
+		++mCurrentScenario;
 
 		if (mCurrentScenario >= m_Scenarios.Count) {
-			mCurrentScenario = 0;
-
 			if (m_PrimaryPlayer == 1) {
+				mCurrentScenario = -1;
 				ActivateState("End");
-				m_Scenarios.Clear();
-				return;
 			}
-
+			else {
+				mCurrentScenario = 0;
+			}
 			m_PrimaryPlayer ^= 1;
 			Shuffle();
 		}
 
-		if (mCurrentScenario < m_Scenarios.Count) {
+		if (0 <= mCurrentScenario && mCurrentScenario < m_Scenarios.Count) {
 			string scenarioName = m_Scenarios[mCurrentScenario];
 			ReplayManager.Instance.Stop();
 			ReplayManager.Instance.Clear();
