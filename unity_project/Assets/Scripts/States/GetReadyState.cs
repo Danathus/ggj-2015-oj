@@ -10,7 +10,7 @@ public class GetReadyState: State {
 
 	public override void Enter() {
 		if (ScenarioManager.Instance.isInitialized()) {
-			Application.LoadLevel("end_game");
+			Application.LoadLevel("get_ready");
 		}
 		mCountdown = 3.0f;
 	}
