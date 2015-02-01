@@ -27,6 +27,13 @@ public class ReviewState: State {
 	// called at FixedUpdate()
 	public override void Update () {
 		if (!ReplayManager.Instance.mIsReplaying) {
+			// If the countdown is already elapsed and we get here,
+			// it is because the replay has just finished playing.
+			if (mCountdownToReplay <= 0) {
+				ScenarioManager.Instance.NextScenario();
+				return;
+			}
+
 			mCountdownToReplay -= Time.fixedDeltaTime;
 			if (mCountdownToReplay <= 0.0f) {
 				bool updatedSomeScenario = false;
