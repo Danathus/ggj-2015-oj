@@ -26,7 +26,7 @@ public class MagneticBehavior: Behavior
 		{
 			m_Delta = m_Target - m_Transform.position;
 			m_Delta *= m_Strength * Time.fixedDeltaTime;
-			Debug.Log("" + (m_Transform.position - m_Target) + ", " + m_Delta);
+			// Debug.Log("" + (m_Transform.position - m_Target) + ", " + m_Delta);
 
 			m_Transform.position += m_Delta;
 			return true;
@@ -64,7 +64,7 @@ public class TitleScreen : MonoBehaviour {
 		m_LeftTransform  = m_LeftPart.GetComponent<RectTransform>() as RectTransform;
 		m_RightTransform = m_RightPart.GetComponent<RectTransform>() as RectTransform;
 
-		float speed = 20.0f;
+		float speed = Screen.width / 55.0f;
 		float magnetForce = 15.0f;
 		Behavior p1Mag   = new MagneticBehavior("player1 magnetic", 	   m_LeftPart, magnetForce);
 		Behavior p1Up    = new RectTranslateBehavior("player1 move up",    m_LeftPart, new Vector3( 0,  1, 0) * speed);
@@ -107,12 +107,14 @@ public class TitleScreen : MonoBehaviour {
 			}
 
 			if (m_LeftTransform != null && m_RightTransform != null) {
-				Vector3 offset = (m_LeftTransform.position + new Vector3(17, 0, 0)) - (m_RightTransform.position - new Vector3(17, 0, 0));
-				if (offset.magnitude < 5) {
+				Vector3 offset = m_LeftTransform.position - m_RightTransform.position;
+				float goal = Screen.width / 100.0f;
+				Debug.Log("Mag: " + offset.magnitude + " of " + goal);
+				if (offset.magnitude < goal) {
 					m_holdAccum += Time.deltaTime;
 					if (m_holdAccum > m_holdTimeRequirement) {
 						m_IsFinished = true;
-						m_FinishedCenter = (m_LeftTransform.position + new Vector3(17, 0, 0)) - (offset * 0.5f);
+						m_FinishedCenter = m_LeftTransform.position - (offset * 0.5f);
 
 						m_LeftPart.GetComponent<PulseImage>().enabled = false;
 						m_RightPart.GetComponent<PulseImage>().enabled = false;
@@ -138,10 +140,10 @@ public class TitleScreen : MonoBehaviour {
 				m_LeftTransform.localScale  = scalev;
 				m_RightTransform.localScale = scalev;
 
-				Vector3 targetLeftPos = (m_FinishedCenter - targetScale * new Vector3(17, 0, 0));
+				Vector3 targetLeftPos = m_FinishedCenter;
 				m_LeftTransform.position = m_LeftTransform.position * w + targetLeftPos * (1 - w);
 
-				Vector3 targetRightPos = (m_FinishedCenter + targetScale * new Vector3(17, 0, 0));
+				Vector3 targetRightPos = m_FinishedCenter;
 				m_RightTransform.position = m_RightTransform.position * w + targetRightPos * (1 - w);
 			}
 
