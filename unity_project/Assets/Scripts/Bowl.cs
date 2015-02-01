@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using System;
 
 public class Bowl : Scenario {
 
@@ -14,17 +16,33 @@ public class Bowl : Scenario {
 	private GameObjectReverter _reverter;
 	private Bounder _bounder;
 
+	private CerealDifficulty _difficulty;
+
 	public override void Reset ()
 	{
 		Debug.Log("Bowl.Reset()!");
+
+
+
+
 		_reverter.Revert ();
 		_totalCaught = 0;
 		_accum = new Vector3();
+
+		_difficulty = ScenarioManager.Instance.GetDifficultyInfo() as CerealDifficulty;
+		UpdateCount ();
+	}
+
+	public void UpdateCount()
+	{
+		Text text = GameObject.Find ("CaughtCereal").GetComponent<Text>();
+		text.text = String.Format ("Caught Cereal: {0}/{1}", Math.Min(_totalCaught, _difficulty.cerealCatchCount), _difficulty.cerealCatchCount);
 	}
 
 	public void CaughtCereal()
 	{
 		_totalCaught ++;
+		UpdateCount ();
 	}
 
 	// Use this for initialization
@@ -67,7 +85,7 @@ public class Bowl : Scenario {
 
 		if (!_hasEnded) {
 			//_playTime += Time.fixedDeltaTime;
-			if(_totalCaught == 50)
+			if(_totalCaught == _difficulty.cerealCatchCount)
 			{
 				this.Victory();
 				_hasEnded = true;

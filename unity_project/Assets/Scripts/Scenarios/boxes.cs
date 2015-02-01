@@ -29,11 +29,6 @@ public class boxes : Scenario
 	void FixedUpdate()
 	{
 		ScenarioUpdate();
-
-		if (Input.GetKey(KeyCode.Space))
-		{
-			Victory();
-		}
 	}
 
 	public override void Reset() {

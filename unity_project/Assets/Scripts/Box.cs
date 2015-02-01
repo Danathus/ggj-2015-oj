@@ -19,6 +19,8 @@ public class Box : Scenario {
 	private RandomReverter _random;
 	private Bounder _bounder;
 
+	private CerealDifficulty _difficulty;
+
 	public override void Reset() {
 		Debug.Log("Box.Reset()!");
 		foreach (Cereal cereal in Object.FindObjectsOfType<Cereal>()) {
@@ -29,6 +31,8 @@ public class Box : Scenario {
 		_reverter.Revert ();
 		_random.Revert ();
 		_spawnTimeAccum = 0.0f;
+
+		_difficulty = ScenarioManager.Instance.GetDifficultyInfo() as CerealDifficulty;
 	}
 
 	void Start() {
@@ -121,7 +125,7 @@ public class Box : Scenario {
 		if (_freeCereal.Count > 0) {
 			GameObject gameObject = _freeCereal.Pop();
 			gameObject.transform.position = gameObject.rigidbody.position = position;
-			gameObject.rigidbody.velocity = gameObject.rigidbody.angularVelocity = _windSpeed;
+			gameObject.rigidbody.velocity = gameObject.rigidbody.angularVelocity = _windSpeed * _difficulty.windSpeedMult;
 			gameObject.SetActiveRecursively(true);
 		} else {
 			Instantiate(cereal, position, new Quaternion());
