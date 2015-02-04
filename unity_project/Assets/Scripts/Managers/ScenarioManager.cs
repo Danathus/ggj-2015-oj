@@ -95,7 +95,7 @@ public class ScenarioManager : Singleton<ScenarioManager>
 			mCurrentState.Update();
 		}
 
-		if (Input.GetKey(KeyCode.Escape)) {
+		if (Input.GetKey(KeyCode.Escape) || (Input.GetKeyDown(KeyCode.Alpha1) && Input.GetKeyDown(KeyCode.Alpha2))) {
 			Application.Quit();
 		}
 	}
