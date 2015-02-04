@@ -15,6 +15,8 @@ public abstract class State {
 		return Input.GetKey(KeyCode.Return) ||
 			Input.GetKey(KeyCode.Alpha1) ||
 			Input.GetKey(KeyCode.Alpha2) ||
+			Input.GetKey(KeyCode.F) ||
+			Input.GetKey(KeyCode.K) ||
 			GamepadInput.GamePad.GetButton(
 				GamepadInput.GamePad.Button.Start,
 				GamepadInput.GamePad.Index.One) ||
