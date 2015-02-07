@@ -12,7 +12,9 @@ public abstract class State {
 
 	protected bool ShouldAdvanceState()
 	{
-		return Input.GetKey(KeyCode.Return) ||
+		bool inAdvanceableState =
+			(mName == "Review" || mName == "Failure" || mName == "Victory");
+		bool isAdvanceKey = Input.GetKey(KeyCode.Return) ||
 			Input.GetKey(KeyCode.Alpha1) ||
 			Input.GetKey(KeyCode.Alpha2) ||
 			Input.GetKey(KeyCode.F) ||
@@ -23,5 +25,6 @@ public abstract class State {
 			GamepadInput.GamePad.GetButton(
 				GamepadInput.GamePad.Button.Start,
 				GamepadInput.GamePad.Index.Two);
+		return inAdvanceableState && isAdvanceKey;
 	}
 }
